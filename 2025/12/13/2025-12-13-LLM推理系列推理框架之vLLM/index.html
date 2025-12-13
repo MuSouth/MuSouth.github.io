@@ -19,10 +19,11 @@
     <link rel="dns-prefetch" href="https://MuSouth.github.io">
     <!--SEO-->
 
-<meta name="keywords" content="" />
+<meta name="keywords" content="推理,vLLM" />
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any ..." />
+<meta name="description" content="参考[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili大语言模型高效推理技术 - 知乎 (zhihu.com)
+1. vLLM入门2. vLLM源码解读主要是vllm代码库..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +34,7 @@
 
 <title>
     
-    Hello World |
+    参考 |
     
     MuSouth&#39;s Blog
 </title>
@@ -145,22 +146,24 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Hello World">
+        <h1 id="参考">
             
-            Hello World
+            参考
             
         </h1>
         <div class="post-meta">
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        
+        <a class="category-link" href="/categories/LLM-Inference/">LLM-Inference</a>
     </span>
     
     
     <span class="fa-wrap">
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/vLLM/" rel="tag">vLLM</a> <a class="tag-none-link" href="/tags/%E6%8E%A8%E7%90%86/" rel="tag">推理</a>
             
         </span>
     </span>
@@ -180,19 +183,97 @@
     </div>
     
     <div class="post-body post-content">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1DpoWYeEeH?spm_id_from=333.788.videopod.sections&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/703628651">大语言模型高效推理技术 - 知乎 (zhihu.com)</a></p>
+<h2 id="1-vLLM入门"><a href="#1-vLLM入门" class="headerlink" title="1. vLLM入门"></a>1. vLLM入门</h2><h2 id="2-vLLM源码解读"><a href="#2-vLLM源码解读" class="headerlink" title="2. vLLM源码解读"></a>2. vLLM源码解读</h2><p>主要是vllm代码库：<br><strong>vllm&#x2F;：</strong></p>
+<ul>
+<li><p>Entrypoints (LLM, API server)</p>
+</li>
+<li><p>Engine (同步：llm_engine.py ， 异步：async_llm_engine.py)</p>
+</li>
+<li><p>Core</p>
+<ul>
+<li>scheduler (step&#x2F;iteration)</li>
+<li>block_manager (KV cache manager) <ul>
+<li>Paged Attention (ToRead: LMCache，vllm production stack)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>evictor<ul>
+<li><strong>prefix caching</strong> 非常重要 &lt;—  (What if prefix doesn’t match? CacheBlend. What if prefix cache on another machine? KV cache sharing across nodes.)</li>
+<li>kv cache optimization<ul>
+<li>DeepSeek (MLA)</li>
+</ul>
+</li>
+<li>LRU cache （最近最少使用缓存）<br>LRU cache基于最近最少使用原则的数据淘汰算法的缓存机制，核心思想是当数据容量达到上限，优先移除哪些最近没有被访问过的数据。LRU实现通常使用双向链表和哈希表，双向链表用于维护数据项的顺序，确保最近使用的数据总是位于链表头部，最久未使用的数据位于链表尾部。哈希表则提供O(1)时间复杂的查找能力。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Worker (承接scheduler分配的任务)</p>
+</li>
+<li><p>Model_Executor (Model Runner) （models里都是vllm适配的模型定义）</p>
+<ul>
+<li>Modelling （模型结构定义代码标准化，把其他模型代码转化为vllm的代码）</li>
+</ul>
+</li>
+<li><p>Attention </p>
+<ul>
+<li>Backend (各种常用Attention的定义和部分Trition实现)</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>distributed:<br>  <strong>Infra-side:</strong><ul>
+<li>Why distributed inference?<ul>
+<li>Communication Device （硬件）<ul>
+<li>NVLink: GPU之间的物理通信连接</li>
+<li>Infinity Band: between nodes</li>
+<li>RDMA (Remote direct memory access)</li>
+</ul>
+</li>
+<li>Communication library (软件)  distributed&#x2F;device_communicators&#x2F;<br>这块通信原语学习参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/706135598">sys(2): 通信原语及其性能分析 - 知乎 (zhihu.com)</a><ul>
+<li>pyNCCL : communication for NVIDIA</li>
+<li>shared memory : os</li>
+<li>custom all reduce : A kernel just for all reduce operations<ul>
+<li>All reduce</li>
+<li>All gather</li>
+<li>Scatter等等</li>
+</ul>
+</li>
+<li>torch.distributed</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>  <strong>Algorithm-side:</strong></p>
+<ul>
+<li>&#x2F;model_executor&#x2F;models&#x2F;llama.py 包含了最正统的并行</li>
+<li>parallel type : TP PP DP EP </li>
+<li>PD分离<br><strong>周边：</strong></li>
+</ul>
+</li>
+<li>Preprocessing &#x2F; Postprocessing (tokenizer, detokenizer, sampler, multimodal processor)</li>
+<li>Distributed</li>
+<li>torch compile</li>
+<li>Observability</li>
+<li>Config</li>
+<li>Testing</li>
+<li>CI&#x2F;CD</li>
+</ul>
+<p><strong>优化：</strong></p>
+<ul>
+<li>Speculative decoding</li>
+<li>Disaggregated prefilling</li>
+<li>Chunked prefill</li>
+<li>Cascade inference</li>
+<li>Prefix caching<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513160012.png" alt="image.png"></li>
+</ul>
+<h2 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://docs.vllm.ai/en/latest/examples/offline_inference/batch_llm_inference.html">Batch LLM Inference - vLLM</a></li>
+<li></li>
+</ol>
 
     </div>
     
@@ -211,17 +292,17 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2025/12/13/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/" class="pre-post btn btn-default" title='一、ACT'>
+    <a href="/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BSGLang/" class="pre-post btn btn-default" title='LLM推理系列推理框架之SGLang'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
-            一、ACT</span>
+            LLM推理系列推理框架之SGLang</span>
     </a>
     
     
-    <a href="/2025/05/29/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97AIOS-LLM-Agent-Operating-System-Agent%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA-SDK-API%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3/" class="next-post btn btn-default" title='【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解'>
+    <a href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97DeepSeek-R1%E8%92%B8%E9%A6%8FQwen7B-%E5%9F%BA%E4%BA%8Etrl%E7%9A%84RLHF%E5%AF%B9%E9%BD%90%E8%AE%AD%E7%BB%83/" class="next-post btn btn-default" title='RLHF训练流程'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解</span><i class="fa fa-angle-right fa-fw"></i>
+            RLHF训练流程</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -255,7 +336,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-vLLM%E5%85%A5%E9%97%A8"><span class="toc-text">1. vLLM入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-vLLM%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="toc-text">2. vLLM源码解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-text">参考</span></a></li></ol>
         
     </div>
 </aside>

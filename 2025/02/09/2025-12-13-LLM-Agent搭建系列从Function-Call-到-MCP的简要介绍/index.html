@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="MuSouth&#39;s Blog">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.3.0">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://MuSouth.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="LLM-Agent,MCP" />
+
+
+<meta name="description" content="FunctionCallFunctionCall的核心功能就是让大模型根据用户需求，精准调用外部工具，常见的包括天气查询、调用浏览器搜索、查询数据库等，FunctionCall承载着将自然语言转..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    【LLM-Agent搭建系列】从Function Call到MCP的简要介绍 |
+    
+    MuSouth&#39;s Blog
+</title>
+
+<link rel="alternate" href="/atom.xml" title="MuSouth&#39;s Blog" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='MuSouth'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://MuSouth.github.io">
+                        MuSouth&#39;s Blog</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Agent/"><i class="fa "></i>
+                                LLM-Agent</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Technology/"><i class="fa "></i>
+                                LLM-技术</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Training/"><i class="fa "></i>
+                                LLM-训练</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Inference/"><i class="fa "></i>
+                                LLM-推理</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="【LLM-Agent搭建系列】从Function Call到MCP的简要介绍">
+            
+            【LLM-Agent搭建系列】从Function Call到MCP的简要介绍
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/LLM-Agent/">LLM-Agent</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/LLM-Agent/" rel="tag">LLM-Agent</a> <a class="tag-none-link" href="/tags/MCP/" rel="tag">MCP</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2025/02/09</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                307</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="FunctionCall"><a href="#FunctionCall" class="headerlink" title="FunctionCall"></a>FunctionCall</h2><p>FunctionCall的核心功能就是让大模型根据用户需求，精准调用外部工具，常见的包括天气查询、调用浏览器搜索、查询数据库等，FunctionCall承载着将自然语言转化为结构化指令的作用，例如用户提问“北京今天多少度？”-&gt;模型生成“get_weather(location&#x3D;“北京””的调用参数等等诸如此类。其技术路径一般为：</p>
+<ul>
+<li>注册函数信息：告诉模型有哪些工具可以用（函数名称、调用参数格式等等）</li>
+<li>意图识别：大模型根据用户输入，判断是否调用工具，调用什么工具</li>
+<li>生成结构化指令或参数：输出符合工具要求的结构化数据（比如json）</li>
+<li>API调用：精准传递参数并返回数据的过程</li>
+</ul>
+<h2 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h2><p>Agent核心功能是自主规划任务流程、调用多个工具完成复杂目标，比如你只给Agent一个指令：写一份十月份去大理的旅游攻略、编写一个贪吃蛇程序等等。Agent会根据目标将任务拆解为多个步骤，进而调用不同工具获取数据完成步骤，其技术路径：</p>
+<ul>
+<li>推理能力：大模型分析任务目标，拆解成若干步骤</li>
+<li>工具调用：调用FunctionCall执行具体操作（查询天气、查询机票等）</li>
+<li>循环迭代：根据工具返回结果修正计划（例如天气不好xxx、当日机票订满了xxx）</li>
+<li>典型场景：智能客服、助手等</li>
+</ul>
+<h2 id="MCP"><a href="#MCP" class="headerlink" title="MCP"></a>MCP</h2><p>Model Context Protocol，模型上下文协议是一种通用开放标准，用于将AI系统和数据源连接起来，用单一协议取代碎片化的集成。这是一种将AI助手连接到数据所在系统（包括内容存储库、业务工具和开发环境等）的新标准，由Anthropic 2024年11.25发布文章所述。<br>MCP的核心遵循客户端client-服务器server架构，主机应用程序可以连接到多个服务器。</p>
+<ul>
+<li>MCP Host：希望通过MCP访问数据的Claude Desktop、IDE或其他AI工具等</li>
+<li>MCP Clients：与服务器保持1：1链接的协议客户端</li>
+<li>MCP Servers：轻量级程序，每个程序都通过标准化的Model Context Protocol公开特定功能</li>
+<li>Local Data Sources：MCP服务器可以安全访问计算机的文件、数据库和服务</li>
+<li>Remote Services：MCP服务器可以连接到的Internet上可用的外部系统（例如API）<br>下图是MCP架构示意图：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162016.png" alt="image.png"></li>
+</ul>
+<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162203.png" alt="image.png"><br>MCP作为一种开放协议，标准化了应用程序如何为LLM提高上下文，是AI模型的“万能转换头”。<br>MCP的技术路径一般为：</p>
+<ul>
+<li>MCP Client（Claude Desktop &#x2F; Cursor等）发送问题到LLM</li>
+<li>LLM分析可用工具，并决定使用哪一个或多个</li>
+<li>客户端通过MCP Server执行所选工具</li>
+<li>工具执行结果返回给LLM</li>
+<li>LLM结合执行结果构造最终的prompt并生成自然语言回应</li>
+<li>展示给用户最后响应<br>并且官方也提供了非常多现成的 MCP Servers，只需要选择你需要接入的工具，然后接入即可。</li>
+<li><a href="https://link.zhihu.com/?target=https://github.com/punkpeye/awesome-mcp-servers">Awesome MCP Servers</a></li>
+<li><a href="https://link.zhihu.com/?target=https://mcpservers.org/">MCP Servers Website</a></li>
+<li><a href="https://link.zhihu.com/?target=https://github.com/modelcontextprotocol/servers">Official MCP Servers</a></li>
+<li><a href="https://link.zhihu.com/?target=https://modelcontextprotocol.io/clients">Example Clients - Model Context Protocol</a></li>
+<li><a href="https://link.zhihu.com/?target=https://modelcontextprotocol.io/examples">Example Servers - Model Context Protocol</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29428728150">MCP (Model Context Protocol) 是什么？ - 知乎 (zhihu.com)</a>一文中这个总结感觉很好：FcuntionCall解决如何调用工具的问题，Agent解决如何智能规划任务的问题，MCP解决如何高效管理工具的问题。</li>
+</ul>
+<h2 id="好用的开源代码"><a href="#好用的开源代码" class="headerlink" title="好用的开源代码"></a>好用的开源代码</h2><h3 id="1-FastMCP"><a href="#1-FastMCP" class="headerlink" title="1. FastMCP"></a>1. FastMCP</h3><p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162055.png" alt="image.png"></p>
+<h4 id="FastMCP的优势"><a href="#FastMCP的优势" class="headerlink" title="FastMCP的优势"></a>FastMCP的优势</h4><p>FastMCP是MCP协议的高级python实现，简化了创建MCP服务器何客户端的过程，与直接使用底层MCP SDK相比，FastMCP开发高效、简洁、python设计、实现规范。<br>FastMCP核心包括tool()、prompt()、resouce()等等，具体介绍参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032112">这篇博客</a>，写的比较全面。</p>
+<h3 id="2-MCP-LLM-Bridge"><a href="#2-MCP-LLM-Bridge" class="headerlink" title="2. MCP-LLM-Bridge"></a>2. MCP-LLM-Bridge</h3><p>大型语言模型（LLM）的应用场景越来越广泛，而不同模型之间的协议差异也带来了集成和使用上的挑战。本文将详细介绍MCP LLM Bridge，这是一个连接Model Context Protocol (MCP)服务器与OpenAI兼容LLM的桥接工具，它使得任何兼容OpenAI API的语言模型都能够通过标准化接口利用MCP兼容工具，无论是使用云端模型还是本地部署的实现（如Ollama）。<br>MCP LLM Bridge是一个双向协议转换层，在MCP和OpenAI的函数调用接口之间建立联系，它将MCP工具规范转换为OpenAI函数模式，并处理函数调用回到MCP工具执行的映射。这种设计使得开发者可以在不同的模型和工具生态系统之间无缝切换，极大地提高了开发效率和系统灵活性。<br>具体介绍和使用参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032129">这篇博客</a>。</p>
+<h2 id="MCP的定位"><a href="#MCP的定位" class="headerlink" title="MCP的定位"></a>MCP的定位</h2><p>很多时候MCP好像与Function Call区别不大，只是它规范了API等工具的调用，所以很多人将其理解为Function Call的集合，实际上MCP的意义可能远大于此。<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Rau6OQT-5AeUGNQgZDT4pQ">这篇文章</a>写的很好，值得一看。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29428728150">MCP (Model Context Protocol) 是什么？ - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29550378300">Cursor、Cline、Roo Code接入本地 MCP Server - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29695874893">如何构建自己的MCP Client - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30515707345">从MCP Client-Server 生命周期出发，深入研究 MCP 的完整交互链路 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30102885373">推荐的好用的 MCP 服务和资源网站 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Rau6OQT-5AeUGNQgZDT4pQ">MCP深度解析：从Function Calling到AI生态重构 (qq.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.anthropic.com/zh-CN/docs/welcome">https://docs.anthropic.com/zh-CN/docs/welcome</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032112">https://blog.csdn.net/kunhe0512/article/details/148032112</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032129">https://blog.csdn.net/kunhe0512/article/details/148032129</a></li>
+</ol>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2025/03/01/2025-12-13-LLM%E8%BD%AE%E5%AD%90%E9%A1%B9%E7%9B%AEMicrograd%E8%A7%A3%E8%AF%BB/" class="pre-post btn btn-default" title='【LLM轮子项目】Micrograd自动微分引擎解读'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            【LLM轮子项目】Micrograd自动微分引擎解读</span>
+    </a>
+    
+    
+    <a href="/2025/02/01/2025-12-13-LLM-%E8%AF%AD%E9%9F%B3%E5%AF%B9%E8%AF%9D%E7%B3%BB%E7%BB%9F%E7%AB%AF%E5%88%B0%E7%AB%AFvs%E7%BA%A7%E8%81%94%E5%BC%8F/" class="next-post btn btn-default" title='【LLM-语音对话系统】端到端vs级联式'>
+        <span class="hidden-lg">下一篇</span>
+        <span class="hidden-xs">
+            【LLM-语音对话系统】端到端vs级联式</span><i class="fa fa-angle-right fa-fw"></i>
+    </a>
+    
+</div>
+
+<div id="comments">
+    
+    
+<div class="utteranc">
+  
+  <script
+    src='https://utteranc.es/client.js'
+    repo='shenliyang/snippet-comment'
+    issue-term='pathname'
+    issue-number=''
+    theme='github-light'
+    label=''
+    crossorigin='anonymous'
+    async
+  ></script>
+</div>
+
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#FunctionCall"><span class="toc-text">FunctionCall</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent"><span class="toc-text">Agent</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP"><span class="toc-text">MCP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%BD%E7%94%A8%E7%9A%84%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-text">好用的开源代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-FastMCP"><span class="toc-text">1. FastMCP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FastMCP%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-text">FastMCP的优势</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MCP-LLM-Bridge"><span class="toc-text">2. MCP-LLM-Bridge</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP%E7%9A%84%E5%AE%9A%E4%BD%8D"><span class="toc-text">MCP的定位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>

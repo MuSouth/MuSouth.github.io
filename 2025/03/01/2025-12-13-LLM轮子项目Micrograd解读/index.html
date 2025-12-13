@@ -19,10 +19,10 @@
     <link rel="dns-prefetch" href="https://MuSouth.github.io">
     <!--SEO-->
 
-<meta name="keywords" content="" />
+<meta name="keywords" content="LLM" />
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any ..." />
+<meta name="description" content="前言对于神经网络训练而言，梯度计算和反向传播是目前的共识，而不论pytorch、tensorflow等，都有一套自动微分引擎算法，micrograd项目展示了从零开始构建的一个简单的自动求导引擎..." />
 
 
 <meta name="robots" content="all" />
@@ -33,7 +33,7 @@
 
 <title>
     
-    Hello World |
+    【LLM轮子项目】Micrograd自动微分引擎解读 |
     
     MuSouth&#39;s Blog
 </title>
@@ -145,22 +145,24 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Hello World">
+        <h1 id="【LLM轮子项目】Micrograd自动微分引擎解读">
             
-            Hello World
+            【LLM轮子项目】Micrograd自动微分引擎解读
             
         </h1>
         <div class="post-meta">
     
     <span class="categories-meta fa-wrap">
         <i class="fa fa-folder-open-o"></i>
-        
+        <a class="category-link" href="/categories/LLM-Project/">LLM-Project</a>
     </span>
     
     
     <span class="fa-wrap">
         <i class="fa fa-tags"></i>
         <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/LLM/" rel="tag">LLM</a>
             
         </span>
     </span>
@@ -170,7 +172,7 @@
     <span class="fa-wrap">
         <i class="fa fa-clock-o"></i>
         <span class="date-meta">
-            2025/12/13</span>
+            2025/03/01</span>
     </span>
     
     
@@ -180,19 +182,24 @@
     </div>
     
     <div class="post-body post-content">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于神经网络训练而言，梯度计算和反向传播是目前的共识，而不论pytorch、tensorflow等，都有一套自动微分引擎算法，micrograd项目展示了从零开始构建的一个简单的自动求导引擎，虽然不如pytorch等成熟框架里的完善，但足够我们学习并理解反向传播在程序设计中如何实现，值得认真研读并学习。</p>
+<h2 id="代码详解"><a href="#代码详解" class="headerlink" title="代码详解"></a>代码详解</h2><p>代码目录很简单：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">micrograd  </span><br><span class="line">|-- README.md  </span><br><span class="line">|-- utils.py</span><br><span class="line">|-- micrograd.py</span><br><span class="line">|-- micrograd_pytorch.py  </span><br></pre></td></tr></table></figure>
+<ul>
+<li>utils.py<br>封装了一些工具函数：随机数生成接口RNG类、随机数生成方法gen_data_yinyang()、可视化相关的一些函数，并且还有绘制计算图的代码。</li>
+<li>micrograd.py<br>自动微分引擎核心代码。</li>
+<li>micrograd_pytorch.py<br>使用pytorch的自动微分引擎，用以验证代码正确性。</li>
+</ul>
+<p>对于反向传播，如果一个很简单的函数，例如<code>f(x)=ax + b</code>，我们自然知道求导就是<code>a</code>，这意味着对于参数x，当x改变1，f(x)会改变a，因此我们就得到了其梯度值，下一步根据梯度更新参数值，需要和学习率等结合使用。对于多个参数同样如此：<code>f(x, y) = ax + by + c</code>，当x改变1，f(x, y)改变a，同理，当y改变1，f(x, y)改变b。换言之，无论x和y改变多少，c &#x3D; f(x, y)会改变两者的变化和，因此计算c的梯度时，需要将x和y梯度都加上。</p>
+<p>这就是加法梯度计算的核心原理，在微积分中，加法的梯度就是一个简单的线性操作。对于整个模型网络来说，梯度的传播就是根据链式法则进行的。<br>其余关于一些激活函数梯度计算、乘法梯度计算以及幂运算、指数运算等都有相应的实现。<br>参考文献1里讲解很好，可以一看。</p>
+<h2 id="代码运行"><a href="#代码运行" class="headerlink" title="代码运行"></a>代码运行</h2><p>没有什么必须依赖，除了graphviz用来作可视化的时候需要。Linux环境下安装graphviz按照下列命令执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install graphviz graphviz-dev</span><br><span class="line">pip install pygraphviz</span><br></pre></td></tr></table></figure>
+<p>运行<code>python micrograd.py</code>会得到如下可视化结果：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/graph.svg" alt="graph.svg"></p>
+<h2 id="见微知著"><a href="#见微知著" class="headerlink" title="见微知著"></a>见微知著</h2><p>直到现在，反向传播是整个深度学习领域的基础，一个深度模型无论多复杂，其最终能实现训练并成功收敛，都是借助于一个合理的训练目标函数+反向传播算法。反向传播的核心是链式法则求导，从输出端点出发，一层一层反向传播梯度偏分，模型上每一层的参数接受梯度引导实现自动优化。优化器例如SGD、ADAM、ADAMW等只是参数更新的策略，没有反向传播就无法实现参数更新。因此Micrograd项目实现的自动微分引擎，其代码很值得参考。能让我们对深度学习有更深理解。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://aijishu.com/a/1060000000477983">LLM101n 硬核代码解读：Micrograd，一个轻量级的自动微分引擎 - 极术社区 - 连接开发者与智能计算生态 (aijishu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/EurekaLabsAI/micrograd">https://github.com/EurekaLabsAI/micrograd</a></li>
+</ol>
 
     </div>
     
@@ -211,17 +218,17 @@
 </article>
 <div class="article-nav prev-next-wrap clearfix">
     
-    <a href="/2025/12/13/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/" class="pre-post btn btn-default" title='一、ACT'>
+    <a href="/2025/03/01/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97DeepSeek-R1%E8%92%B8%E9%A6%8FQwen7B-%E5%8F%8A-Llama-8B-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/" class="pre-post btn btn-default" title='【LLM训练系列】DeepSeek R1蒸馏Qwen7B 及 Llama 8B 模型微调'>
         <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
         <span class="hidden-xs">
-            一、ACT</span>
+            【LLM训练系列】DeepSeek R1蒸馏Qwen7B 及 Llama 8B 模型微调</span>
     </a>
     
     
-    <a href="/2025/05/29/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97AIOS-LLM-Agent-Operating-System-Agent%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA-SDK-API%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3/" class="next-post btn btn-default" title='【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解'>
+    <a href="/2025/02/09/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%BB%8EFunction-Call-%E5%88%B0-MCP%E7%9A%84%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D/" class="next-post btn btn-default" title='【LLM-Agent搭建系列】从Function Call到MCP的简要介绍'>
         <span class="hidden-lg">下一篇</span>
         <span class="hidden-xs">
-            【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解</span><i class="fa fa-angle-right fa-fw"></i>
+            【LLM-Agent搭建系列】从Function Call到MCP的简要介绍</span><i class="fa fa-angle-right fa-fw"></i>
     </a>
     
 </div>
@@ -255,7 +262,7 @@
             文章目录
         </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%AF%A6%E8%A7%A3"><span class="toc-text">代码详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C"><span class="toc-text">代码运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%81%E5%BE%AE%E7%9F%A5%E8%91%97"><span class="toc-text">见微知著</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
         
     </div>
 </aside>

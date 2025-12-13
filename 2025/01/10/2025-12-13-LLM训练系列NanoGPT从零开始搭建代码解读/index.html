@@ -1,0 +1,390 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+<head>
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="MuSouth&#39;s Blog">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.3.0">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="https://MuSouth.github.io">
+    <!--SEO-->
+
+<meta name="keywords" content="训练,NanoGPT" />
+
+
+<meta name="description" content="一、前言学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，..." />
+
+
+<meta name="robots" content="all" />
+<meta name="google" content="all" />
+<meta name="googlebot" content="all" />
+<meta name="verify" content="all" />
+    <!--Title-->
+
+<title>
+    
+    NanoGPT从零开始搭建代码解读（Karpathy 教程项目） |
+    
+    MuSouth&#39;s Blog
+</title>
+
+<link rel="alternate" href="/atom.xml" title="MuSouth&#39;s Blog" type="application/atom+xml">
+
+
+<link rel="icon" href="/favicon.ico">
+
+    
+
+
+<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+
+    
+<div class="hide">
+    <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+</div>
+
+
+
+
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header"  style="background-image:url(
+    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)"
+     >
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title='MuSouth'>
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+            <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+        </div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                        <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://MuSouth.github.io">
+                        MuSouth&#39;s Blog</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/"><i class="fa "></i>
+                                首页</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Agent/"><i class="fa "></i>
+                                LLM-Agent</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Technology/"><i class="fa "></i>
+                                LLM-技术</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Training/"><i class="fa "></i>
+                                LLM-训练</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/categories/LLM-Inference/"><i class="fa "></i>
+                                LLM-推理</a>
+                        </li>
+                        
+                        <li role="presentation" class="text-center">
+                            <a href="/archives/"><i class="fa "></i>
+                                归档</a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="NanoGPT从零开始搭建代码解读（Karpathy 教程项目）">
+            
+            NanoGPT从零开始搭建代码解读（Karpathy 教程项目）
+            
+        </h1>
+        <div class="post-meta">
+    
+    <span class="categories-meta fa-wrap">
+        <i class="fa fa-folder-open-o"></i>
+        <a class="category-link" href="/categories/LLM-Training/">LLM-Training</a>
+    </span>
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-tags"></i>
+        <span class="tags-meta">
+            
+            <a class="tag-none-link" href="/tags/NanoGPT/" rel="tag">NanoGPT</a> <a class="tag-none-link" href="/tags/%E8%AE%AD%E7%BB%83/" rel="tag">训练</a>
+            
+        </span>
+    </span>
+    
+    
+    
+    <span class="fa-wrap">
+        <i class="fa fa-clock-o"></i>
+        <span class="date-meta">
+            2025/01/10</span>
+    </span>
+    
+    
+</div>
+        
+        
+        <p class="fa fa-exclamation-triangle warning">
+            本文于<strong>
+                337</strong>
+            天之前发表，文中内容可能已经过时。
+        </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，原始的NanoGPT是经典GPT-2结构的复现，而更现代化的LLM中的技术并没有集成在原项目代码中，本次只完整记录Karpathy在视频教程以及build_NanoGPT项目中实现的过程，而将在下一篇文章综合实现结合现代化LLM技术（RoPE、MLA、GQA、RMSNorm、SwiGLU等等）的新NanoGPT，先附上Karpathy的<a target="_blank" rel="noopener" href="https://github.com/karpathy/nanogpt">nanogpt源代码仓库链接</a>和<a target="_blank" rel="noopener" href="https://github.com/karpathy/build-nanogpt">build-nanogpt</a>。build-nanogpt是相对更新的一个项目，其项目结构很简洁：train_gpt2.py里定义了模型以及训练和验证代码，fineweb.py里写了下载fineweb数据集的脚本，hellaswag.py写了一个经常被用来作验证的数据集的相关脚本。其精华就在train_gpt2.py里了。不得不说这个视频教程真的让人兴奋，karpathy行云流水的操作以及对整个模型结构和训练Pipeline的思路之清晰让人佩服。<br>本文主要就train_gpt2.py进行代码讲解，一方面掺杂着自己的理解，一方面在分析的过程中将Karpathy配套视频中涉及到的一些细节一并记录下来（这部分零零散散可能有些杂乱）。PS : 整个近4小时的视频，讲解的相当全面了。</p>
+<h2 id="二、模型结构与权重初始化方法"><a href="#二、模型结构与权重初始化方法" class="headerlink" title="二、模型结构与权重初始化方法"></a>二、模型结构与权重初始化方法</h2><p>这个项目复现的模型完全参考GPT-2，而其中一些模型或训练参数配置参考GPT-3，两篇论文arxiv链接放在文章最后。GPT系列工作与Bert系列工作不同，GPT系列是decoder-only的，这也是现代LLM通用架构，下图是Attention is all you need（transformer）的结构图。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518222227.png" alt="image.png"><br>对于Decoder-only的GPT-2，左半边Encoder部分舍弃了，其次Decoder部分的Multi-Head Attention，也就是Encoder输出和Decoder中Masked Multi-Head Attention输出的交互模块也舍弃了，其余都保留，然后GPT-2的实现中LN层是在输入Attention和输入FFN之前进行的，并且在输入LM-head之前又加了一层LN。其结构如下：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518223508.png" alt="image.png"></p>
+<p>上图是往上流传的最广的结构图，但其实有点问题，因为按照代码在一个Decoder layer中包含三个LayerNorm，其中还有一个在Attention之前使用的，所以这个结构其实需要更改，我这里做了个新图(途中省略了skip connection)：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/got2.png" alt="got2.png"><br>其和模型结构定义相关的的核心代码段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GPT类实现（这里省略掉了参数初始化、加载预训练模型等等其他函数）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GPT</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.config = config</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.transformer = nn.ModuleDict(<span class="built_in">dict</span>(</span><br><span class="line">            wte = nn.Embedding(config.vocab_size, config.n_embd),</span><br><span class="line">            wpe = nn.Embedding(config.block_size, config.n_embd),</span><br><span class="line">            h = nn.ModuleList([Block(config) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(config.n_layer)]),</span><br><span class="line">            ln_f = nn.LayerNorm(config.n_embd),</span><br><span class="line">        ))</span><br><span class="line">        <span class="variable language_">self</span>.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># weight sharing scheme</span></span><br><span class="line">        <span class="comment"># lm_head和wte是相反的操作，但其参数大小一致，一个从vocab_size映射到n_embed维度</span></span><br><span class="line">        <span class="comment"># lm_head则是从n_embed维度映射回vocab_size，从而方便后续解码为自然语言</span></span><br><span class="line">        <span class="comment"># 两者参数量一致，而在实现上，GPT-2/3中将两组权重tie起来了，权重共享了</span></span><br><span class="line">        <span class="comment"># 这个细节节省了训练参数量，同时被验证有效</span></span><br><span class="line">        <span class="variable language_">self</span>.transformer.wte.weight = <span class="variable language_">self</span>.lm_head.weight</span><br><span class="line"></span><br><span class="line">        <span class="comment"># init params</span></span><br><span class="line">        <span class="variable language_">self</span>.apply(<span class="variable language_">self</span>._init_weights)    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, idx, targets=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># idx is of shape (B, T)</span></span><br><span class="line">        B, T = idx.size()</span><br><span class="line">        <span class="keyword">assert</span> T &lt;= <span class="variable language_">self</span>.config.block_size, <span class="string">f&quot;Cannot forward sequence of length <span class="subst">&#123;T&#125;</span>, block size is only <span class="subst">&#123;self.config.block_size&#125;</span>&quot;</span></span><br><span class="line">        <span class="comment"># forward the token and posisition embeddings</span></span><br><span class="line">        pos = torch.arange(<span class="number">0</span>, T, dtype=torch.long, device=idx.device) <span class="comment"># shape (T)</span></span><br><span class="line">        pos_emb = <span class="variable language_">self</span>.transformer.wpe(pos) <span class="comment"># position embeddings of shape (T, n_embd)</span></span><br><span class="line">        tok_emb = <span class="variable language_">self</span>.transformer.wte(idx) <span class="comment"># token embeddings of shape (B, T, n_embd)</span></span><br><span class="line">        x = tok_emb + pos_emb</span><br><span class="line">        <span class="comment"># forward the blocks of the transformer</span></span><br><span class="line">        <span class="keyword">for</span> block <span class="keyword">in</span> <span class="variable language_">self</span>.transformer.h:</span><br><span class="line">            x = block(x)</span><br><span class="line">        <span class="comment"># forward the final layernorm and the classifier</span></span><br><span class="line">        <span class="comment"># 可以看到这里第三个layernorm在Lm_head之前使用</span></span><br><span class="line">        x = <span class="variable language_">self</span>.transformer.ln_f(x)</span><br><span class="line">        logits = <span class="variable language_">self</span>.lm_head(x) <span class="comment"># (B, T, vocab_size)</span></span><br><span class="line">        loss = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> targets <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            loss = F.cross_entropy(logits.view(-<span class="number">1</span>, logits.size(-<span class="number">1</span>)), targets.view(-<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> logits, loss</span><br><span class="line"></span><br><span class="line"><span class="comment"># 除了LM-head之外的结构，可以看到有两个layernorm，分别在attn和mlp之前使用</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Block</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.ln_1 = nn.LayerNorm(config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.attn = CausalSelfAttention(config)</span><br><span class="line">        <span class="variable language_">self</span>.ln_2 = nn.LayerNorm(config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.mlp = MLP(config)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = x + <span class="variable language_">self</span>.attn(<span class="variable language_">self</span>.ln_1(x))</span><br><span class="line">        x = x + <span class="variable language_">self</span>.mlp(<span class="variable language_">self</span>.ln_2(x))</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="comment"># Masked MHA实现</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CausalSelfAttention</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="keyword">assert</span> config.n_embd % config.n_head == <span class="number">0</span></span><br><span class="line">        <span class="comment"># key, query, value projections for all heads, but in a batch</span></span><br><span class="line">        <span class="variable language_">self</span>.c_attn = nn.Linear(config.n_embd, <span class="number">3</span> * config.n_embd)</span><br><span class="line">        <span class="comment"># output projection</span></span><br><span class="line">        <span class="variable language_">self</span>.c_proj = nn.Linear(config.n_embd, config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj.NANOGPT_SCALE_INIT = <span class="number">1</span></span><br><span class="line">        <span class="comment"># regularization</span></span><br><span class="line">        <span class="variable language_">self</span>.n_head = config.n_head</span><br><span class="line">        <span class="variable language_">self</span>.n_embd = config.n_embd</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        B, T, C = x.size() <span class="comment"># batch size, sequence length, embedding dimensionality (n_embd)</span></span><br><span class="line">        <span class="comment"># calculate query, key, values for all heads in batch and move head forward to be the batch dim</span></span><br><span class="line">        <span class="comment"># nh is &quot;number of heads&quot;, hs is &quot;head size&quot;, and C (number of channels) = nh * hs</span></span><br><span class="line">        <span class="comment"># e.g. in GPT-2 (124M), n_head=12, hs=64, so nh*hs=C=768 channels in the Transformer</span></span><br><span class="line">        <span class="comment"># 一般qkv映射不用定义三个linear层，分别映射到想同纬度，而直接采用一个大linear</span></span><br><span class="line">        <span class="comment"># 将输入x直接映射到3倍大小维度，然后用split()将其拆分成q k v</span></span><br><span class="line">        <span class="comment"># 然后使用看k.view(B, T, ...)将B, T, hs维度转换为, B, nh, T/nh, hs维度</span></span><br><span class="line">        <span class="comment"># 也就是拆分成若干个head</span></span><br><span class="line">        qkv = <span class="variable language_">self</span>.c_attn(x)</span><br><span class="line">        q, k, v = qkv.split(<span class="variable language_">self</span>.n_embd, dim=<span class="number">2</span>)</span><br><span class="line">        k = k.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        q = q.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        v = v.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        <span class="comment"># scaled_dot_product_attention是pytorch2.0之后支持的</span></span><br><span class="line">        <span class="comment"># 这是FlashAttention的函数接口</span></span><br><span class="line">        y = F.scaled_dot_product_attention(q, k, v, is_causal=<span class="literal">True</span>) <span class="comment"># flash attention</span></span><br><span class="line">        y = y.transpose(<span class="number">1</span>, <span class="number">2</span>).contiguous().view(B, T, C) <span class="comment"># re-assemble all head outputs side by side</span></span><br><span class="line">        <span class="comment"># output projection</span></span><br><span class="line">        y = <span class="variable language_">self</span>.c_proj(y)</span><br><span class="line">        <span class="keyword">return</span> y</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MLP</span>(nn.Module):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.c_fc    = nn.Linear(config.n_embd, <span class="number">4</span> * config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.gelu    = nn.GELU(approximate=<span class="string">&#x27;tanh&#x27;</span>)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj  = nn.Linear(<span class="number">4</span> * config.n_embd, config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj.NANOGPT_SCALE_INIT = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = <span class="variable language_">self</span>.c_fc(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.gelu(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.c_proj(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>从上述代码中不难发现，首先三个LN层的使用一眼丁真，此外有个wpe和lm_head权重共享的实现细节要注意，最后一层线性层也就是lm_head是wpe的转置，在GPT2中的位置编码不同于原始transformer的三角函数绝对位置编码，而是采用了可学习的一组参数作位置编码。在注意力块中，主要细节则是FlashAttention的使用，其他的则属于非常简单的实现了。</p>
+<p>然后就是权重初始化，GPT2中权重初始化方案在论文中给出了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_init_weights</span>(<span class="params">self, module</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(module, nn.Linear):</span><br><span class="line">            std = <span class="number">0.02</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">hasattr</span>(module, <span class="string">&#x27;NANOGPT_SCALE_INIT&#x27;</span>):</span><br><span class="line">                std *= (<span class="number">2</span> * <span class="variable language_">self</span>.config.n_layer) ** -<span class="number">0.5</span></span><br><span class="line">            torch.nn.init.normal_(module.weight, mean=<span class="number">0.0</span>, std=std)</span><br><span class="line">            <span class="keyword">if</span> module.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                torch.nn.init.zeros_(module.bias)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(module, nn.Embedding):</span><br><span class="line">            torch.nn.init.normal_(module.weight, mean=<span class="number">0.0</span>, std=<span class="number">0.02</span>)</span><br></pre></td></tr></table></figure>
+<p>对于一般的层，就用标准差为0.02均值为0的正太分布初始化即可，但对于残差连接这个bypass的加和操作，会导致输入数据的方差变大，不妨作个样例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置随机种子以确保结果可重现</span></span><br><span class="line">torch.manual_seed(<span class="number">42</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成20个随机张量，每个都是均值为0，方差为1的正态分布</span></span><br><span class="line">tensors = [torch.randn(<span class="number">1000</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">20</span>)]  <span class="comment"># 每个张量包含1000个元素  </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将所有张量相加</span></span><br><span class="line">sum_tensor = torch.zeros_like(tensors[<span class="number">0</span>])</span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> tensors:</span><br><span class="line">    sum_tensor += t </span><br><span class="line"><span class="comment"># 计算最终结果的方差</span></span><br><span class="line">variance = torch.var(sum_tensor) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印结果</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;最终结果的方差: <span class="subst">&#123;variance.item():<span class="number">.4</span>f&#125;</span>&quot;</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证每个输入张量的方差是否接近1</span></span><br><span class="line">input_variances = [torch.var(t).item() <span class="keyword">for</span> t <span class="keyword">in</span> tensors]</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;\n输入张量的方差统计:&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;平均值: <span class="subst">&#123;np.mean(input_variances):<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;标准差: <span class="subst">&#123;np.std(input_variances):<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;最小值: <span class="subst">&#123;<span class="built_in">min</span>(input_variances):<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;最大值: <span class="subst">&#123;<span class="built_in">max</span>(input_variances):<span class="number">.4</span>f&#125;</span>&quot;</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 理论值：20个独立随机变量相加，方差应该是20</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;\n理论方差值: 20.0000&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748522284459.png" alt="1748522284459.png"><br>这时发现，尽管对一个张量初始化为均值为0方差为1，当很多个这样的张量加起来后，其方差会等比放大。这点起始就是针对残差连接而言的，在每个注意力块和MLP块都引入了残差连接，残差连接表现为<code>x = x + f(x)</code>，我们初始化参数时确实只对式子中的f参数初始化，但残差连接时这个加和会对残差中的激活作出一定贡献，也就发生了上面展示的情况。这个很抽象很难解释，但这就是一种控制前向传递中残差流内激活增长的方法。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748523653277.png" alt="1748523653277.png"></p>
+<h2 id="三、Dataloder和Tokenizer"><a href="#三、Dataloder和Tokenizer" class="headerlink" title="三、Dataloder和Tokenizer"></a>三、Dataloder和Tokenizer</h2><h3 id="Tokenizer"><a href="#Tokenizer" class="headerlink" title="Tokenizer"></a>Tokenizer</h3><p>数据和模型是两大基本盘，模型的定义我们已经在上节总结过了，下面主要是数据加载器的定义和分词器的定义。自然语言从输入到llm输出一般经历如下过程：</p>
+<ul>
+<li>Tokenizer分词，将输入自然语言sequence转化为token，数值范围在0 到 vocab_size</li>
+<li>从vocab_size大小的idx索引列表-&gt;embedding层，嵌入表维度(vocab_size, embedding_size)</li>
+<li>索引列表转为为(seq_len, embedding)维度，也就是从vocab空间映射到了embedding空间</li>
+<li>经过多层transformer块计算，维度不变</li>
+<li>最后通过输出头，也就是一个线性层，维度映射回vocab_size，最终输出(seq_len, vocab_size)<br>此时最后一个长度为vocab_size的向量代表着下一个词的分布，采样该分布得到下一个token</li>
+<li>用tokenizer将token转换回文本输出</li>
+</ul>
+<p>在转换为vocab之前会先进行分词，常用的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/685785987">分词策略</a>包括Byte Pair Embedding, BPE、WordPiece和Unigram Language Model，对不同语料库以及不同大语言模型构建的词表数量，相关内容后面专门总结一期。对GPT2而言，Vocab_size为50257，50257&#x3D;50000+256+1（50000个词元，256包含扩展ASCII，最后一个endoftext，作文本结束符。</p>
+<p>在本次实践中，Karpathy是直接调用的OpenAI开源的tiktoken来实现的tokenizer，具体代码表现为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tiktoken</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">enc = tiktoken.get_encoding(<span class="string">&quot;gpt2&quot;</span>)</span><br><span class="line">tokens = enc.encode(<span class="string">&quot;Hello, I&#x27;m a language model,&quot;</span>)</span><br><span class="line">tokens = torch.tensor(tokens, dtype=torch.long)</span><br><span class="line">tokens = tokens.unsqueeze(<span class="number">0</span>).repeat(num_return_sequences, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>这段代码直接调用了tiktoken里面的字节对编码BPE方法。<br>对于GPT2来说，tokenizer的压缩率大概是3：1。</p>
+<p>对于GPT2 来说，vocab_size是50257，这就意味着输出有50257个分类，因为我们计算损失采用交叉熵，所以如果我们随机初始化，初始阶段对于每个分类的概率预测都是近似相等的，此时损失值应该为：$-ln(\frac{1}{50257} \approx 10.8245)$ </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">model = GPT(GPTConfig())</span><br><span class="line">model.to(device)</span><br><span class="line">logits, loss = model(x, y)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(loss)</span><br><span class="line"><span class="comment">#-----------------------------------# 输出</span></span><br><span class="line">tensor(<span class="number">11.0139</span>, grad_fn=&lt;NllLossBackward0&gt;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 交叉熵损失定义为</span></span><br><span class="line">loss = F.cross_entropy(logits.view(-<span class="number">1</span>, logits.size(-<span class="number">1</span>)), targets.view(-<span class="number">1</span>), ignore_index=-<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>CE损失不使用多维输入，因此输入前把logits都要拉平成2维的（BT* Vocab_size），target(BT, )，然后两个会在第一维度上计算交叉熵损失。</p>
+<h3 id="Dataloader"><a href="#Dataloader" class="headerlink" title="Dataloader"></a>Dataloader</h3><p>此外如何从数据集中加载数据，构建训练用的dataloader也是一个关键步骤。因为大语言模型推理的过程，或者说Decoder推理过程中，只会用T个token中最后一个token对应的logit作softmax以预测下一个词，而不是全部T个token的logits，因为第T个token已经聚合了整个输入序列的信息，事实上Attention计算被认为具有聚合信息的能力，MLP则没有这种能力。第T个token输出综合了整个输入序列，大致的计算流程如：<br>模型输入：x&#x3D;[x1,x2,x3]，<br>模型输出：logits (1, 3, vocab_size)<br>基于x1预测x2分布的logits[:, 0, :]<br>基于x1,x2预测x3分布 logits[:, 1, :]<br>基于x1,x2,x3预测next分布logits[:, 2, :]<br>简而言之，预测下一个的范式：对logits[:, -1, :]取softmax就得到了下一个词的概率分布。</p>
+<p>这是这类自回归生成式模型的特性，尤其是对于因果编码器，只能和自身以及自身之前的token作注意力计算，这种前向推理时的自回归过程更加明确。而这个特性也正是现阶段PD分离和KV Cache的实现基础。考虑到我们在构建数据集时，模型始终以预测下一个token为目标，简单代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_tokens</span>(<span class="params">filename</span>):</span><br><span class="line">    npt = np.load(filename)</span><br><span class="line">    npt = npt.astype(np.int32) <span class="comment"># added after video</span></span><br><span class="line">    ptt = torch.tensor(npt, dtype=torch.long)</span><br><span class="line">    <span class="keyword">return</span> ptt</span><br><span class="line">    </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DataLoaderLite</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, B, T, process_rank, num_processes, split</span>):</span><br><span class="line">        <span class="variable language_">self</span>.B = B</span><br><span class="line">        <span class="variable language_">self</span>.T = T</span><br><span class="line">        <span class="variable language_">self</span>.process_rank = process_rank</span><br><span class="line">        <span class="variable language_">self</span>.num_processes = num_processes</span><br><span class="line">        <span class="keyword">assert</span> split <span class="keyword">in</span> &#123;<span class="string">&#x27;train&#x27;</span>, <span class="string">&#x27;val&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># get the shard filenames</span></span><br><span class="line">        data_root = <span class="string">&quot;edu_fineweb10B&quot;</span></span><br><span class="line">        shards = os.listdir(data_root)</span><br><span class="line">        shards = [s <span class="keyword">for</span> s <span class="keyword">in</span> shards <span class="keyword">if</span> split <span class="keyword">in</span> s]</span><br><span class="line">        shards = <span class="built_in">sorted</span>(shards)</span><br><span class="line">        shards = [os.path.join(data_root, s) <span class="keyword">for</span> s <span class="keyword">in</span> shards]</span><br><span class="line">        <span class="variable language_">self</span>.shards = shards</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(shards) &gt; <span class="number">0</span>, <span class="string">f&quot;no shards found for split <span class="subst">&#123;split&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">if</span> master_process:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;found <span class="subst">&#123;<span class="built_in">len</span>(shards)&#125;</span> shards for split <span class="subst">&#123;split&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="variable language_">self</span>.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># state, init at shard zero</span></span><br><span class="line">        <span class="variable language_">self</span>.current_shard = <span class="number">0</span></span><br><span class="line">        <span class="variable language_">self</span>.tokens = load_tokens(<span class="variable language_">self</span>.shards[<span class="variable language_">self</span>.current_shard])</span><br><span class="line">        <span class="variable language_">self</span>.current_position = <span class="variable language_">self</span>.B * <span class="variable language_">self</span>.T * <span class="variable language_">self</span>.process_rank</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next_batch</span>(<span class="params">self</span>):</span><br><span class="line">        B, T = <span class="variable language_">self</span>.B, <span class="variable language_">self</span>.T</span><br><span class="line">        buf = <span class="variable language_">self</span>.tokens[<span class="variable language_">self</span>.current_position : <span class="variable language_">self</span>.current_position+B*T+<span class="number">1</span>]</span><br><span class="line">        x = (buf[:-<span class="number">1</span>]).view(B, T) <span class="comment"># inputs</span></span><br><span class="line">        y = (buf[<span class="number">1</span>:]).view(B, T) <span class="comment"># targets</span></span><br><span class="line">        <span class="comment"># advance the position in the tensor</span></span><br><span class="line">        <span class="variable language_">self</span>.current_position += B * T * <span class="variable language_">self</span>.num_processes</span><br><span class="line">        <span class="comment"># if loading the next batch would be out of bounds, advance to next shard</span></span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.current_position + (B * T * <span class="variable language_">self</span>.num_processes + <span class="number">1</span>) &gt; <span class="built_in">len</span>(<span class="variable language_">self</span>.tokens):</span><br><span class="line">            <span class="variable language_">self</span>.current_shard = (<span class="variable language_">self</span>.current_shard + <span class="number">1</span>) % <span class="built_in">len</span>(<span class="variable language_">self</span>.shards)</span><br><span class="line">            <span class="variable language_">self</span>.tokens = load_tokens(<span class="variable language_">self</span>.shards[<span class="variable language_">self</span>.current_shard])</span><br><span class="line">            <span class="variable language_">self</span>.current_position = B * T * <span class="variable language_">self</span>.process_rank</span><br><span class="line">        <span class="keyword">return</span> x, y</span><br></pre></td></tr></table></figure>
+<p>这段是karpathy写的一个简单的Dataloader代码，核心就关注next_batch方法，里面对x和y的定义分别是buf[:-1]和buf[1:]，可以看到Ground Truth y正好是输入数据x的往后偏移一个token。因为要遍历所有数据，所以用了一个current_position来确定数据范围，其中B是batch_size，T是输入序列长度，训练采样数据时将一个B* T长度的输入序列view为(B, T)的形状。此外程序中的num_process是因为用到了分布式训练，所以对于每个进程都会分配BT长的数据对进行训练。程序中还包含了处理边界条件的情况，比如为防止采样位置+BT大于总token数量时造成数组越界，会用取余的方式重新从数组头开始取值。</p>
+<p>这段代码没什么难以理解的，主要分布式训练情况下，这个数据采样的策略需要调整，因为每个时刻到来的rank不确定，所以一般都会用rank_id作为采样时的一个因素，用rank_id乘上采样长度作为下一次采样时该rank进程的起始位置。此外，这段dataloader只是用了最简单的顺序采样方式，没有作任何数据增强，比如加噪声，或者shuffle打乱采样顺序等。</p>
+<h2 id="训练策略（优化器-学习率调度）"><a href="#训练策略（优化器-学习率调度）" class="headerlink" title="训练策略（优化器+学习率调度）"></a>训练策略（优化器+学习率调度）</h2><h3 id="优化器采用Adam"><a href="#优化器采用Adam" class="headerlink" title="优化器采用Adam"></a>优化器采用Adam</h3><p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529221352.png" alt="image.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optimizer = torch.optim.AdamW(model.parameters(), lr=<span class="number">3e-4</span>, betas=(<span class="number">0.9</span>, <span class="number">0.95</span>), eps=<span class="number">1e-8</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="lr调度"><a href="#lr调度" class="headerlink" title="lr调度"></a>lr调度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_lr</span>(<span class="params">it</span>):</span><br><span class="line">        min_lr = args.learning_rate * args.learning_rate_decay_frac</span><br><span class="line">        <span class="comment"># 1) linear warmup for warmup_iters steps</span></span><br><span class="line">        <span class="keyword">if</span> it &lt; args.warmup_iters:</span><br><span class="line">            <span class="keyword">return</span> args.learning_rate * (it+<span class="number">1</span>) / args.warmup_iters</span><br><span class="line">        <span class="comment"># 2) if it &gt; lr_decay_iters, return min learning rate</span></span><br><span class="line">        <span class="keyword">if</span> it &gt; args.num_iterations:</span><br><span class="line">            <span class="keyword">return</span> min_lr</span><br><span class="line">        <span class="comment"># 3) in between, use cosine decay down to min learning rate</span></span><br><span class="line">        decay_ratio = (it - args.warmup_iters) / (args.num_iterations - args.warmup_iters)</span><br><span class="line">        <span class="keyword">assert</span> <span class="number">0</span> &lt;= decay_ratio &lt;= <span class="number">1</span></span><br><span class="line">        coeff = <span class="number">0.5</span> * (<span class="number">1.0</span> + math.cos(math.pi * decay_ratio)) <span class="comment"># coeff starts at 1 and goes to 0</span></span><br><span class="line">        <span class="keyword">return</span> min_lr + coeff * (args.learning_rate - min_lr)</span><br></pre></td></tr></table></figure>
+<p>在GPT2训练中，学习率有一个warmup的过程，这个过程预设了warmup_iters，在训练批次没有达到warmup_iter之前，学习率线性增长，到达warmup设定步数后，使用余弦衰减的方式计算学习率，系数会从1到0，直到学习率衰减到最小值，如果训练步数大于最大步数，直接返回最小学习率。曲线大概就像下面这张图里展示的：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748528307170.png" alt="1748528307170.png"></p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lr = get_lr(step)  # 获取学习率</span><br><span class="line">for param_group in optimizer.param_groups:  # 需手动更新每一个参数组的学习率</span><br><span class="line">  param_group[&#x27;lr&#x27;] = lr </span><br></pre></td></tr></table></figure>
+<p>此外可能GPT2训练策略中，还涉及到了对batch_size的动态修改，比如到达预设训练epoch之后，batch_size变大，一开始用小batch，到后期batchsize不断变大，但这个改进会增加复杂度，karpathy没做。<br>这里说明下权重衰减weight_decay其实就是L2正则化，在损失函数中通过增加权重的L2范数以限制该权重的梯度值，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/nannandbk/p/18134455">[深度学习]L2正则化和权重衰退(Weight Decay) - nannandbk - 博客园 (cnblogs.com)</a>。也可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43592352/article/details/134696066">优化器原理——权重衰减（weight_decay）_优化器weight decay-CSDN博客</a>。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748528559607.png" alt="1748528559607.png"></p>
+<p>对于大权重来说，其受到的惩罚越大，进而防止了过拟合。</p>
+<h3 id="梯度累积以在算力有限情况下用更大batch-size"><a href="#梯度累积以在算力有限情况下用更大batch-size" class="headerlink" title="梯度累积以在算力有限情况下用更大batch_size"></a>梯度累积以在算力有限情况下用更大batch_size</h3><p>假设总批大小为 N 。 <strong>梯度累积</strong>是一种训练技巧，用于在内存受限的情况下扩大 batch size。基本思路是在多个 mini batch 上累积梯度，达到预定义的<strong>梯度累积次数</strong>再进行一次参数更新。使用梯度累积的等效批大小——总批大小 <code>total_batch_size = B * T * grad_accum_steps</code>。 其中：</p>
+<p>意思是，假设我们的设备最高只能承载B&#x3D;32的情况，但我们想增大batchsize到64，此时我们在B&#x3D;32的情况下计算梯度，但是这次计算后不进行反向传播，而是再计算下一个batch的数据的梯度，最后两个batch的梯度加起来，一起进行反向传播更新模型参数，这就实现了一种时间换空间的trade-off。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">loss_accum = <span class="number">0.0</span></span><br><span class="line"><span class="keyword">for</span> micro_step <span class="keyword">in</span> <span class="built_in">range</span>(grad_accum_steps):</span><br><span class="line">  x, y = train_loader.next_batch()</span><br><span class="line">  x, y = x.to(device), y.to(device)</span><br><span class="line">  <span class="keyword">if</span> ddp: </span><br><span class="line">      model.require_backward_grad_sync = (micro_step == grad_accum_steps - <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">with</span> torch.autocast(device_type=device, dtype=torch.bfloat16):</span><br><span class="line">	  logits, loss = model(x, y)  <span class="comment"># 计算出来的是micro_batch的loss</span></span><br><span class="line">  <span class="comment"># cross_entropy 默认reduction=mean，损失计算公式为L/B。</span></span><br><span class="line">  <span class="comment"># 梯度累积的情况下使用小批量B/gas，也就是L*gas/B，还需要除以一个gas。</span></span><br><span class="line">  loss /= grad_accum_steps</span><br><span class="line">  loss_accum += loss.detach()</span><br><span class="line">  loss.backward()</span><br><span class="line"><span class="keyword">if</span> ddp:  <span class="comment"># 累加平均每个gpu上的loss</span></span><br><span class="line">  dist.all_reduce(loss_accum, op=dist.ReduceOp.AVG)</span><br></pre></td></tr></table></figure>
+<p>这其实是在分布式情况下进行梯度累积计算，实现复杂度又高了一层。对于分布式训练而言，使用torch.nn.parallel即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.distributed <span class="keyword">import</span> init_process_group, destroy_process_group</span><br><span class="line"><span class="keyword">from</span> torch.nn.parallel <span class="keyword">import</span> DistributedDataParallel <span class="keyword">as</span> DDP</span><br><span class="line"><span class="keyword">import</span> torch.distributed <span class="keyword">as</span> dist</span><br></pre></td></tr></table></figure>
+<p><strong>DDP 部分参数：</strong></p>
+<ul>
+<li>node: 概念，表示物理节点，就是一台机器，节点内部可以有多个 GPU(一台机器有多卡)。</li>
+<li><code>RANK</code>：表示全局进程的序号，用于进程间通信。每一个进程对应一个 <code>RANK</code>。<code>RANK=0</code> 的进程就是主进程。</li>
+<li><code>LOCAL_RANK</code>： 指在一台机器上（一个node上）进程的相对序号。单机多卡时，<code>RANK</code> 就等于 <code>LOCAL_RANK</code>。</li>
+<li><code>WORLD_SIZE</code>: 全局（一个分布式任务）中 <code>RANK</code> 的数量（所有进程的数量）。</li>
+<li><code>NPROC_PER_NODE</code>：每个物理节点上面进程的数量。</li>
+</ul>
+<p><strong>DDP 的工作模式：</strong></p>
+<ul>
+<li>每个 gpu 都有自己独立的模型和数据加载器，前向传播、计算梯度、反向传播与其他 gpu 独立。</li>
+<li>反向传播就是在计算每一个参数的梯度，但此过程不做更新，直到 <code>optimizer.step()</code> 才更新参数。</li>
+<li>如果 <code>model.require_backward_grad_sync=True</code> ，那么在反向传播 <code>loss.backward()</code> 的时候，DDP 使用 <code>all-reduce</code> 操作来<strong>同步</strong>所有进程（gpu）的梯度：对所有 gpu 上梯度的做平均（也可以其他模式，基于不同的配置），然后回传给所有的 gpu，<strong>保证所有 gpu 上的梯度一致</strong>。梯度同步通过 <a href="https://link.zhihu.com/?target=https://www.cnblogs.com/liyier/p/18135209">Ring-All-Reduce</a> 算法实现。</li>
+<li>一旦所有 gpu 上梯度都同步完成，就开始做参数更新。由于每个 gpu 都使用相同的更新梯度，故所有的模型副本在任何时间点上访问都是相同的。</li>
+<li>参考 <a href="https://link.zhihu.com/?target=https://www.cnblogs.com/liyier/p/18135209">cnblog</a>。</li>
+</ul>
+<p>分布式训练需要修改初始化、数据加载器、训练梯度同步等。这部分详情参见原视频和参考中的博文，这里不再详细赘述。不过这块倒是可以学下NCCL通信机制，因为在分布式训练中，数据的同步广播、切片等都有对应的通信原语支持，例如场景的all_reduce、scatter、all_gather等，这个是分布式训练的底层机制。</p>
+<h3 id="训练用的数据集"><a href="#训练用的数据集" class="headerlink" title="训练用的数据集"></a>训练用的数据集</h3><p>Karpathy用的fineweb数据集作训练，以及用了hellaswag数据集作验证，fineweb里是一些语料数据集，huggingface上download下来后经过处理，以npy格式保存着，Hellaswag数据集的形式是问题-选项格式的，例如：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529223546.png" alt="image.png"><br>这样的验证数据集能以比较丝滑的状态看到模型准确率上升情况。</p>
+<h2 id="训练性能优化"><a href="#训练性能优化" class="headerlink" title="训练性能优化"></a>训练性能优化</h2><p>上面定义好了模型，做好了参数初始化，dataloader也写好了，包括后续梯度反向传播等，直接用pytorch的接口实现，整个训练链路已经搭好。此时设置B&#x3D;2，T&#x3D;1024，计算每秒token吞吐量。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loaded 338025 tokens</span><br><span class="line">1 epoch = 165 batches</span><br><span class="line">...</span><br><span class="line">step   48, loss: 6.699172, dt: 207.13ms, tok/sec 9887.67</span><br><span class="line">step   49, loss: 6.810062, dt: 207.56ms, tok/sec 9866.80</span><br></pre></td></tr></table></figure>
+<h3 id="优化点1"><a href="#优化点1" class="headerlink" title="优化点1"></a>优化点1</h3><p>矩阵乘法使用tf32。因为模型参数模型精度是FP32的，TF32是19位类型，切掉了一部分FP32的精度，tf32是Ampere架构后引入的，V100不支持。对于浮点数来说，一般exponent表示浮点数的表示范围，mantissa也就是尾数表示精度，具体理解可以参考<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1729530">15 张图带你深入理解浮点数-腾讯云开发者社区-腾讯云 (tencent.com)</a>。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529211713.png" alt="image.png"><br>要实现这个操作，只要一行代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.set_float32_matmul_precision(<span class="string">&#x27;high&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>此时token吞吐量有了提升。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step   48, loss: 6.690034, dt: 181.26ms, tok/sec 11298.78</span><br><span class="line">step   49, loss: 6.795850, dt: 181.98ms, tok/sec 11253.92</span><br></pre></td></tr></table></figure>
+
+<p>进一步的可以在前向传播和反向传播中使用BF16，如果只是削减精度，例如把FP32换成TF32，这个不容易出问题，但如果使用FP16，把表示范围削减了，可能导致累计梯度溢出的问题。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529213322.png" alt="image.png"><br>torch里用BF16，使用autocast</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> torch.autocast(device_type=device, dtype=torch.bfloat16):</span><br><span class="line">	logits, loss = model(x, y)</span><br></pre></td></tr></table></figure>
+<p>此时吞吐量进一步变大。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step   48, loss: 6.704887, dt: 147.89ms, tok/sec 13848.14</span><br><span class="line">step   49, loss: 6.810391, dt: 147.52ms, tok/sec 13883.33</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化点2-torch-compile-编译模型"><a href="#优化点2-torch-compile-编译模型" class="headerlink" title="优化点2 torch.compile()编译模型"></a>优化点2 torch.compile()编译模型</h3><p><a target="_blank" rel="noopener" href="https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html">Introduction to torch.compile — PyTorch Tutorials 2.7.0+cu126 documentation</a><br>torch.compile()做的事情包括：</p>
+<ul>
+<li>把整个模型网络编译为一个不需要Python 解释器参与的对象</li>
+<li>更多片内操作，大量减少GPU上显存和计算单元间的load和store<br>torch.compile()在分布式情况下会出现编译错误，而且输出一堆看不懂的信息，这个被Karpathy也吐槽过，这也是llm.c出现的直接原因，因为torch生态下搭建一个网络，然后对训练做优化，很多时候都是在封装好的函数使用的，底层的作用机理和调用关系很复杂，一层层的抽象可能导致结构臃肿。事实上实现一个GPT2类语言模型的训练没有那么困难，所需要的也就是数据+模型+梯度传播。llm.c用c+cuda完整实现了nanoGPT的训练，这个可以好好学习下。<br>不过torch.compile()后，模型训练加速很明显，正是因为它剥离了python解释器，避免了每次训练时，在Python解释器中，一行一行阅读指令执行指令的过程。<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step   48, loss: 6.719885, dt: 97.32ms, tok/sec 21044.27</span><br><span class="line">step   49, loss: 6.826200, dt: 99.17ms, tok/sec 20651.76</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="优化点3-Flash-Attention使用"><a href="#优化点3-Flash-Attention使用" class="headerlink" title="优化点3 Flash Attention使用"></a>优化点3 Flash Attention使用</h3><p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529214643.png" alt="image.png"><br>FlashAttention使用切片技术，避免在相对较慢的GPU HBM上物化materialization大的NxN注意力矩阵，而是在外部循环中，遍历K和V矩阵块，将他们加载到速度较快的SRAM中，每个块内，循环遍历Q矩阵块，将他们加载到SRAM中计算注意力，最后写回HBM。整个过程还是蛮复杂的，这里并没有完全讲清楚，因为我后续会针对FlashAttention系列再总结一篇文章。<br>FlashAttention在torch中的使用方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># attention (materializes the large (T,T) matrix for all the queries and keys)</span></span><br><span class="line"><span class="comment"># att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))</span></span><br><span class="line"><span class="comment"># att = att.masked_fill(self.bias[:,:,:T,:T] == 0, float(&#x27;-inf&#x27;))</span></span><br><span class="line"><span class="comment"># att = F.softmax(att, dim=-1)</span></span><br><span class="line"><span class="comment"># y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -&gt; (B, nh, T, hs)</span></span><br><span class="line">y = F.scaled_dot_product_attention(q, k, v, is_causal=<span class="literal">True</span>)  <span class="comment">#$ Flash ttention, 未采用dropout</span></span><br></pre></td></tr></table></figure>
+<p>此时进一步加速：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step   48, loss: 6.686561, dt: 78.55ms, tok/sec 26070.95</span><br><span class="line">step   49, loss: 6.790135, dt: 77.61ms, tok/sec 26386.81</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化点4-（Nice-Number）比较抽象的一个东西"><a href="#优化点4-（Nice-Number）比较抽象的一个东西" class="headerlink" title="优化点4 （Nice Number）比较抽象的一个东西"></a>优化点4 （Nice Number）比较抽象的一个东西</h3><p>计算机世界中，2的幂数 2、4、8、64、128…这些都是好数，而质数比如13 、17等就没那么优美，这个在我们设置batch_size时经常会发现，通常我们会设定为2的幂数，<br>因为在CUDA中，很多时候都会以2的幂数形式编写kernel，很多大小为16或64的block，当我们的输入不是nice number，可能会在CUDA中有额外的逻辑处理，反而会增加处理时间。<br>这里最有趣的一个改动是vocab_size从50527修改为了50304，50304&#x3D;2^7 x 3 x 131，可以被2的部分幂数整除，这一步改动相当于在embedding层添加了额外的虚假token，因为这里单纯是为了凑出来一个nice number，实际数据预处理后vocab_size没那么多，但实际上因为这些虚假token在数据中从未出现，在训练过程中不会被访问，所以这些额外的列在最后一层lm_head之后，数值上会被逐渐推向很大的负值，从而在softmax后概率接近0。所以在功能上不会影响，但仅仅因为将这个值从50527这个不太好的数，变成了50304这样的nice number，token吞吐量反而变大：<br>本机 <code>B=2, T=1024</code>，<code>tf32</code>，<code>autocast</code> - <code>bf16</code>, <code>model.compile()</code>, <code>scaled_dot_product_attention</code>：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step   48, loss: 6.736511, dt: 75.81ms, tok/sec 27016.03</span><br><span class="line">step   49, loss: 6.832377, dt: 75.53ms, tok/sec 27113.49</span><br></pre></td></tr></table></figure>
+
+<p>最后附上Karpathy的GPT2训练曲线：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529223713.png" alt="image.png"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本文简单回顾了Karpathy的从零开始重现GPT-2教程，这个教程对于大模型在做什么，以及搭建一个大语言模型的大致技术链路作了拆解。但LLM技术发展太快，很多新型技术在这个教程中没有体现，在之后的文章中我们继续分享和更新相关改进。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV12s421u7sZ/?spm_id_from=333.788.recommend_more_video.-1&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">【精校】“让我们重现GPT-2（1.24亿参数）!”AI大神Andrej Karpathy最新4小时经典教程 【中英】_哔哩哔哩_bilibili</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/karpathy/nanogpt">https://github.com/karpathy/nanogpt</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/karpathy/build-nanogpt">https://github.com/karpathy/build-nanogpt</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/16880416388">GPT2复现笔记 Let’s reproduce GPT-2 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kodp/GPT/">Kodp&#x2F;GPT: Reproduce GPT model. (github.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/685785987">https://zhuanlan.zhihu.com/p/685785987</a></li>
+</ol>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+            转载声明：
+            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+            
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+<div class="article-nav prev-next-wrap clearfix">
+    
+    <a href="/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AE%AD%E7%BB%83/" class="pre-post btn btn-default" title='NanoGPT中文大模型预训练（从零搭建）'>
+        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+        <span class="hidden-xs">
+            NanoGPT中文大模型预训练（从零搭建）</span>
+    </a>
+    
+    
+</div>
+
+<div id="comments">
+    
+    
+<div class="utteranc">
+  
+  <script
+    src='https://utteranc.es/client.js'
+    repo='shenliyang/snippet-comment'
+    issue-term='pathname'
+    issue-number=''
+    theme='github-light'
+    label=''
+    crossorigin='anonymous'
+    async
+  ></script>
+</div>
+
+
+
+</div>
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">
+            文章目录
+        </h3>
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E4%B8%8E%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-text">二、模型结构与权重初始化方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Dataloder%E5%92%8CTokenizer"><span class="toc-text">三、Dataloder和Tokenizer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tokenizer"><span class="toc-text">Tokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dataloader"><span class="toc-text">Dataloader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5%EF%BC%88%E4%BC%98%E5%8C%96%E5%99%A8-%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%EF%BC%89"><span class="toc-text">训练策略（优化器+学习率调度）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8%E9%87%87%E7%94%A8Adam"><span class="toc-text">优化器采用Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lr%E8%B0%83%E5%BA%A6"><span class="toc-text">lr调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E4%BB%A5%E5%9C%A8%E7%AE%97%E5%8A%9B%E6%9C%89%E9%99%90%E6%83%85%E5%86%B5%E4%B8%8B%E7%94%A8%E6%9B%B4%E5%A4%A7batch-size"><span class="toc-text">梯度累积以在算力有限情况下用更大batch_size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">训练用的数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-text">训练性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B91"><span class="toc-text">优化点1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B92-torch-compile-%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9E%8B"><span class="toc-text">优化点2 torch.compile()编译模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B93-Flash-Attention%E4%BD%BF%E7%94%A8"><span class="toc-text">优化点3 Flash Attention使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B94-%EF%BC%88Nice-Number%EF%BC%89%E6%AF%94%E8%BE%83%E6%8A%BD%E8%B1%A1%E7%9A%84%E4%B8%80%E4%B8%AA%E4%B8%9C%E8%A5%BF"><span class="toc-text">优化点4 （Nice Number）比较抽象的一个东西</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+<a id="back-to-top" class="icon-btn hide">
+    <i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy;
+                    2017
+                    
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="/js/app.js?rev=@@hash.js"></script>
+
+</body>
+</html>
