@@ -73,9 +73,7 @@
 <div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
 <![endif]-->
 <body>
-    <header class="main-header"  style="background-image:url(
-    https://hexo-theme-snippet-1251680922.cos.ap-beijing.myqcloud.com/img/banner.jpg)"
-     >
+    <header class="main-header"  >
     <div class="main-header-box">
         <a class="header-avatar" href="/" title='MuSouth'>
             <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
@@ -177,8 +175,8 @@
     <div class="post-content">
         <div class="post-head home-post-head">
             <h1 class="post-title">
-                <a href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E8%A7%A3%E6%9E%90/">
-                    参考</a>
+                <a href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%9F%BA%E4%BA%8EQwen2-5-7B%E7%9A%84%E5%BE%AE%E8%B0%83%E8%AE%AD%E7%BB%83%E4%B9%8Bms-swift-unsloth-llama-factory%E5%8F%8APEFT%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C-1/">
+                    RLHF训练流程</a>
             </h1>
             <div class="post-meta"> &bull;
                 <time class="post-date" datetime="" title="">
@@ -188,7 +186,7 @@
         </div>
         <p class="brief">
             
-            前言简单的分布式训练我们都尝试过，torch本身就支持，使用torchrun或torch.distributed.launch实现，但真正分布式训练底层设计的技术很少有了解，本文总结并解析和分布式训练或推理相关的通信机制以及关于大模型...
+            前言大语言模型一般用来回答问题，而所谓的问答本质上还是在续写，问题可以看作一个被打断的句子。而我们在微调里分享过这样一个观点，预训练大模型并不具备对话的能力，而需要SFT以及RLHF等指令微调后才具备正常对话能力。初看这两个观点其实有...
             
         </p>
     </div>
@@ -222,8 +220,8 @@
     <div class="post-content">
         <div class="post-head home-post-head">
             <h1 class="post-title">
-                <a href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%9F%BA%E4%BA%8EQwen2-5-7B%E7%9A%84%E5%BE%AE%E8%B0%83%E8%AE%AD%E7%BB%83%E4%B9%8Bms-swift-unsloth-llama-factory%E5%8F%8APEFT%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C-1/">
-                    RLHF训练流程</a>
+                <a href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E8%A7%A3%E6%9E%90/">
+                    参考</a>
             </h1>
             <div class="post-meta"> &bull;
                 <time class="post-date" datetime="" title="">
@@ -233,7 +231,7 @@
         </div>
         <p class="brief">
             
-            前言大语言模型一般用来回答问题，而所谓的问答本质上还是在续写，问题可以看作一个被打断的句子。而我们在微调里分享过这样一个观点，预训练大模型并不具备对话的能力，而需要SFT以及RLHF等指令微调后才具备正常对话能力。初看这两个观点其实有...
+            前言简单的分布式训练我们都尝试过，torch本身就支持，使用torchrun或torch.distributed.launch实现，但真正分布式训练底层设计的技术很少有了解，本文总结并解析和分布式训练或推理相关的通信机制以及关于大模型...
             
         </p>
     </div>
@@ -381,7 +379,7 @@
     <h3 class="title">
         分类
     </h3>
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Embodied-Intelligence/"><i class="fa" aria-hidden="true">Embodied-Intelligence</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM/"><i class="fa" aria-hidden="true">LLM</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link current" href="/categories/LLM-Agent/"><i class="fa" aria-hidden="true">LLM-Agent</i></a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Foundation/"><i class="fa" aria-hidden="true">LLM-Foundation</i></a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Inference/"><i class="fa" aria-hidden="true">LLM-Inference</i></a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Project/"><i class="fa" aria-hidden="true">LLM-Project</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Technology/"><i class="fa" aria-hidden="true">LLM-Technology</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Training/"><i class="fa" aria-hidden="true">LLM-Training</i></a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Voice/"><i class="fa" aria-hidden="true">LLM-Voice</i></a><span class="category-list-count">1</span></li></ul>
+    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Embodied-Intelligence/"><i class="fa" aria-hidden="true">Embodied-Intelligence</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM/"><i class="fa" aria-hidden="true">LLM</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Agent/"><i class="fa" aria-hidden="true">LLM-Agent</i></a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Foundation/"><i class="fa" aria-hidden="true">LLM-Foundation</i></a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Inference/"><i class="fa" aria-hidden="true">LLM-Inference</i></a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Project/"><i class="fa" aria-hidden="true">LLM-Project</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Technology/"><i class="fa" aria-hidden="true">LLM-Technology</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Training/"><i class="fa" aria-hidden="true">LLM-Training</i></a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/LLM-Voice/"><i class="fa" aria-hidden="true">LLM-Voice</i></a><span class="category-list-count">1</span></li></ul>
 </div>
 
     
