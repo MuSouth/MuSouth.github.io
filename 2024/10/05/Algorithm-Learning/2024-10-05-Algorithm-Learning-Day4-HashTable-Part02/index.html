@@ -61,6 +61,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -95,10 +99,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/10/05/%E7%AC%AC%E5%9B%9B%E5%A4%A9%EF%BC%9A%E5%93%88%E5%B8%8C%E8%A1%A8part02/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/10/06/Algorithm-Learning/2024-10-06-Algorithm-Learning-Day5-Graph-Part02/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/10/04/%E7%AC%AC%E4%B8%89%E5%A4%A9%EF%BC%9A%E5%93%88%E5%B8%8C%E8%A1%A8part01/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/10/04/Algorithm-Learning/2024-10-04-Algorithm-Learning-Day3-HashTable-Part01/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -202,7 +206,7 @@
 <p><strong>思路：</strong> 暴力解法就是两层for循环，时间复杂度O(n^2)。而且这道题可以可以借助哈希表来减少时间复杂度，因为哈希表查询的时间复杂度是O(1)的，借助哈希表，将遍历过的元素 索引和值存放到哈希表中，然后在后面的遍历中，每次询问哈希表中是否存在 <code>target - num</code>，若存在，则返回下标。因为这道题要记录下标，所以用unordered_map，unorderer_set只能存放key，不能存放value。对unordered_map而言，C++中也支持std::map std::multimap std::unordered_map三种，且map和multimap都是底层由红黑树实现的，unordered_map底层由哈希表实现。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">twoSum</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">	unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; hashTab;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">		<span class="keyword">if</span> (hashTab.<span class="built_in">count</span>(target - nums[i] == <span class="number">0</span>)) &#123;  <span class="comment">//如果target-num不存在</span></span><br><span class="line">			hashTab.<span class="built_in">insert</span>(<span class="built_in">pair</span>&lt;<span class="type">int</span>, <span class="type">int</span>&gt; (nums[i], i));  <span class="comment">// 就正常插入新的num</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;   <span class="comment">// 如果target - num存在，那就找到了这两个数</span></span><br><span class="line">			<span class="keyword">return</span> &#123;nums[target - nums[i]], i&#125;;   <span class="comment">// 返回两个数下标</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 很多时候会看到另一种写法，用 hashTab.find(target - nums[i] != hashTab.end())表示如果存在；反之不存在，这里的意思就是：find()如果找到了指定元素，则返回元素位置，如果没有找到，会默认返回end()，这是个使用技巧，当然用count也可以。其次就是vector数组类型的返回值可以用&#123;&#125;直接构造，而哈希表类型需要用pair&lt;int, int&gt;构造。vector数组的初始化方式有这几种：</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; v = &#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; v&#123;<span class="number">1</span>, <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果不创建变量直接用来传参、函数返回：</span></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; &#123;<span class="number">1</span>, <span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="454-四数相加"><a href="#454-四数相加" class="headerlink" title="454. 四数相加"></a>454. 四数相加</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/4sum-ii/">力扣题目链接</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747314032870.png" alt="1747314032870.png"><br><strong>思路：</strong> 这题有点像两数之和的升级版。本题当然不可以用四重暴力循环来做，时间复杂度太高，考虑使用哈希表优化查询，首先用一个哈希Map统计A和B中所有元素相加结果的次数，然后在遍历C和D，找到C+D+A+B &#x3D; 0情况并统计次数，此时哈希表的优势体现出来，当0 - （C+D)在哈希表中存在的话，就直接计数加上哈希表对应的值即可，因为这意味着存在这么多个A+B的组合满足A+B+C+D&#x3D;0。</p>
+<h3 id="454-四数相加"><a href="#454-四数相加" class="headerlink" title="454. 四数相加"></a>454. 四数相加</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/4sum-ii/">力扣题目链接</a><br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747314032870.png" data-caption="1747314032870.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747314032870.png" alt="1747314032870.png"></a><br><strong>思路：</strong> 这题有点像两数之和的升级版。本题当然不可以用四重暴力循环来做，时间复杂度太高，考虑使用哈希表优化查询，首先用一个哈希Map统计A和B中所有元素相加结果的次数，然后在遍历C和D，找到C+D+A+B &#x3D; 0情况并统计次数，此时哈希表的优势体现出来，当0 - （C+D)在哈希表中存在的话，就直接计数加上哈希表对应的值即可，因为这意味着存在这么多个A+B的组合满足A+B+C+D&#x3D;0。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">fourSumCount</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; A, vector&lt;<span class="type">int</span>&gt;&amp; B, vector&lt;<span class="type">int</span>&gt;&amp; C, vector&lt;<span class="type">int</span>&gt;&amp; D)</span> </span>&#123;</span><br><span class="line">	unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; cnt;</span><br><span class="line">	<span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> a : A)</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> b : B)</span><br><span class="line">			cnt[a + b]++;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> c : C) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">auto</span> d : D) &#123;</span><br><span class="line">			<span class="keyword">if</span> (cnt.<span class="built_in">find</span>(<span class="number">0</span> - (c + d)) != cnt.<span class="built_in">end</span>()) &#123; <span class="comment">// cnt中存在0 - (c + d)</span></span><br><span class="line">				count += cnt[<span class="number">0</span> - (c + d)];</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 有个更简练的写法</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> c : C) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> d : D) &#123;</span><br><span class="line">		count += cnt[-(c + d)];  <span class="comment">// 这么写省去了判断</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="15-三数之和"><a href="#15-三数之和" class="headerlink" title="15. 三数之和"></a>15. 三数之和</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/3sum/">力扣题目链接(opens new window)</a></p>
 <p>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c &#x3D; 0 ？请你找出所有满足条件且不重复的三元组。</p>
@@ -375,6 +379,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

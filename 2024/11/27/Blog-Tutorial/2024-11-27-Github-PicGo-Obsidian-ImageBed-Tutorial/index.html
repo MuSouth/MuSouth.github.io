@@ -70,6 +70,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -104,10 +108,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-cdn-jsdelivr-alternative/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -204,11 +208,11 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install nginx</span><br><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">nginx -v</span><br></pre></td></tr></table></figure></li>
 <li><p>编辑nginx配置文件，通常在<code>/etc/nginx/conf.d/hexo.conf</code>下，如没有可创建一个</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/nginx/conf.d/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">touch</span> hexo.conf</span><br><span class="line">vi hexo.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在hexo.conf中输入以下程序</span></span><br><span class="line">server &#123; </span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.aidenlee.tech; <span class="comment"># 替换为您的域名</span></span><br><span class="line">	location / &#123; root /path/to/your/hexo/public; <span class="comment"># 替换为您的 Hexo 公共目录路径         index index.html index.htm; </span></span><br><span class="line">	try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ =404; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里public文件夹就在你所创建的博客文件夹的根目录，要确认里面有<code>index.html</code>。且注意要同时修改博客根目录下<code>_config.yml</code>配置文件里的url参数，修改为你自己的域名。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png" alt="1732785086099.png"></p>
+<p>这里public文件夹就在你所创建的博客文件夹的根目录，要确认里面有<code>index.html</code>。且注意要同时修改博客根目录下<code>_config.yml</code>配置文件里的url参数，修改为你自己的域名。<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png" data-caption="1732785086099.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png" alt="1732785086099.png"></a></p>
 </li>
 <li><p>启动Nginx服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查Nginx配置语法或格式是否正确</span></span><br><span class="line"><span class="built_in">sudo</span> nginx -t</span><br><span class="line"><span class="comment"># 启动Nginx</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart nginx</span><br></pre></td></tr></table></figure>
-<p><strong>若不出意外，那么就可以访问自己的博客网站啦。</strong><br>(<em>^_^</em>)，但是博主这里还是出了些意外，我认为这也可能是比较常见的情况~<strong>403 Forbidden！！</strong><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/20241128171532.png" alt="image.png"><br>有问题就解决问题，出现403错误的最可能的原因是你给的权限不够，Nginx无法访问你的<code>public</code>目录，在Nginx中有一个用户的概念，查看<code>/etc/nginx/nginx.conf</code>文件可以看到Nginx的用户名，一般情况下就是<code>www-data</code>：<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785526882.png" alt="1732785526882.png"></p>
+<p><strong>若不出意外，那么就可以访问自己的博客网站啦。</strong><br>(<em>^_^</em>)，但是博主这里还是出了些意外，我认为这也可能是比较常见的情况~<strong>403 Forbidden！！</strong><br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/20241128171532.png" data-caption="image.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/20241128171532.png" alt="image.png"></a><br>有问题就解决问题，出现403错误的最可能的原因是你给的权限不够，Nginx无法访问你的<code>public</code>目录，在Nginx中有一个用户的概念，查看<code>/etc/nginx/nginx.conf</code>文件可以看到Nginx的用户名，一般情况下就是<code>www-data</code>：<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785526882.png" data-caption="1732785526882.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785526882.png" alt="1732785526882.png"></a></p>
 </li>
 </ul>
 <p>然后你需要开放Nginx用户<code>www-data</code>对你博客目录下<code>public</code>文件夹的读取权限，这里至少需要<code>755</code>（<strong>这里简单说明下Linux系统下文件权限的问题</strong>，在Linux中文件权限分为八级，以二进制类似的形式排列组合了读r&#x2F;写w&#x2F;执行x三种权限，且对于每个文件的权限分为三个组，所有者Owner、用户组Group、其他用户Others，不同的权限可以用对应的排列组合样式表示，同时可以按照二进制的计算原则转换成十进制数字，从而对应每一个排列，例如只读是<code>r--</code>，换算成十进制就是4，只写是<code>-w-</code>，换算成十进制就是2，同样可执行权限<code>--x</code>则对应1，如果该文件具有所有权限则表示为<code>rwx</code>，对应数字7，如果配置一个文件的权限要同时按照所有者&#x2F;用户组&#x2F;其他的顺序，赋予三个组权限，例如我提到的<code>755</code>就是分别赋予所有者、用户组、其他以可读写执行、可读可执行、可读可执行的权限，查看文件或目录权限使用<code>ls -l filename</code>，更改权限则使用<code>chmod 755 filename</code>详细的可以参考这篇博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lv8549510/article/details/85406215">Linux文件权限详解</a>）。</p>
@@ -227,13 +231,13 @@
 </ul>
 <h3 id="2-Github图床基本原理"><a href="#2-Github图床基本原理" class="headerlink" title="2. Github图床基本原理"></a>2. Github图床基本原理</h3><p>Github （或者考虑使用Gitee，但是经博主测试，Gitee应该是加装了防盗链，可能早就禁止使用于图床了）可以用作图床，原理是将图片上传至 Github 仓库，然后在博客中使用 URL 链接来访问这些图片。而通过 PicGo+Obsidian，我们可以在编辑Markdown过程中顺手复制粘贴一张图片，即可轻松上传图片至Github仓库，并自动生成对应的URL链接，方便同时在本地 Obsidian以及服务器博客中进行管理。</p>
 <h3 id="3-配置步骤"><a href="#3-配置步骤" class="headerlink" title="3. 配置步骤"></a>3. 配置步骤</h3><ul>
-<li><p>登录Github账号，并创建一个新的仓库<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793786473.png" alt="1732793786473.png"></p>
+<li><p>登录Github账号，并创建一个新的仓库<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793786473.png" data-caption="1732793786473.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793786473.png" alt="1732793786473.png"></a></p>
 </li>
-<li><p>填写基本的仓库信息，包括Repo仓库名，分支就用默认的main就好，然后可以添加一个Readme。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793869684.png" alt="1732793869684.png"></p>
+<li><p>填写基本的仓库信息，包括Repo仓库名，分支就用默认的main就好，然后可以添加一个Readme。<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793869684.png" data-caption="1732793869684.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793869684.png" alt="1732793869684.png"></a></p>
 </li>
-<li><p>获取Personal Access Tokens，后续PicGo配置要使用<br>   登录Github，点击右上角头像，选择<code>Settings</code>，在左侧菜单栏中下滑到底，选择<code>Developer settings</code>，然后选择<code>Personal access tokens</code>、<code>Tokens(classic)</code>即可，点击<code>Generate new token(classic)</code>，创建时一定记得勾选<code>repo</code>，期限可以选择永久。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794219164.png" alt="1732794219164.png"><br>  <strong>拿到Token后记录下来，将在PicGo中使用。</strong></p>
+<li><p>获取Personal Access Tokens，后续PicGo配置要使用<br>   登录Github，点击右上角头像，选择<code>Settings</code>，在左侧菜单栏中下滑到底，选择<code>Developer settings</code>，然后选择<code>Personal access tokens</code>、<code>Tokens(classic)</code>即可，点击<code>Generate new token(classic)</code>，创建时一定记得勾选<code>repo</code>，期限可以选择永久。<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794219164.png" data-caption="1732794219164.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794219164.png" alt="1732794219164.png"></a><br>  <strong>拿到Token后记录下来，将在PicGo中使用。</strong></p>
 </li>
-<li><p>安装并配置<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases">PicGo</a><br>  在图床设置中找到Github图床，打开相关设置，填写示例如下<br>  <img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794561133.png" alt="1732794561133.png"><br>  这里的自定义域名中填写的是<code>https://jsdelivr.codeqihan.com/gh/Your_user_name/Your_repo_name@main</code>，前面这部分是使用了一个开源的公共内容分发网络服务（CDN），它可以从多个源（如npm、Github、wordpress）提供文件，通过分布在全球的服务器，jsDelivr能够快速提供内容。</p>
+<li><p>安装并配置<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases">PicGo</a><br>  在图床设置中找到Github图床，打开相关设置，填写示例如下<br>  <a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794561133.png" data-caption="1732794561133.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794561133.png" alt="1732794561133.png"></a><br>  这里的自定义域名中填写的是<code>https://jsdelivr.codeqihan.com/gh/Your_user_name/Your_repo_name@main</code>，前面这部分是使用了一个开源的公共内容分发网络服务（CDN），它可以从多个源（如npm、Github、wordpress）提供文件，通过分布在全球的服务器，jsDelivr能够快速提供内容。</p>
 <p>  <strong>题外话：什么是CDN？</strong><br>  这类CDN即内容分发网络概念性来说就是一种通过分布在全球各地的边缘节点来缓存和分发内容的技术，CDN 由多个分布在不同地理位置的服务器组成，这些服务器称为边缘节点。这些节点存储和缓存来自源服务器的静态内容。<strong>分布式网络</strong>：当用户请求某个资源时，CDN 会根据用户的地理位置选择离用户最近的边缘节点。<strong>内容缓存：</strong>边缘节点会检查是否已经缓存了该内容。如果缓存中存在该资源，CDN 将直接从边缘节点提供资源，从而提高访问速度。<strong>回源策略</strong>：如果请求的资源不在边缘节点的缓存中，CDN 会将请求转发到源服务器。源服务器响应请求后，CDN 会将该内容缓存到边缘节点，以便后续请求能够更快地响应。<strong>负载均衡</strong>：CDN 通过智能算法进行负载均衡，将用户的请求分配到不同的边缘节点，这不仅提高了访问速度，还能有效减少源服务器的压力。<strong>自动化和优化</strong>：CDN 提供自动化的管理和优化功能，包括内容更新、缓存失效策略、压缩、代码优化等。这些功能可以帮助开发者更好地管理资源并提升性能。以jsDelivr为例，其工作流程大致可以总结为：</p>
 <ul>
 <li><strong>文件上传</strong>：开发者将静态资源（例如 JavaScript 库）上传到 GitHub、npm 或其他源。    </li>
@@ -247,7 +251,7 @@
 <li><p>最后一步，安装并配置<a target="_blank" rel="noopener" href="https://obsidian.md/">Obsidian</a><br>  在Obsidian设置中找到<code>Community plugins</code>，然后点击<code>Browse</code>查找第三方插件<code>image auto upload plugin</code>并安装，如果由于网络原因无法在Obsidian插件市场直接安装，可参考这篇博文：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/403001135">如何安装插件？【玩转Obsidian的保姆级教程】 - 知乎 (zhihu.com)</a>，用离线安装的方式实现。安装完成后选择PicGo作为默认App，然后基本也不用配置什么，PicGo和Obsidian默认的监听端口都是36677。</p>
 </li>
 </ul>
-<p><strong>到这一步，终于完成了图床功能的搭建，可以在Obsidian中测试下图床功能了，比如上传一张Aiden的头像。</strong><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/avator.jpg" alt="avator.jpg"></p>
+<p><strong>到这一步，终于完成了图床功能的搭建，可以在Obsidian中测试下图床功能了，比如上传一张Aiden的头像。</strong><br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/avator.jpg" data-caption="avator.jpg"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/avator.jpg" alt="avator.jpg"></a></p>
 <p><strong>你是不是发现图片的链接已经自动替换成Github仓库地址中那张图片的链接了呢？</strong></p>
 <h2 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h2><p>这篇博客进行到这里已经基本完成了，但这里要注意两点，一是注意Github单个仓库的容量限制，大概在500MB到1GB吧，超出容量限制要尽快创建一个新仓库用来存储了，并且每个Github用户的总容量是有限制的，不过用于个人博客的一些图片的存储还是足够的，如果不够就另寻他法咯，比如使用阿里云OSS、Amazon S3等数据存储服务，这就是另外的价钱了。此外，自建图床有几点劣势，最显著的特点就是数据隐私性差，且缺乏一些内容优化工具，例如自动压缩、缓存管理、格式支持等，当然这些功能我们依旧可以自己设计，我将会放在后续博客慢慢介绍。这篇博客主要介绍了网站上线和图床搭建两个环节，如果能帮助到你，那我觉得太棒了。</p>
 
@@ -404,6 +408,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

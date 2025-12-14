@@ -62,6 +62,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -96,10 +100,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2025/01/01/%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3RPC/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2025/01/10/LLM-Training/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AE%AD%E7%BB%83/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/12/04/%E7%BD%91%E7%AB%99%E4%BC%98%E5%8C%96+%E7%BB%84%E4%BB%B6%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/12/04/Blog-Tutorial/2024-12-04-Hexo-Blog-Optimization-and-Components/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -183,14 +187,14 @@
   <div class="content e-content" itemprop="articleBody">
     <h2 id="RPC是什么？RPC框架是什么？"><a href="#RPC是什么？RPC框架是什么？" class="headerlink" title="RPC是什么？RPC框架是什么？"></a>RPC是什么？RPC框架是什么？</h2><p>关于RPC，Remote Procedure Call，远程过程调用，一个最基本的定义是：它是一种允许运行在一台计算机上的程序调用在另一台计算机上的子程序上，使得程序间的远程通信就像本地调用一样简单，进而使得开发者方便的开发分布式系统，将不同组件分布在不同计算机上。可以看到这个定义和主要功能的描述核心就是”远程调用“。</p>
 <p>所以RPC其实就可以理解为一种协议，一种通信方式，它是一种思想而不是一个规范，当想要跨进程甚至于跨计算机调用另一个进程上部署的服务时（这个服务可以是一个程序、或是一个接口），RPC就是这个桥梁。具体来说RPC的信息传输协议可以基于HTTP、TCP、UDP、WebSocket等等，其信息内容规范协议可以是json、xml、protobuf等。此外RPC一般有一个客户端通信实现模块和服务端通信实现模块。RPC协议不像TCP和HTTP一样有一个严格统一的标准，RPC协议只要通信双方规定好即可。在这个协议的基础上，各大厂商又研发了RPC框架，这些框架额外支持了一些开发特性，例如阿里的Dubbo支持多种协议和负载均衡，此外还有Google的gRPC、Facebook的Thrift等等。</p>
-<p>RPC框架的核心原理是基于网络传输实现的远程方法调用。RPC框架通常由服务提供者和服务消费者两个部分组成，服务提供者将本地方法暴露成远程服务，服务消费者则通过远程代理对象调用远程方法。实现远程方法调用时需要进行数据对象的二进制序列化和反序列化，就是将待传输对象转化为二进制数据流方便在网络中传输。为了提高性能，gRPC中使用protocol buffers协议，dubbo使用了Hessian2协议。与基于文本的json、xml协议相比，二进制协议传输体积更小，有更高的解析速度，进而可以减小网络传输开销。(目前大火的大模型上下文协议 MCP中用到的json RPC协议其实就是一种基于json文本的传输协议）。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527153631.png" alt="image.png"></p>
+<p>RPC框架的核心原理是基于网络传输实现的远程方法调用。RPC框架通常由服务提供者和服务消费者两个部分组成，服务提供者将本地方法暴露成远程服务，服务消费者则通过远程代理对象调用远程方法。实现远程方法调用时需要进行数据对象的二进制序列化和反序列化，就是将待传输对象转化为二进制数据流方便在网络中传输。为了提高性能，gRPC中使用protocol buffers协议，dubbo使用了Hessian2协议。与基于文本的json、xml协议相比，二进制协议传输体积更小，有更高的解析速度，进而可以减小网络传输开销。(目前大火的大模型上下文协议 MCP中用到的json RPC协议其实就是一种基于json文本的传输协议）。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527153631.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527153631.png" alt="image.png"></a></p>
 <h2 id="RPC调用流程总结"><a href="#RPC调用流程总结" class="headerlink" title="RPC调用流程总结"></a>RPC调用流程总结</h2><p>RPC 框架的核心原理是通过代理、序列化、网络传输、反序列化、反射等技术，实现远程过程调用的透明化。核心流程如下：</p>
 <ol>
 <li>客户端通过代理对象（Proxy）调用远程服务，代理对象将调用信息（比如方法名、参数等）进行序列化（Serialzation），转换成字节流；    </li>
 <li>客户端通过网络传输（Transport）将序列化后的字节流发送给服务端，服务端收到字节流后进行反序列化（Deserialization），还原成调用信息。    </li>
 <li>服务端通过反射（Reflection）根据调用信息找到对应的服务信息（Service）和方法（Method），并执行方法，得到返回结果。    </li>
 <li>服务端将返回结果进行序列化，转换成字节流，通过网络传输发送给客户端，客户端接收到字节流后，进行反序列化，还原成返回结果。    </li>
-<li>客户端通过代理对象返回结果给调用者，完成远程过程调用。调用过程流程图如下：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527163422.png" alt="image.png"><br>这种Client&#x2F;Server架构目前很流行，其实仔细想想，近期大模型上下文协议很火，MCP不也是基于这个RPC协议来进行通信的嘛，只不过MCP针对大模型工具调用链路，所有的服务是在大模型生态里作，因而采用更方便的文本传输，值得说明的是MCP中采用JSON-RPC2.0协议。</li>
+<li>客户端通过代理对象返回结果给调用者，完成远程过程调用。调用过程流程图如下：<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527163422.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527163422.png" alt="image.png"></a><br>这种Client&#x2F;Server架构目前很流行，其实仔细想想，近期大模型上下文协议很火，MCP不也是基于这个RPC协议来进行通信的嘛，只不过MCP针对大模型工具调用链路，所有的服务是在大模型生态里作，因而采用更方便的文本传输，值得说明的是MCP中采用JSON-RPC2.0协议。</li>
 </ol>
 <h2 id="RPC实战测试（有时间再补充）"><a href="#RPC实战测试（有时间再补充）" class="headerlink" title="RPC实战测试（有时间再补充）"></a>RPC实战测试（有时间再补充）</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1506792">必知必会 - 一文搞定理解RPC-腾讯云开发者社区-腾讯云 (tencent.com)</a></li>
@@ -352,6 +356,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

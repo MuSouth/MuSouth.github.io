@@ -14,7 +14,7 @@
 <meta property="og:description" content="前言baby-llama2-chinese是一个基于LLaMA2架构的小型中文大模型项目，适合学习和研究中文LLM的训练。本文将对该项目进行介绍，包括项目特点、使用方法和技术要点。 一、项目概述baby-llama2-chinese是一个开源的中文大模型训练项目，主要特点包括：  基于LLaMA2：使用LLaMA2的架构和训练方法 中文优化：针对中文语料进行优化 轻量级：模型规模相对较小，适合个人">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-14T02:21:05.687Z">
+<meta property="article:modified_time" content="2025-12-14T02:23:15.735Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="训练">
 <meta property="article:tag" content="中文大模型">
@@ -59,6 +59,10 @@
       <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
     
 	<!-- mathjax -->
+	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -154,7 +158,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-14T02:21:05.687Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        (Updated: <time datetime="2025-12-14T02:23:15.735Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -379,6 +383,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

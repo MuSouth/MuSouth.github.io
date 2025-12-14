@@ -69,6 +69,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -103,10 +107,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/04/01/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/03/01/%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3Redis/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/03/01/Database-Cache/2024-03-01-Understanding-Redis/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -188,14 +192,14 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="进程与线程基础知识"><a href="#进程与线程基础知识" class="headerlink" title="进程与线程基础知识"></a>进程与线程基础知识</h2><p>编写好的代码存储在硬盘，编译后生成二进制可执行文件，当运行这个可执行文件时，它会被装填到内存中，接着CPU会顺序执行程序中的指令，运行中的程序就叫做进程 Process。<br>CPU单核情况下一次只能运行一个进程，但在1s内可能运行多个进程，这就是并发。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png" alt="image.png"></p>
-<p>早期操作系统都是以进程为基本单位，到了后期又提出了线程这个更小的独立运行的单位。线程其实就是进程中一条执行流程，同一个进程内多个线程共享代码段、数据段等资源，但每个线程有自己独立的栈和寄存器资源。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357786847.png" alt="1748357786847.png"><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357816384.png" alt="1748357816384.png"><br>第二种关系则是多对多，也可以一对一。用户线程是基于用户态的线程管理库实现的，线程控制块也是在库里实现的，操作系统看不到线程控制块Thread Control Block，所以对用户线程的整个线程管理和调度 操作系统不会直接参与，而是由这个库函数来完成线程的创建、终止、同步和调度等。</p>
+    <h2 id="进程与线程基础知识"><a href="#进程与线程基础知识" class="headerlink" title="进程与线程基础知识"></a>进程与线程基础知识</h2><p>编写好的代码存储在硬盘，编译后生成二进制可执行文件，当运行这个可执行文件时，它会被装填到内存中，接着CPU会顺序执行程序中的指令，运行中的程序就叫做进程 Process。<br>CPU单核情况下一次只能运行一个进程，但在1s内可能运行多个进程，这就是并发。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png" alt="image.png"></a></p>
+<p>早期操作系统都是以进程为基本单位，到了后期又提出了线程这个更小的独立运行的单位。线程其实就是进程中一条执行流程，同一个进程内多个线程共享代码段、数据段等资源，但每个线程有自己独立的栈和寄存器资源。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357786847.png" data-caption="1748357786847.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357786847.png" alt="1748357786847.png"></a><br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357816384.png" data-caption="1748357816384.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357816384.png" alt="1748357816384.png"></a><br>第二种关系则是多对多，也可以一对一。用户线程是基于用户态的线程管理库实现的，线程控制块也是在库里实现的，操作系统看不到线程控制块Thread Control Block，所以对用户线程的整个线程管理和调度 操作系统不会直接参与，而是由这个库函数来完成线程的创建、终止、同步和调度等。</p>
 <p>内核线程则是由操作系统管理，线程对应的控制块放在操作系统里，线程的创建、终止管理等由操作系统负责。</p>
 <h2 id="进程通信方式"><a href="#进程通信方式" class="headerlink" title="进程通信方式"></a>进程通信方式</h2><p>进程间通信方式包括Socket、管道、消息队列、共享内存、信号量、信号。<br><a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/process_commu.html#%E7%AE%A1%E9%81%93">5.2 进程间有哪些通信方式？ | 小林coding (xiaolincoding.com)</a></p>
-<h2 id="多线程冲突"><a href="#多线程冲突" class="headerlink" title="多线程冲突"></a>多线程冲突</h2><p>单核CPU，如果要实现多程序进程同时运行，操作系统通常以时间片调度方式让每个进程执行一个时间片，时间片用完后会切换另外进程，时间片很短的时候就造成了并发现象，并发不是并行。<br>操作系统会为每个进程创建巨大的私有的虚拟内存假象，这种地址空间的抽象会使得每个程序好像拥有自己的内存，但实际OS会让多个地址空间复用物理内存。<br>当一个程序只有一个执行流程，这就是单线程，一个程序可以有多个执行流程，这就是所谓多线程。线程是调度的基本单位，进程是资源分配基本单位。线程之间可以共享进程资源，比如代码段、堆空间、数据段等，但每个线程拥有自己独立的栈空间。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527170638.png" alt="image.png"></p>
-<p>当多线程同时要使用共享资源时，就产生了资源竞争，假设有一个共享的全局变量资源 i&#x3D;0，然后定义一个代码段，这个函数里面的内容是循环N次，每次将i加1，当同时定义两个线程调用该函数时，理想结果是两个线程程序运行结束后结果应该是2N，但实际情况可能小于2N，这就是因为产生了竞争条件。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172759.png" alt="image.png"></p>
+<h2 id="多线程冲突"><a href="#多线程冲突" class="headerlink" title="多线程冲突"></a>多线程冲突</h2><p>单核CPU，如果要实现多程序进程同时运行，操作系统通常以时间片调度方式让每个进程执行一个时间片，时间片用完后会切换另外进程，时间片很短的时候就造成了并发现象，并发不是并行。<br>操作系统会为每个进程创建巨大的私有的虚拟内存假象，这种地址空间的抽象会使得每个程序好像拥有自己的内存，但实际OS会让多个地址空间复用物理内存。<br>当一个程序只有一个执行流程，这就是单线程，一个程序可以有多个执行流程，这就是所谓多线程。线程是调度的基本单位，进程是资源分配基本单位。线程之间可以共享进程资源，比如代码段、堆空间、数据段等，但每个线程拥有自己独立的栈空间。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527170638.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527170638.png" alt="image.png"></a></p>
+<p>当多线程同时要使用共享资源时，就产生了资源竞争，假设有一个共享的全局变量资源 i&#x3D;0，然后定义一个代码段，这个函数里面的内容是循环N次，每次将i加1，当同时定义两个线程调用该函数时，理想结果是两个线程程序运行结束后结果应该是2N，但实际情况可能小于2N，这就是因为产生了竞争条件。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172759.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172759.png" alt="image.png"></a></p>
 <p>当多线程竞争操作共享变量时，可能会在执行过程中出现上下文切换，比如在线程1执行上述函数前，此时变量i&#x3D;50，然后线程1开始执行对i的自增操作，此时定时器中断产生，切换到线程2，线程2也读取变量i&#x3D;50，因为从计算完结果到将结果存到寄存器需要时间，线程2开始计算的时候这个变量的值未必在寄存器中已经更新好，所以导致两个线程同时并发时出现了混乱，这样就不是严格的执行了2N次自增操作了。这就是所谓的竞争条件，而这段描述了对公共变量进行循环自增的代码段叫做临界区，要想避免上述情况发生，就要避免临界区给多线程执行。</p>
-<p>换句话说，临界区应该保证互斥，保证一个线程在临界区执行的时候，另一个线程要被阻止进入临界区。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172749.png" alt="image.png"><br>此外还有一个同步的概念，同步就是并发线程&#x2F;进程在一些关键点上需要互相等待或者互通消息，这种相互制约的等待与互通信息成为进程&#x2F;线程同步。形象理解就是线程A负责读取数据，线程B负责处理数据，所以线程B必须在线程A结束后被唤醒。这个和互斥有点区别，互斥单纯是指两个线程不可以同时执行，但并未必产生这种同步关系。</p>
+<p>换句话说，临界区应该保证互斥，保证一个线程在临界区执行的时候，另一个线程要被阻止进入临界区。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172749.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172749.png" alt="image.png"></a><br>此外还有一个同步的概念，同步就是并发线程&#x2F;进程在一些关键点上需要互相等待或者互通消息，这种相互制约的等待与互通信息成为进程&#x2F;线程同步。形象理解就是线程A负责读取数据，线程B负责处理数据，所以线程B必须在线程A结束后被唤醒。这个和互斥有点区别，互斥单纯是指两个线程不可以同时执行，但并未必产生这种同步关系。</p>
 <p>对于如何解决这种并发的健康协作：</p>
 <ul>
 <li>锁：加锁、解锁操作<br>任何想进入临界区的线程必须先执行加锁操作，若加锁成功则顺利通过，线程可以进入临界区，完成临界区资源访问后再执行解锁操作，释放临界区资源。<br>根据锁的实现不同，分为忙等待锁，无忙等待锁。<br>忙等待锁是自旋锁，当线程获取不到锁时会一直while循环。而无忙等待锁在获取不到锁的时候不用自旋。  既然不想自旋，当没获取到锁的时候就把当前线程放到锁的等待队列中，执行调度程序把CPU让给其他线程。</li>
@@ -206,10 +210,10 @@
 <li>互斥条件；</li>
 <li>持有并等待条件；</li>
 <li>不可剥夺条件；</li>
-<li>环路等待条件；<br>互斥条件就是指多个线程不能同时持有同一个资源，当线程A持有资源，线程B想申请这个资源的时候只能等待。<br>持有并等待条件是指假设线程A已经持有资源1，同时想要申请资源2，但是资源2在线程C手中，线程A只能等待，等待过程中A不会释放资源1。<br>不可剥夺条件是指当线程已经持有了资源，自己用完之前不能被其他线程获取。<br>最后环路等待条件是指死锁发生的时候，两个线程获取资源的顺序已经形成了环形链。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527174600.png" alt="image.png"></li>
+<li>环路等待条件；<br>互斥条件就是指多个线程不能同时持有同一个资源，当线程A持有资源，线程B想申请这个资源的时候只能等待。<br>持有并等待条件是指假设线程A已经持有资源1，同时想要申请资源2，但是资源2在线程C手中，线程A只能等待，等待过程中A不会释放资源1。<br>不可剥夺条件是指当线程已经持有了资源，自己用完之前不能被其他线程获取。<br>最后环路等待条件是指死锁发生的时候，两个线程获取资源的顺序已经形成了环形链。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527174600.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527174600.png" alt="image.png"></a></li>
 </ul>
 <h3 id="如何避免死锁-1"><a href="#如何避免死锁-1" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h3><p>既然上述四个条件已经明确，要解决死锁就只要破坏四个条件之一就可以，<strong>最常见的就是资源有序分配法</strong>。资源有序分配法是指线程A以及线程B获取资源顺序要一致，假设A和B都需要申请资源1和2，那么两个线程申请资源的顺序都必须遵守先申请资源1，再申请资源2，这样就打破了死锁。</p>
-<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527175100.png" alt="image.png"></p>
+<p><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527175100.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527175100.png" alt="image.png"></a></p>
 <h2 id="什么是悲观锁和乐观锁？"><a href="#什么是悲观锁和乐观锁？" class="headerlink" title="什么是悲观锁和乐观锁？"></a>什么是悲观锁和乐观锁？</h2><p>多线程访问共享资源的时候，避免不了资源竞争导致的数据错乱问题，所以通常在访问共享资源之前加锁，最常用的就是互斥锁，还有很多不同的锁，比如自旋锁、读写锁、乐观锁等。高并发场景下不合适的锁可能导致性能退化很严重，因此结合分析业务中场景访问共享资源的方式，考虑并发资源访问冲突的概率，可以选择合适的锁以减小对高并发性能影响。</p>
 <p>下面就「互斥锁、自旋锁、读写锁、乐观锁和悲观锁」的选择和使用进行分析。</p>
 <h3 id="互斥锁和自旋锁"><a href="#互斥锁和自旋锁" class="headerlink" title="互斥锁和自旋锁"></a>互斥锁和自旋锁</h3><p>这两个锁是最基本的，高级锁大都基于它们实现，首先明确加锁的目的是保证共享资源在任意时间内只有一个线程可以访问，当有一个线程已经加锁后，其他线程加锁就会失败。</p>
@@ -376,6 +380,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

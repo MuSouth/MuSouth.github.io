@@ -60,6 +60,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -94,8 +98,10 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -178,7 +184,7 @@
 
   <div class="content e-content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="一、ACT"><a href="#一、ACT" class="headerlink" title="一、ACT"></a>一、ACT</h2><p>核心提出了Action Chunking方法，防止误差随着自回归过程越来越大</p>
-<h2 id="二、Pi0"><a href="#二、Pi0" class="headerlink" title="二、Pi0"></a>二、Pi0</h2><p>pi0使用互联网大规模视觉语言预训练、开源机器人操作数据集以及8个不同机器人的灵巧任务组成的数据集作为输入，这些灵巧操作由7种不同的机器人配置、68种不同任务。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png" alt="image.png"></p>
+<h2 id="二、Pi0"><a href="#二、Pi0" class="headerlink" title="二、Pi0"></a>二、Pi0</h2><p>pi0使用互联网大规模视觉语言预训练、开源机器人操作数据集以及8个不同机器人的灵巧任务组成的数据集作为输入，这些灵巧操作由7种不同的机器人配置、68种不同任务。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png" alt="image.png"></a></p>
 <p>核心是一个VLM （siglip）和一个动作专家(Conditional Flow Matching)，这里backbone里还有一个Gemma大模型，Google开源的一套轻量级大语言模型。此外要关注的是Flow Macthing，这个和Diffusion之间的关系，以及当前Flow Macthing似乎热度很高。对于最终输出的关于Manipulation或者Locomotion这类输出，是xDoF或者其他物体位姿数据等，这个作为操作的中间表示。<br>其实这么看来要去理解这套技术并非多难，可以把当前主流的结构都过一遍。</p>
 <h2 id="三、Pi0-Fast"><a href="#三、Pi0-Fast" class="headerlink" title="三、Pi0-Fast"></a>三、Pi0-Fast</h2><p>核心在Tokenization方法上提出了一种FAST方法，依赖于DCT压缩技术，将DCT与字节编码BPE结合，将原始动作token压缩成少量的密集action token，每个token包含原来正常状态下30到60个token。</p>
 <h2 id="四、RDT-1B"><a href="#四、RDT-1B" class="headerlink" title="四、RDT-1B"></a>四、RDT-1B</h2><h2 id="五、Go-1"><a href="#五、Go-1" class="headerlink" title="五、Go-1"></a>五、Go-1</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
@@ -338,6 +344,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

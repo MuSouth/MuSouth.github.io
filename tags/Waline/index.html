@@ -53,6 +53,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -108,30 +112,6 @@
       
       
         <li class="post-year"><h2>2024</h2></li>
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2024-12-04T09:01:18.000Z" class="dt-published" itemprop="datePublished">2024-12-04</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/2024/12/04/%E7%BD%91%E7%AB%99%E4%BC%98%E5%8C%96+%E7%BB%84%E4%BB%B6%E6%90%AD%E5%BB%BA/">Hexo博客网站优化+基本组件搭建</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
       
       <li class="post-item">
         
@@ -221,6 +201,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

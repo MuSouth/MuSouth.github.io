@@ -66,6 +66,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -100,7 +104,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/03/01/%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3Redis/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
@@ -184,16 +188,16 @@
 
   <div class="content e-content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看到了几篇写得很好的文章，让我对Redis的理解更加清晰。下面将文章链接放在参考里，顺便分享下我自己的理解。Redis (Remote Dictionary Server)，直译过来就是远程字典服务，这个名字初看可能不知所云，但相信在后面的讲解中能够变得越来越清晰易懂。</p>
-<h2 id="应用背景"><a href="#应用背景" class="headerlink" title="应用背景"></a>应用背景</h2><p>假设你需要维护一个商品服务，背后直连mysql数据库，mysql数据库一般存放在磁盘上，读取速度最多支持5k QPS，但实际情况下可能超过了1w QPS，此时服务很容易崩溃，这类场景在秒杀、春运抢车票等场景下很常见。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153737.png" alt="image.png"></p>
-<p>为了保证数据库不被压垮，可以引入一个中间件，这就是Redis的定位。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153940.png" alt="image.png"></p>
+<h2 id="应用背景"><a href="#应用背景" class="headerlink" title="应用背景"></a>应用背景</h2><p>假设你需要维护一个商品服务，背后直连mysql数据库，mysql数据库一般存放在磁盘上，读取速度最多支持5k QPS，但实际情况下可能超过了1w QPS，此时服务很容易崩溃，这类场景在秒杀、春运抢车票等场景下很常见。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153737.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153737.png" alt="image.png"></a></p>
+<p>为了保证数据库不被压垮，可以引入一个中间件，这就是Redis的定位。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153940.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526153940.png" alt="image.png"></a></p>
 <p>mysql数据存放在磁盘里，如果将mysql数据放到内存里，查询完全不走磁盘，那么读取速度一定会加速很多，很容易想到，在商品服务的内存里申请一个词典，python里就是dict，java里叫map。key是商品id，value是商品数据，发生查询时，先查询内存词典，如果有结果就返回，没结果再去查询mysql，然后将查询结果顺便放到词典里，下次如果还要查该数据，就可以从内存直接取出来了。而且这个读取内存词典查到的话，用专业术语描述就是“缓存命中“，没查到就是没命中呗。</p>
-<p>像上面这样的放在服务器内部的缓存，就是所谓的本地缓存。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154407.png" alt="image.png"></p>
-<p>在实际应用场景下，为了保证系统高可用，可能不仅有一个实例，如果针对每个商品服务实例都重复缓存一份本地内存，就有点浪费空间了。因此在上面这个内存词典的基础上，抽象出来了一层服务，这个服务就是远程缓存服务（远程字典服务）。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154621.png" alt="image.png"></p>
-<p>当多个商品服务读写同一份远程缓存时，存在并发问题，正常来说针对并发问题，可以通过多线程、异步编程等思路解决，但Redis的设计却是简单直接。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154755.png" alt="image.png"><br>不管来多少读写命令的网络请求，都统一放到一个线程上，在一个线程上进行读写，从而解决了并发问题和线程切换开销。</p>
-<p>当然截止到目前，上面这个缓存服务只有dict字典提供的key-value数据类型，而且key和value都是字符串，因此可以考虑对value数据类型进行扩展，因此引入了支持先进先出的List、用于去重的Set以及可以作排行榜的有序集合ZSet。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526155040.png" alt="image.png"><br>现在缓存服务已经很好了，但紧接着要考虑下一个问题，内存空间不是无限的，因此必须要设计数据过期和驱逐策略，简单来说，就是给存入的数据设置一个过期时间，到期了就从内存删掉。但如果不设置过期时间，内存还是会炸，所以还要设计一些保障策略，这个保障策略中最典型的就是LRU，LRU会将最近最少使用内存数据删掉，当然还有其他策略，有兴趣自行研究。</p>
+<p>像上面这样的放在服务器内部的缓存，就是所谓的本地缓存。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154407.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154407.png" alt="image.png"></a></p>
+<p>在实际应用场景下，为了保证系统高可用，可能不仅有一个实例，如果针对每个商品服务实例都重复缓存一份本地内存，就有点浪费空间了。因此在上面这个内存词典的基础上，抽象出来了一层服务，这个服务就是远程缓存服务（远程字典服务）。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154621.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154621.png" alt="image.png"></a></p>
+<p>当多个商品服务读写同一份远程缓存时，存在并发问题，正常来说针对并发问题，可以通过多线程、异步编程等思路解决，但Redis的设计却是简单直接。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154755.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526154755.png" alt="image.png"></a><br>不管来多少读写命令的网络请求，都统一放到一个线程上，在一个线程上进行读写，从而解决了并发问题和线程切换开销。</p>
+<p>当然截止到目前，上面这个缓存服务只有dict字典提供的key-value数据类型，而且key和value都是字符串，因此可以考虑对value数据类型进行扩展，因此引入了支持先进先出的List、用于去重的Set以及可以作排行榜的有序集合ZSet。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526155040.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526155040.png" alt="image.png"></a><br>现在缓存服务已经很好了，但紧接着要考虑下一个问题，内存空间不是无限的，因此必须要设计数据过期和驱逐策略，简单来说，就是给存入的数据设置一个过期时间，到期了就从内存删掉。但如果不设置过期时间，内存还是会炸，所以还要设计一些保障策略，这个保障策略中最典型的就是LRU，LRU会将最近最少使用内存数据删掉，当然还有其他策略，有兴趣自行研究。</p>
 <p>现在防止内存空间不够用的功能也有了，最后就是要考虑数据持久化问题了，因为缓存服务一旦重启，数据就会全部丢失，这是RAM的特性。所以可以考虑加一个异步线程，定期将全量内存里的数据持久化到磁盘文件里，将内存数据生成快照保存到文件的方式就是所谓的RDB，Redis DataBase Backup。此外还有一种方式在每次写入数据时，顺手将数据操作记录到文件缓存中，每秒将文件缓存输入磁盘，这种持久化机制叫AOF，服务启动时跟着文件重新执行一遍就能将大部分数据还原，最大程度保证数据持久化。</p>
 <p>解决了数据持久化问题，基本上服务已经完善了，最后规定下这个远程缓存服务如何对外提供读写能力，Redis中基于TCP作传输，并且redis官方提供redis-cli命令行，可以通过简单明了读写数据。</p>
-<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526162630.png" alt="image.png"></p>
+<p><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526162630.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250526162630.png" alt="image.png"></a></p>
 <p>到这里，当初那个简陋的远程缓存服务，就成了一个<strong>高性能</strong>，<strong>支持多种数据类型</strong>和各种<strong>缓存淘汰策略</strong>，并提供一定<strong>持久化</strong>能力的超强缓存服务，没错，它就是我们常说的 <strong>Redis</strong>，全称 <strong>Remote Dictionary Server</strong>，这名字就很精辟了，说白了 redis 就是个远程的字典服务。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Redis本质上就是个远程字典服务，而且所有读写命令等核心逻辑都在一个线程完成，从而避免了线程切换开销和并发问题等。而且Redis支持多种数据类型，例如字符串、列表、集合、有序集合等，方便其他功能集成，而且存在内存过期策略和驱逐策略，并且通过TCP对外提供传输协议。<br>此外，Redis有一套持久化保证，按照Append only File (AOF)的机制实现数据持久化，最后Redis支持多种扩展，可以作个简易版的MongoDB（也就是Redis JSON服务）等。–</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
@@ -356,6 +360,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

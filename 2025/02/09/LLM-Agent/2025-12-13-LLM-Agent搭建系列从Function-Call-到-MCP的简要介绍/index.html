@@ -63,6 +63,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -202,9 +206,9 @@
 <li>MCP Clients：与服务器保持1：1链接的协议客户端</li>
 <li>MCP Servers：轻量级程序，每个程序都通过标准化的Model Context Protocol公开特定功能</li>
 <li>Local Data Sources：MCP服务器可以安全访问计算机的文件、数据库和服务</li>
-<li>Remote Services：MCP服务器可以连接到的Internet上可用的外部系统（例如API）<br>下图是MCP架构示意图：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162016.png" alt="image.png"></li>
+<li>Remote Services：MCP服务器可以连接到的Internet上可用的外部系统（例如API）<br>下图是MCP架构示意图：<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162016.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162016.png" alt="image.png"></a></li>
 </ul>
-<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162203.png" alt="image.png"><br>MCP作为一种开放协议，标准化了应用程序如何为LLM提高上下文，是AI模型的“万能转换头”。<br>MCP的技术路径一般为：</p>
+<p><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162203.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162203.png" alt="image.png"></a><br>MCP作为一种开放协议，标准化了应用程序如何为LLM提高上下文，是AI模型的“万能转换头”。<br>MCP的技术路径一般为：</p>
 <ul>
 <li>MCP Client（Claude Desktop &#x2F; Cursor等）发送问题到LLM</li>
 <li>LLM分析可用工具，并决定使用哪一个或多个</li>
@@ -218,7 +222,7 @@
 <li><a href="https://link.zhihu.com/?target=https://modelcontextprotocol.io/clients">Example Clients - Model Context Protocol</a></li>
 <li><a href="https://link.zhihu.com/?target=https://modelcontextprotocol.io/examples">Example Servers - Model Context Protocol</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29428728150">MCP (Model Context Protocol) 是什么？ - 知乎 (zhihu.com)</a>一文中这个总结感觉很好：FcuntionCall解决如何调用工具的问题，Agent解决如何智能规划任务的问题，MCP解决如何高效管理工具的问题。</li>
 </ul>
-<h2 id="好用的开源代码"><a href="#好用的开源代码" class="headerlink" title="好用的开源代码"></a>好用的开源代码</h2><h3 id="1-FastMCP"><a href="#1-FastMCP" class="headerlink" title="1. FastMCP"></a>1. FastMCP</h3><p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162055.png" alt="image.png"></p>
+<h2 id="好用的开源代码"><a href="#好用的开源代码" class="headerlink" title="好用的开源代码"></a>好用的开源代码</h2><h3 id="1-FastMCP"><a href="#1-FastMCP" class="headerlink" title="1. FastMCP"></a>1. FastMCP</h3><p><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162055.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162055.png" alt="image.png"></a></p>
 <h4 id="FastMCP的优势"><a href="#FastMCP的优势" class="headerlink" title="FastMCP的优势"></a>FastMCP的优势</h4><p>FastMCP是MCP协议的高级python实现，简化了创建MCP服务器何客户端的过程，与直接使用底层MCP SDK相比，FastMCP开发高效、简洁、python设计、实现规范。<br>FastMCP核心包括tool()、prompt()、resouce()等等，具体介绍参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032112">这篇博客</a>，写的比较全面。</p>
 <h3 id="2-MCP-LLM-Bridge"><a href="#2-MCP-LLM-Bridge" class="headerlink" title="2. MCP-LLM-Bridge"></a>2. MCP-LLM-Bridge</h3><p>大型语言模型（LLM）的应用场景越来越广泛，而不同模型之间的协议差异也带来了集成和使用上的挑战。本文将详细介绍MCP LLM Bridge，这是一个连接Model Context Protocol (MCP)服务器与OpenAI兼容LLM的桥接工具，它使得任何兼容OpenAI API的语言模型都能够通过标准化接口利用MCP兼容工具，无论是使用云端模型还是本地部署的实现（如Ollama）。<br>MCP LLM Bridge是一个双向协议转换层，在MCP和OpenAI的函数调用接口之间建立联系，它将MCP工具规范转换为OpenAI函数模式，并处理函数调用回到MCP工具执行的映射。这种设计使得开发者可以在不同的模型和工具生态系统之间无缝切换，极大地提高了开发效率和系统灵活性。<br>具体介绍和使用参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/kunhe0512/article/details/148032129">这篇博客</a>。</p>
 <h2 id="MCP的定位"><a href="#MCP的定位" class="headerlink" title="MCP的定位"></a>MCP的定位</h2><p>很多时候MCP好像与Function Call区别不大，只是它规范了API等工具的调用，所以很多人将其理解为Function Call的集合，实际上MCP的意义可能远大于此。<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Rau6OQT-5AeUGNQgZDT4pQ">这篇文章</a>写的很好，值得一看。</p>
@@ -387,6 +391,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

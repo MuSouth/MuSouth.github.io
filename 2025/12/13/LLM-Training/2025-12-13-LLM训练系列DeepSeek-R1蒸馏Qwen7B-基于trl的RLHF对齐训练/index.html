@@ -20,8 +20,8 @@
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
 <meta property="article:modified_time" content="2025-12-13T09:06:06.156Z">
 <meta property="article:author" content="MuSouth">
-<meta property="article:tag" content="RLHF">
 <meta property="article:tag" content="训练">
+<meta property="article:tag" content="RLHF">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250603100124.png">
     
@@ -64,6 +64,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -98,7 +102,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Technology/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Training/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E8%A7%A3%E6%9E%90/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -183,10 +187,10 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大语言模型一般用来回答问题，而所谓的问答本质上还是在续写，问题可以看作一个被打断的句子。而我们在微调里分享过这样一个观点，预训练大模型并不具备对话的能力，而需要SFT以及RLHF等指令微调后才具备正常对话能力。初看这两个观点其实有点冲突，但实际上并不是，因为所谓RLHF对齐训练后模型才具备了更好的对话表现，本质上还是增强了模型的生成续写的能力，只不过以人类的偏好作为目标。简而言之RLHF，Reinforcement Learning from Human Feedback即使用强化学习的方法，是一种利用人类反馈信号直接优化语言模型的方式。<br>我们已经简单分享过了如何进行微调，下面就RLHF这一关键任务。RLHF的训练过程大概分为三个阶段：1）多种策略产生样本并收集人类反馈；2）训练奖励模型；3）训练强化学习策略，微调LLM。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250603100124.png" alt="image.png"></p>
-<h2 id="RLHF训练流程"><a href="#RLHF训练流程" class="headerlink" title="RLHF训练流程"></a>RLHF训练流程</h2><p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748870429379.png" alt="1748870429379.png"></p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大语言模型一般用来回答问题，而所谓的问答本质上还是在续写，问题可以看作一个被打断的句子。而我们在微调里分享过这样一个观点，预训练大模型并不具备对话的能力，而需要SFT以及RLHF等指令微调后才具备正常对话能力。初看这两个观点其实有点冲突，但实际上并不是，因为所谓RLHF对齐训练后模型才具备了更好的对话表现，本质上还是增强了模型的生成续写的能力，只不过以人类的偏好作为目标。简而言之RLHF，Reinforcement Learning from Human Feedback即使用强化学习的方法，是一种利用人类反馈信号直接优化语言模型的方式。<br>我们已经简单分享过了如何进行微调，下面就RLHF这一关键任务。RLHF的训练过程大概分为三个阶段：1）多种策略产生样本并收集人类反馈；2）训练奖励模型；3）训练强化学习策略，微调LLM。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250603100124.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250603100124.png" alt="image.png"></a></p>
+<h2 id="RLHF训练流程"><a href="#RLHF训练流程" class="headerlink" title="RLHF训练流程"></a>RLHF训练流程</h2><p><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748870429379.png" data-caption="1748870429379.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748870429379.png" alt="1748870429379.png"></a></p>
 <p>预训练阶段需要训练两个模型，一个actor，来生成评价，一个是critic模型，来评判生成评价好与坏。actor不断生成结果，critic不断评估。</p>
-<h4 id="PPO：标准RLHF的训练方法"><a href="#PPO：标准RLHF的训练方法" class="headerlink" title="PPO：标准RLHF的训练方法"></a>PPO：标准RLHF的训练方法</h4><p>在PPO的RLHF过程中，一共有4个模型参与，model_actor_ref是model_actor的复制，model_actor在实际链路中训练，ref可以看成是一个对齐训练前的预训练模型快照。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872263247.png" alt="1748872263247.png"><br>构建批数据的过程比较复杂。但训练过程反而简单了，只涉及到了actor和value模型。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872797300.png" alt="1748872797300.png"></p>
+<h4 id="PPO：标准RLHF的训练方法"><a href="#PPO：标准RLHF的训练方法" class="headerlink" title="PPO：标准RLHF的训练方法"></a>PPO：标准RLHF的训练方法</h4><p>在PPO的RLHF过程中，一共有4个模型参与，model_actor_ref是model_actor的复制，model_actor在实际链路中训练，ref可以看成是一个对齐训练前的预训练模型快照。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872263247.png" data-caption="1748872263247.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872263247.png" alt="1748872263247.png"></a><br>构建批数据的过程比较复杂。但训练过程反而简单了，只涉及到了actor和value模型。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872797300.png" data-caption="1748872797300.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748872797300.png" alt="1748872797300.png"></a></p>
 <p>本次实验数据集采用imdb影评数据集，该数据集已经集成在datasets下，可以直接load下载调用，其余代码如下：</p>
 <p>这里说明的是，计算critic以及actor输出prob_logits计算两者之间的KL散度，用这个散度以及value模型的输出作为loss作强化学习训练。</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
@@ -349,6 +353,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

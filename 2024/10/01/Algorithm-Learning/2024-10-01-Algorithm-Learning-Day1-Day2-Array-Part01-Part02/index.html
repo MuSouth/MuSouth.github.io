@@ -63,6 +63,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -97,10 +101,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/10/01/%E7%AC%AC%E4%B8%80%E5%A4%A9&%E7%AC%AC%E4%BA%8C%E5%A4%A9%EF%BC%9A%E6%95%B0%E7%BB%84part01&part02/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/10/02/Algorithm-Learning/2024-10-02-Algorithm-Learning-Day1-Day2-Array-Part01-Part02-2/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/04/01/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -185,7 +189,7 @@
     <h2 id="数组理论基础与基础操作"><a href="#数组理论基础与基础操作" class="headerlink" title="数组理论基础与基础操作"></a>数组理论基础与基础操作</h2><p>数据属于最基础的数据结构，这块的题目思维不难，主要是代码细节，例如一些边界条件需要非常清晰才可以。首先数组的定义：<strong>数组是存放在内存空间上的相同类型数据的集合。</strong> 数组可以通过下标索引快速获取对应下标位置的数据。数组满足以下两点：</p>
 <ul>
 <li>数组下标从0开始</li>
-<li>数组内存空间地址连续<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png" alt="1747143263934.png"><br>对于数组来说常用操作包括：</li>
+<li>数组内存空间地址连续<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png" data-caption="1747143263934.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png" alt="1747143263934.png"></a><br>对于数组来说常用操作包括：</li>
 <li>初始化数组<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存储在栈上，内存由系统程序自动管理</span></span><br><span class="line"><span class="type">int</span> arr[<span class="number">5</span>];</span><br><span class="line"><span class="type">int</span> nums[<span class="number">5</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="comment">// 存储在堆上，内存需要手动释放</span></span><br><span class="line"><span class="type">int</span>* arr1 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">5</span>];</span><br><span class="line"><span class="type">int</span>* nums1 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">5</span>] &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br></pre></td></tr></table></figure></li>
 <li>访问元素<br>数组索引从0开始，索引本质上是内存地址的偏移量。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">randomAccess</span><span class="params">(<span class="type">int</span> * nums, <span class="type">int</span> size)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> randomIndex = <span class="built_in">rand</span>() % size;</span><br><span class="line">	<span class="type">int</span> randomNum = nums[randomIndex];</span><br><span class="line">	<span class="keyword">return</span> randomNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
 <li>插入元素<br>在某个位置插入元素后，需要将之后的元素后移动一位，而且如果数组长度固定，原本数组末尾数字会消失。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> size, <span class="type">int</span> num, <span class="type">int</span> index)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 倒着插入数据一次遍历即可，这种倒着进行遍历的思想算法中有很多</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = size - <span class="number">1</span>; i &gt; index; i--) &#123;</span><br><span class="line">		nums[i] = nums[i - <span class="number">1</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	nums[index] = num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
@@ -202,14 +206,14 @@
 <li>while (left &lt;&#x3D; right) 要使用 &lt;&#x3D; ，因为left &#x3D;&#x3D; right是有意义的，所以使用 &lt;&#x3D;</li>
 <li>if (nums[middle] &gt; target) right 要赋值为 middle - 1，因为当前这个nums[middle]一定不是target，那么接下来要查找的左区间结束下标位置就是 middle - 1</li>
 </ul>
-<p>例如在数组：1,2,3,4,7,9,10中查找元素2，如图所示：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513222314.png" alt="image.png"></p>
+<p>例如在数组：1,2,3,4,7,9,10中查找元素2，如图所示：<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513222314.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513222314.png" alt="image.png"></a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [left, right]左闭右闭，要保证这个区间上任何一个值都是有效索引</span></span><br><span class="line"><span class="comment">// 就要保证right = Len - 1，因为索引从0 -- N- 1</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> right = nums.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span> (left &lt;= right) &#123; <span class="comment">// 因为right==left有意义，因此这里取&lt;=</span></span><br><span class="line">		<span class="type">int</span> mid = left + (right - left) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (nums[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) right = mid - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> left = mid + <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="第二种，左闭右开"><a href="#第二种，左闭右开" class="headerlink" title="第二种，左闭右开"></a>第二种，左闭右开</h4><p>如果说定义 target 是在一个在左闭右开的区间里，也就是[left, right)。<br>有如下两点：</p>
 <ul>
 <li>while (left &lt; right)，这里使用 &lt; ,因为left &#x3D;&#x3D; right在区间[left, right)是没有意义的</li>
 <li>if (nums[middle] &gt; target) right 更新为 middle，因为当前nums[middle]不等于target，去左区间继续寻找，而寻找区间是左闭右开区间，所以right更新为middle，即：下一个查询区间不会去比较nums[middle]</li>
 </ul>
-<p>在数组：1,2,3,4,7,9,10中查找元素2，如图所示：（<strong>注意和方法一的区别</strong>）<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513223048.png" alt="image.png"></p>
+<p>在数组：1,2,3,4,7,9,10中查找元素2，如图所示：（<strong>注意和方法一的区别</strong>）<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513223048.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513223048.png" alt="image.png"></a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> right = nums.<span class="built_in">size</span>();</span><br><span class="line">	<span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">// 因为right==left有意义，因此这里取&lt;=</span></span><br><span class="line">		<span class="type">int</span> mid = left + (right - left) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (nums[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) right = mid;</span><br><span class="line">		<span class="keyword">else</span> left = mid + <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>边界条件是很多算法中最容易混淆的东西，只能多写</strong></p>
 <h3 id="27-移除元素"><a href="#27-移除元素" class="headerlink" title="27. 移除元素"></a>27. 移除元素</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element/">力扣题目链接</a><br>给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并<strong>原地</strong>修改输入数组。<br>元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。<br>示例 1: 给定 nums &#x3D; [3,2,2,3], val &#x3D; 3, 函数应该返回新的长度 2, 并且 nums 中的前两个元素均为 2。 你不需要考虑数组中超出新长度后面的元素。<br>示例 2: 给定 nums &#x3D; [0,1,2,2,3,0,4,2], val &#x3D; 2, 函数应该返回新的长度 5, 并且 nums 中的前五个元素为 0, 1, 3, 0, 4。</p>
@@ -391,6 +395,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

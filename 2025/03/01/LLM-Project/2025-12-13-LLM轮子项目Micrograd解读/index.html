@@ -60,6 +60,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -191,7 +195,7 @@
 <p>这就是加法梯度计算的核心原理，在微积分中，加法的梯度就是一个简单的线性操作。对于整个模型网络来说，梯度的传播就是根据链式法则进行的。<br>其余关于一些激活函数梯度计算、乘法梯度计算以及幂运算、指数运算等都有相应的实现。<br>参考文献1里讲解很好，可以一看。</p>
 <h2 id="代码运行"><a href="#代码运行" class="headerlink" title="代码运行"></a>代码运行</h2><p>没有什么必须依赖，除了graphviz用来作可视化的时候需要。Linux环境下安装graphviz按照下列命令执行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install graphviz graphviz-dev</span><br><span class="line">pip install pygraphviz</span><br></pre></td></tr></table></figure>
-<p>运行<code>python micrograd.py</code>会得到如下可视化结果：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/graph.svg" alt="graph.svg"></p>
+<p>运行<code>python micrograd.py</code>会得到如下可视化结果：<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/graph.svg" data-caption="graph.svg"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/graph.svg" alt="graph.svg"></a></p>
 <h2 id="见微知著"><a href="#见微知著" class="headerlink" title="见微知著"></a>见微知著</h2><p>直到现在，反向传播是整个深度学习领域的基础，一个深度模型无论多复杂，其最终能实现训练并成功收敛，都是借助于一个合理的训练目标函数+反向传播算法。反向传播的核心是链式法则求导，从输出端点出发，一层一层反向传播梯度偏分，模型上每一层的参数接受梯度引导实现自动优化。优化器例如SGD、ADAM、ADAMW等只是参数更新的策略，没有反向传播就无法实现参数更新。因此Micrograd项目实现的自动微分引擎，其代码很值得参考。能让我们对深度学习有更深理解。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a target="_blank" rel="noopener" href="https://aijishu.com/a/1060000000477983">LLM101n 硬核代码解读：Micrograd，一个轻量级的自动微分引擎 - 极术社区 - 连接开发者与智能计算生态 (aijishu.com)</a></li>
@@ -351,6 +355,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

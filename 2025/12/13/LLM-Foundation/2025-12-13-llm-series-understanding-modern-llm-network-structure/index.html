@@ -65,6 +65,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -99,10 +103,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Technology/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%B9%8B-MHA-MQA-GQA-FlashAttention1-2-3%E8%A7%A3%E8%AF%BB/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -188,10 +192,10 @@
 <h3 id="主要参考"><a href="#主要参考" class="headerlink" title="主要参考"></a>主要参考</h3><p><a target="_blank" rel="noopener" href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/">https://ai.meta.com/research/publications/the-llama-3-herd-of-models/</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/713794852">从Llama 3报告出发的一些LLM技术整理 - 知乎 (zhihu.com)</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T7aD9diSNymHhv68FSaSZA">https://mp.weixin.qq.com/s/T7aD9diSNymHhv68FSaSZA</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/@AndrejKarpathy/videos">https://www.youtube.com/@AndrejKarpathy/videos</a><br>还是看下Andrej Karpathy的视频，一个是从0开始完整搭建GPT2（<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=kCc8FmEb1nY&t=792s" title="Let&#39;s build GPT: from scratch, in code, spelled out.">Let’s build GPT: from scratch, in code, spelled out.</a>），一个是3小时ChatGPT大模型沉浸式讲解（<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7xTGNNLPyMI&t=1s" title="Deep Dive into LLMs like ChatGPT">Deep Dive into LLMs like ChatGPT</a>）。通过这两个视频，一定可以更好理解整个大模型工程过程，<strong>注意工程这个词</strong>，仅仅理解大模型相关理论是不够的，很多优化技术都是针对工程实现上的困难而作出的，对于大模型来说，理论与工程同等重要。</p>
 <h2 id="1-大模型Overview"><a href="#1-大模型Overview" class="headerlink" title="1. 大模型Overview"></a>1. 大模型Overview</h2><h3 id="1-1-基础模型训练阶段"><a href="#1-1-基础模型训练阶段" class="headerlink" title="1.1 基础模型训练阶段"></a>1.1 基础模型训练阶段</h3><p>（1）预训练阶段pre-training：next word prediction，用交叉熵损失训练。<br>（2）后训练阶段post-training：包括SFT(监督微调)技术，以及RLHF(强化学习人类反馈)、DPO(直接偏好优化 direct preference optimization)、PPO等强化学习技术。将模型偏好对齐到人类喜好上，或让模型在特定任务上的能力提升。<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/20922850916">LLM中的强化学习：从RLHF到DPO - 知乎 (zhihu.com)</a></p>
 <h3 id="RMSNorm"><a href="#RMSNorm" class="headerlink" title="RMSNorm"></a>RMSNorm</h3><p>【其他博客】<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42295205/article/details/144963811">【归一化】RMSNorm_rms norm-CSDN博客</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012856866/article/details/146639778?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-146639778-blog-144963811.235%5Ev43%5Epc_blog_bottom_relevance_base6&spm=1001.2101.3001.4242.1&utm_relevant_index=2">【大模型】归一化方法之Batch Norm, Layer Norm, RMS Norm-CSDN博客</a></p>
-<h4 id="1-Normalization是什么"><a href="#1-Normalization是什么" class="headerlink" title="1. Normalization是什么"></a>1. Normalization是什么</h4><p>在统计学中，一般翻译成归一化，或正则化。还有一个概念叫Standardization，叫做标准化。归一化一般是将数据缩放到0 - 1之间，标准化是将数据缩放到均值为0，方差为1的正态分布。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png" alt="image.png"><br>在神经网络中，最早的Batch Normalization，到后边Transformer常用的Layer Norm，严格意义来讲都是Standardization，也就是将特征数据调整到均值为0，方差为1的缩放平移操作，一般这种标准化是为了消除输入数据的量纲。</p>
-<h4 id="2-Batch-Normalization"><a href="#2-Batch-Normalization" class="headerlink" title="2. Batch Normalization"></a>2. Batch Normalization</h4><p>批归一化，最早2015年Sergey loffe等提出，BatchNorm 主要解决的问题是在训练深度神经网络时出现的内部协变量偏移（Internal Covariate Shift），即网络中各层输入数据分布的变化。所谓的内部协变量偏移是指随着网络层数加深，每一层的输入数据的分布（前一层的输出）会发生变化，导致训练梯度消失或爆炸问题，从而影响网络的收敛速度和稳定性。<br>BN关注的是批次每一列数据，表示不同样本的同一维特征，这个特性也是Transformer不使用的BN的原因，因为Transformer的输入序列长度不恒定，无法保证一个Batch里的数据有相同的长度。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230813.png" alt="image.png"></p>
-<h4 id="3-Layer-Norm"><a href="#3-Layer-Norm" class="headerlink" title="3. Layer Norm"></a>3. Layer Norm</h4><p>LayerNorm（Layer Normalization），层归一化是一种在深度学习中用于稳定神经网络训练和提高性能的技术。它是由 Jimmy Lei Ba、Jamie Ryan Kiros、Geoffrey E. Hinton 在 2016 年提出的。LayerNorm 与 Batch Normalization 类似，都旨在减少内部协变量偏移，但它们在归一化的具体实现上有所不同。<br>Layer Norm对每个样本所有特征作标准化，而不是基于一个批次。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231718.png" alt="image.png"></p>
-<h4 id="4-RMS-Norm-均方根层归一化"><a href="#4-RMS-Norm-均方根层归一化" class="headerlink" title="4. RMS Norm 均方根层归一化"></a>4. RMS Norm 均方根层归一化</h4><p>RMS Norm（Root MeanSquare Layer Norm），均方根层归一化 是 LayerNorm 的一个简单变体，来自 2019 年的论文 Root Mean Square Layer Normalization，被当前主流的大模型（ LLama，Qwen, DeepSeek等 ）所使用。可以说目前大模型基本都用这个归一化方法，RMSNorm认为 LN很好，但每次都要计算均值和方差，LN成功的原因是re-scaling，因为方差计算的过程中用到了均值，而RMSNorm不再使用均值计算方差，而是直接使用均方根RMS代替方差Var。<br>RMSNorm不再需要计算均值和方差，而只需要计算 均方根RMS 一个统计量即可。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231707.png" alt="image.png"><br>上述公式中$g_i$是可学习的缩放因子，偏移参数$b_i$移除掉了。实验验证RMSNorm与LN性能相当，但节省7%到64%的计算量。其代码实现也很简单：</p>
+<h4 id="1-Normalization是什么"><a href="#1-Normalization是什么" class="headerlink" title="1. Normalization是什么"></a>1. Normalization是什么</h4><p>在统计学中，一般翻译成归一化，或正则化。还有一个概念叫Standardization，叫做标准化。归一化一般是将数据缩放到0 - 1之间，标准化是将数据缩放到均值为0，方差为1的正态分布。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png" alt="image.png"></a><br>在神经网络中，最早的Batch Normalization，到后边Transformer常用的Layer Norm，严格意义来讲都是Standardization，也就是将特征数据调整到均值为0，方差为1的缩放平移操作，一般这种标准化是为了消除输入数据的量纲。</p>
+<h4 id="2-Batch-Normalization"><a href="#2-Batch-Normalization" class="headerlink" title="2. Batch Normalization"></a>2. Batch Normalization</h4><p>批归一化，最早2015年Sergey loffe等提出，BatchNorm 主要解决的问题是在训练深度神经网络时出现的内部协变量偏移（Internal Covariate Shift），即网络中各层输入数据分布的变化。所谓的内部协变量偏移是指随着网络层数加深，每一层的输入数据的分布（前一层的输出）会发生变化，导致训练梯度消失或爆炸问题，从而影响网络的收敛速度和稳定性。<br>BN关注的是批次每一列数据，表示不同样本的同一维特征，这个特性也是Transformer不使用的BN的原因，因为Transformer的输入序列长度不恒定，无法保证一个Batch里的数据有相同的长度。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230813.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230813.png" alt="image.png"></a></p>
+<h4 id="3-Layer-Norm"><a href="#3-Layer-Norm" class="headerlink" title="3. Layer Norm"></a>3. Layer Norm</h4><p>LayerNorm（Layer Normalization），层归一化是一种在深度学习中用于稳定神经网络训练和提高性能的技术。它是由 Jimmy Lei Ba、Jamie Ryan Kiros、Geoffrey E. Hinton 在 2016 年提出的。LayerNorm 与 Batch Normalization 类似，都旨在减少内部协变量偏移，但它们在归一化的具体实现上有所不同。<br>Layer Norm对每个样本所有特征作标准化，而不是基于一个批次。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231718.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231718.png" alt="image.png"></a></p>
+<h4 id="4-RMS-Norm-均方根层归一化"><a href="#4-RMS-Norm-均方根层归一化" class="headerlink" title="4. RMS Norm 均方根层归一化"></a>4. RMS Norm 均方根层归一化</h4><p>RMS Norm（Root MeanSquare Layer Norm），均方根层归一化 是 LayerNorm 的一个简单变体，来自 2019 年的论文 Root Mean Square Layer Normalization，被当前主流的大模型（ LLama，Qwen, DeepSeek等 ）所使用。可以说目前大模型基本都用这个归一化方法，RMSNorm认为 LN很好，但每次都要计算均值和方差，LN成功的原因是re-scaling，因为方差计算的过程中用到了均值，而RMSNorm不再使用均值计算方差，而是直接使用均方根RMS代替方差Var。<br>RMSNorm不再需要计算均值和方差，而只需要计算 均方根RMS 一个统计量即可。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231707.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231707.png" alt="image.png"></a><br>上述公式中$g_i$是可学习的缩放因子，偏移参数$b_i$移除掉了。实验验证RMSNorm与LN性能相当，但节省7%到64%的计算量。其代码实现也很简单：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LlamaRMSNorm</span>(nn.Module):</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, hidden_size, eps=<span class="number">1e-6</span></span>):</span><br><span class="line">		<span class="built_in">super</span>().__init__()</span><br><span class="line">		<span class="variable language_">self</span>.weight = nn.Parameter(torch.ones(hidden_size))</span><br><span class="line">		<span class="variable language_">self</span>.variance_eps = eps</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, hidden_states</span>):</span><br><span class="line">		input_dtype = hidden_states.dtype</span><br><span class="line">		variance = hidden_states.<span class="built_in">pow</span>(<span class="number">2</span>).mean(-<span class="number">1</span>, keepdim=<span class="literal">True</span>) // 最后一维求均值</span><br><span class="line">		<span class="comment"># torch.rsqrt计算每个元素的平方根的倒数</span></span><br><span class="line">		<span class="comment"># out_i = 1 / sqrt(x_i)</span></span><br><span class="line">		hidden_states = hidden_states * torch.rsqrt(variance + <span class="variable language_">self</span>.variance_eps)</span><br><span class="line">		<span class="keyword">return</span> (<span class="variable language_">self</span>.weight * hidden_states).to(input_dtype)</span><br></pre></td></tr></table></figure>
 
 
@@ -348,6 +352,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

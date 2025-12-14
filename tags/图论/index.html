@@ -53,6 +53,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -108,54 +112,6 @@
       
       
         <li class="post-year"><h2>2024</h2></li>
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2024-10-06T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-10-06</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/2024/10/06/%E7%AC%AC%E4%BA%94%E5%A4%A9%EF%BC%9A%E5%9B%BE%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95part02/">算法学习第五天：图论相关算法part02</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2024-10-06T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-10-06</time>
-        
-      
-    </div>
-
-
-        <span>
-    
-        <a class="" href="/2024/10/06/%E7%AC%AC%E4%BA%94%E5%A4%A9%EF%BC%9A%E5%9B%BE%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95part01/">算法学习第五天：图论相关算法part01</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
       
       <li class="post-item">
         
@@ -269,6 +225,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

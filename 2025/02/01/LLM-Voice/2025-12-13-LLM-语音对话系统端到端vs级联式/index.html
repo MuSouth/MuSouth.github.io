@@ -65,6 +65,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -185,10 +189,10 @@
 
   <div class="content e-content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前以LLM为核心的语音对话系统主要有端到端和级联式两种构建思路。端到端结构直接将用户输入语音映射到语音输出，全流程直接对音频序列作处理。级联式架构则是先用语音识别ASR将用户输入语音转化为文本，通过LLM进行文本回复，然后通过文本转语音TTS合成语音。</p>
-<h2 id="端到端语音语言SpeechLMs架构"><a href="#端到端语音语言SpeechLMs架构" class="headerlink" title="端到端语音语言SpeechLMs架构"></a>端到端语音语言SpeechLMs架构</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/python12222_/article/details/142452495">开源语音实时交互新突破：LLaMA-Omni实现大语言模型无缝语音交互-CSDN博客</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134233.png" alt="image.png"></p>
+<h2 id="端到端语音语言SpeechLMs架构"><a href="#端到端语音语言SpeechLMs架构" class="headerlink" title="端到端语音语言SpeechLMs架构"></a>端到端语音语言SpeechLMs架构</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/python12222_/article/details/142452495">开源语音实时交互新突破：LLaMA-Omni实现大语言模型无缝语音交互-CSDN博客</a><br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134233.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134233.png" alt="image.png"></a></p>
 <p>端到端的架构优势在于：延迟小，对话自然度高，目前已有的跨模态端到端语音大模型，例如gpt-4o-realtime、Qwen2.5-omni，这类端到端的模型对话更真实自然 。该类模型还能在对话中引入诸如“嗯”、“呵呵”等<strong>非文本信号</strong>（如插话、笑声、语气等），提升亲切度 。端到端系统天生支持多模态理解（如同时分析语音、背景音和上下文），并且适合开放式、互动式对话场景。</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/buyi-gao/p/18796561">Qwen2.5-Omni技术报告 - 一介布衣、 - 博客园 (cnblogs.com)</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134219.png" alt="image.png"><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134353.png" alt="image.png"></p>
-<h2 id="级联式架构"><a href="#级联式架构" class="headerlink" title="级联式架构"></a>级联式架构</h2><p>级联式对话模型通常拆解为ASR、LLM、TTS的流程化处理，这类架构稳定性强，工程化较简单。而且拆解开的三个部分都比较成熟，下面对ASR、TTS的分类和主流做法作重点分析。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131936.png" alt="image.png"></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/buyi-gao/p/18796561">Qwen2.5-Omni技术报告 - 一介布衣、 - 博客园 (cnblogs.com)</a><br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134219.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134219.png" alt="image.png"></a><br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134353.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530134353.png" alt="image.png"></a></p>
+<h2 id="级联式架构"><a href="#级联式架构" class="headerlink" title="级联式架构"></a>级联式架构</h2><p>级联式对话模型通常拆解为ASR、LLM、TTS的流程化处理，这类架构稳定性强，工程化较简单。而且拆解开的三个部分都比较成熟，下面对ASR、TTS的分类和主流做法作重点分析。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131936.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131936.png" alt="image.png"></a></p>
 <h3 id="ASR"><a href="#ASR" class="headerlink" title="ASR"></a>ASR</h3><p>ASR通常有两种做法，传统的识别方法例如：基于隐马尔可夫模型作识别；基于深度神经网络的端到端方法。ASR的基本流程包括预处理、特征提取、声学模型计算、语言模型作用以及解码输出等。</p>
 <ul>
 <li>预处理包括对数据降噪、静音段检测、滤波等，提升语音信号质量，减少噪声干扰，将音频切分成适合处理的帧。 </li>
@@ -204,7 +208,7 @@
 <li>束搜索（Beam Search）：在端到端神经网络ASR中，由于可能的输出序列空间巨大，通常使用启发式的束搜索截断低概率分支以降低计算成本。束搜索会维护一个固定大小的候选列表，在每步扩展时仅保留概率前$k$高的部分序列，从而逼近最优解。</li>
 <li>WFST解码：工业系统中，有时将声学模型、语言模型和词典等融合到加权有限状态机(WFST)框架中，将解码转化为在WFST上找到最低权重路径的问题。这种方法能够灵活地整合多种知识源，微软、谷歌等公司的早期系统大量使用WFST解码器来实现高效率的解码。</li>
 </ul>
-<p>不过上面都是早期的ASR发展过程，我不是音频处理方向的，具体的发展过程也不想深究了。就说现代ASR系统，大都是端到端的、数据驱动的、深度学习模式加持的范式，比如下图中展示的OpenAI Whisper模型结构，就是一个典型的端到端的Encoder-Decoder结构，也是目前业界最常用的ASR模型了吧。对于Whisper的讲解可以看<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/662906303">OpenAI Whisper 新一代语音技术(更新至v3-turbo) - 知乎 (zhihu.com)</a>。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530104527.png" alt="image.png"><br>OpenAI Whisper在使用过程中，对于特定业务场景可以进行微调，参考<a target="_blank" rel="noopener" href="https://github.com/yeyupiaoling/Whisper-Finetune">Whisper-finetune</a>项目，该项目演示了whisper-tiny、-base、-small、-medium、-large、-large-v2、large-v3、large-v3-turbo全系列的LoRA微调（为什么用PEFT微调，因为Whisper参数量很大，以largev2为例，模型参数文件就达到了7GB大小，参数量也在5B往上了）。数据方面需要提前准备好音频文件，然后准备一个jsonlist形式的数据标签，其中包括音频路径、文本、语言、时间戳信息等。具体还是自己看项目吧。</p>
+<p>不过上面都是早期的ASR发展过程，我不是音频处理方向的，具体的发展过程也不想深究了。就说现代ASR系统，大都是端到端的、数据驱动的、深度学习模式加持的范式，比如下图中展示的OpenAI Whisper模型结构，就是一个典型的端到端的Encoder-Decoder结构，也是目前业界最常用的ASR模型了吧。对于Whisper的讲解可以看<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/662906303">OpenAI Whisper 新一代语音技术(更新至v3-turbo) - 知乎 (zhihu.com)</a>。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530104527.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530104527.png" alt="image.png"></a><br>OpenAI Whisper在使用过程中，对于特定业务场景可以进行微调，参考<a target="_blank" rel="noopener" href="https://github.com/yeyupiaoling/Whisper-Finetune">Whisper-finetune</a>项目，该项目演示了whisper-tiny、-base、-small、-medium、-large、-large-v2、large-v3、large-v3-turbo全系列的LoRA微调（为什么用PEFT微调，因为Whisper参数量很大，以largev2为例，模型参数文件就达到了7GB大小，参数量也在5B往上了）。数据方面需要提前准备好音频文件，然后准备一个jsonlist形式的数据标签，其中包括音频路径、文本、语言、时间戳信息等。具体还是自己看项目吧。</p>
 <blockquote>
 <p>音频信号通常用Mel-Spectrum特征提取，梅尔频谱是一种声音的频谱表示方式，结合了声学特性和人类听觉感知，与普通频谱图（例如傅里叶变换得到的频谱不同），梅尔频谱在频率轴上采用梅尔刻度 mel scale，这种刻度更接近人耳对不同频率声音的感知特性。核心特性包括：</p>
 <ol>
@@ -224,7 +228,7 @@
 <li><strong>声学模型</strong>：声学模型是TTS系统的核心部分，负责从输入文本中预测声学特征。现代基于神经网络的声学模型（如<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=252800692&content_type=Article&match_order=1&q=Tacotron&zhida_source=entity">Tacotron</a>和<a target="_blank" rel="noopener" href="https://zhida.zhihu.com/search?content_id=252800692&content_type=Article&match_order=1&q=FastSpeech&zhida_source=entity">FastSpeech</a>）直接使用字符或词嵌入作为输入，大大提高了效率。</li>
 <li><strong>语音声码器</strong>：声码器是TTS流程的最后一步，它将中间声学特征（如梅尔频谱图）转换为可播放的语音波形。声码器的质量直接决定了生成语音的自然度和音质。<br>声学模型从早期的参数化方法逐渐演变成基于神经网络的复杂模型，例如基于RNN、CNN、Transformer，以及LLMs的。而声码器可以分为基于RNN、CNN、GAN、Diffusion的。</li>
 </ul>
-<p>现在看来，TTS早期主要依赖于统计模型，例如HMM和早期神经网络参数方法，直到序列到序列模型的引入，带来了TTS的新突破。不论是文本的序列到序列，还是语音到文本的序列到序列，或是反过来文本到语音的序列到序列，两类数据在某种程度上具备相似性，因为音频信息也带有时间信息，文本信息也有，所以两者可以使用这种自回归的方式生成。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131501.png" alt="image.png"></p>
+<p>现在看来，TTS早期主要依赖于统计模型，例如HMM和早期神经网络参数方法，直到序列到序列模型的引入，带来了TTS的新突破。不论是文本的序列到序列，还是语音到文本的序列到序列，或是反过来文本到语音的序列到序列，两类数据在某种程度上具备相似性，因为音频信息也带有时间信息，文本信息也有，所以两者可以使用这种自回归的方式生成。<br><a data-fancybox="gallery" data-src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131501.png" data-caption="image.png"><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250530131501.png" alt="image.png"></a></p>
 <p>就拿chatTTS来说，这就是一种依赖于自回归范式的TTS模型。非自回归的模型通常基于HMM、VAE、扩散模型、流模型等生成模型，自回归的通常将语音量化为离散标记，通过解码器自回归生成这些标记。</p>
 <p>除了上述这根据结构的分类之外，根据对话系统运行模式（是否可以被打断）还能将语音系统分成全双工模式和半双工模式。全双工模式下交互更加自然，人类和人机交互能合理的互相打断，这无疑进一步提升了交互体验。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
@@ -399,6 +403,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

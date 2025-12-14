@@ -53,6 +53,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -170,30 +174,6 @@
 
         <span>
     
-        <a class="" href="/2025/01/01/%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3RPC/">简单理解RPC</a>
-    
-
-
-</span>
-      </li>
-    
-      
-      
-      
-      
-      <li class="post-item">
-        
-    <div class="meta">
-      
-        
-          <time datetime="2025-01-01T02:46:18.000Z" class="dt-published" itemprop="datePublished">2025-01-01</time>
-        
-      
-    </div>
-
-
-        <span>
-    
         <a class="" href="/2025/01/01/Communication-Protocol/2025-01-01-Understanding-RPC/">简单理解RPC</a>
     
 
@@ -269,6 +249,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>

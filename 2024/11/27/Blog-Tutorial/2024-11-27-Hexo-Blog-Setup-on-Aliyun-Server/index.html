@@ -66,6 +66,10 @@
     
 	<!-- mathjax -->
 	
+	<!-- FancyBox CSS -->
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -100,10 +104,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="上一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-cdn-jsdelivr-alternative/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="上一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-Github-PicGo-Obsidian-ImageBed-Tutorial/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" aria-label="下一篇" href="/2024/10/06/%E7%AC%AC%E4%BA%94%E5%A4%A9%EF%BC%9A%E5%9B%BE%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95part02/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="下一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-cdn-jsdelivr-alternative/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -224,7 +228,7 @@
 <li>安装依赖<br>  <code>cd myblog</code><br>  <code>npm install</code></li>
 </ul>
 <h3 id="步骤二，编辑配置文件，并进行初步测试"><a href="#步骤二，编辑配置文件，并进行初步测试" class="headerlink" title="步骤二，编辑配置文件，并进行初步测试"></a>步骤二，编辑配置文件，并进行初步测试</h3><ul>
-<li><p>编辑配置文件_config.yml<br>  <code>vi _config.yml</code><br>  <img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710611227.png" alt="1732710611227.png"></p>
+<li><p>编辑配置文件_config.yml<br>  <code>vi _config.yml</code><br>  <a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710611227.png" data-caption="1732710611227.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710611227.png" alt="1732710611227.png"></a></p>
 </li>
 <li><p>编译文件<br>  <code>hexo g</code></p>
 </li>
@@ -243,14 +247,14 @@
 <li>在博客根目录下，执行克隆主题仓库到本地操作<br> <code>git clone https://github.com/fluid-dev/hexo-theme-fluid.git theme/fluid</code></li>
 <li>将主题中的_config.yml复制一份，并更名为_config.fluid.yml到博客根目录，对于Hexo5.0以上的版本，能够自动识别根目录下_config.xx主题.yml的配置文件，并将其设置为优先级最高，从而调整该文件可视为对主题配置做了调整。</li>
 <li>将博客根目录下_config.yml文件中的theme项，修改为fluid。</li>
-<li>重新执行hexo clean、hexo g、hexo d以及hexo server等命令即完成了主题更换。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732709743344.png" alt="博客页面"><br><strong>到此位置，个人博客就初具雏形了，鼓掌！！！</strong></li>
+<li>重新执行hexo clean、hexo g、hexo d以及hexo server等命令即完成了主题更换。<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732709743344.png" data-caption="博客页面"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732709743344.png" alt="博客页面"></a><br><strong>到此位置，个人博客就初具雏形了，鼓掌！！！</strong></li>
 </ol>
 <h3 id="步骤四，博客长期运行"><a href="#步骤四，博客长期运行" class="headerlink" title="步骤四，博客长期运行"></a>步骤四，博客长期运行</h3><p>也许你会产生疑问，如果一旦退出云服务器链接，那么hexo server命令就会自动终端，从而网站也没办法访问了，有没有解决办法呢？当然有，而且很简单。<br>pm2是一个管理nodejs process的工具，用简单的指令即可启动nodejs进程，并保证在后台不被杀死。</p>
 <ul>
 <li>首先安装pm2<br><code>npm install -g pm2</code></li>
 <li>进入博客根目录，新建文件：run.js<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//run.js</span><br><span class="line">const &#123; <span class="built_in">exec</span> &#125; = require(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="built_in">exec</span>(<span class="string">&#x27;hexo server -s -p your_port&#x27;</span>,(error, stdout, stderr) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(error)&#123;</span><br><span class="line">                console.log(<span class="string">&#x27;exec error: $&#123;error&#125;&#x27;</span>)</span><br><span class="line">                <span class="built_in">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        console.log(<span class="string">&#x27;stdout: $&#123;stdout&#125;&#x27;</span>);</span><br><span class="line">        console.log(<span class="string">&#x27;stderr: $&#123;stderr&#125;&#x27;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>启动进程服务<br>  <code>pm2 start run.js</code><br>启动后，一般会输出如下结果，即表示成功：<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710366167.png" alt="1732710366167.png"></li>
-<li>结束进程服务<br>  <code>pm2 stop run.js</code><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710431509.png" alt="1732710431509.png"><br>此外还有很多应用方式，各位感兴趣可以自行查看手册<a target="_blank" rel="noopener" href="https://pm2.fenxianglu.cn/docs/start">快速开始 | PM2中文网 (fenxianglu.cn)</a>。</li>
+<li>启动进程服务<br>  <code>pm2 start run.js</code><br>启动后，一般会输出如下结果，即表示成功：<br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710366167.png" data-caption="1732710366167.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710366167.png" alt="1732710366167.png"></a></li>
+<li>结束进程服务<br>  <code>pm2 stop run.js</code><br><a data-fancybox="gallery" data-src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710431509.png" data-caption="1732710431509.png"><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710431509.png" alt="1732710431509.png"></a><br>此外还有很多应用方式，各位感兴趣可以自行查看手册<a target="_blank" rel="noopener" href="https://pm2.fenxianglu.cn/docs/start">快速开始 | PM2中文网 (fenxianglu.cn)</a>。</li>
 </ul>
 <h2 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h2><p>教程进行到这里基本算完成了，后面如果做一些博客个人化定制、美化工作，可能会继续更一些该主题美化的教程，也或者是干脆分享一些比较好的美化教程链接供大家参考。最后希望各位能从这篇博客里学到一些东西，如果能帮助到你，那我觉得太棒了。</p>
 
@@ -407,6 +411,27 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    Fancybox.bind("[data-fancybox]", {
+      // Fancybox options
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Thumbs: {
+        autoStart: false,
+      },
+    });
+  });
+</script>
 
 </body>
 </html>
