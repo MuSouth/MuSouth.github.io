@@ -1,196 +1,196 @@
-<!DOCTYPE HTML>
-<html lang="zh-CN">
-
+<!DOCTYPE html>
+<html lang=zh>
 <head>
-    <!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="MuSouth&#39;s Blog">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.3.0">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://MuSouth.github.io">
-    <!--SEO-->
-
-<meta name="keywords" content="训练,NanoGPT" />
-
-
-<meta name="description" content="一、前言学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，..." />
-
-
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、前言学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，原始的NanoGPT是经典GPT-2结构的复现，而更现代化的LLM中的技术并没有集成在原项目代码中，本次只完整记录Karpathy在视频教程以及build_NanoGPT项目中实现的过程，而将在下一篇文章综">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NanoGPT从零开始搭建代码解读（Karpathy 教程项目）">
+<meta property="og:url" content="https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="一、前言学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，原始的NanoGPT是经典GPT-2结构的复现，而更现代化的LLM中的技术并没有集成在原项目代码中，本次只完整记录Karpathy在视频教程以及build_NanoGPT项目中实现的过程，而将在下一篇文章综">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518222227.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518223508.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/got2.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748522284459.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748523653277.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529221352.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748528307170.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748528559607.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529223546.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529211713.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529213322.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529214643.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250529223713.png">
+<meta property="article:published_time" content="2025-01-10T07:56:20.000Z">
+<meta property="article:modified_time" content="2025-12-13T09:06:06.160Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="训练">
+<meta property="article:tag" content="NanoGPT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518222227.png">
     
-    NanoGPT从零开始搭建代码解读（Karpathy 教程项目） |
     
-    MuSouth&#39;s Blog
-</title>
-
-<link rel="alternate" href="/atom.xml" title="MuSouth&#39;s Blog" type="application/atom+xml">
-
-
-<link rel="icon" href="/favicon.ico">
-
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
     
+    <!-- title -->
+    <title>NanoGPT从零开始搭建代码解读（Karpathy 教程项目）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+    <!-- Umami Analytics -->
 
+
+    <!-- styles -->
     
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-</div>
+<link rel="stylesheet" href="/css/style.css">
 
-
-
-
+    <!-- persian styles -->
     
-
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <header class="main-header"  style="background-image:url(
-    /img/head-img.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='MuSouth'>
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
-        </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
-            
-            <h2>
-                从未如此简单有趣
-            </h2>
-            
-        </div>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AE%AD%E7%BB%83/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&text=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&is_video=false&description=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）&body=Check out this article: https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&name=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&t=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://MuSouth.github.io">
-                        MuSouth&#39;s Blog</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Agent/"><i class="fa "></i>
-                                LLM-Agent</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Technology/"><i class="fa "></i>
-                                LLM-技术</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Training/"><i class="fa "></i>
-                                LLM-训练</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Inference/"><i class="fa "></i>
-                                LLM-推理</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives/"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="NanoGPT从零开始搭建代码解读（Karpathy 教程项目）">
-            
-            NanoGPT从零开始搭建代码解读（Karpathy 教程项目）
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/LLM-Training/">LLM-Training</a>
-    </span>
     
     
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-none-link" href="/tags/NanoGPT/" rel="tag">NanoGPT</a> <a class="tag-none-link" href="/tags/%E8%AE%AD%E7%BB%83/" rel="tag">训练</a>
-            
-        </span>
-    </span>
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E4%B8%8E%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、模型结构与权重初始化方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Dataloder%E5%92%8CTokenizer"><span class="toc-number">3.</span> <span class="toc-text">三、Dataloder和Tokenizer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tokenizer"><span class="toc-number">3.1.</span> <span class="toc-text">Tokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dataloader"><span class="toc-number">3.2.</span> <span class="toc-text">Dataloader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5%EF%BC%88%E4%BC%98%E5%8C%96%E5%99%A8-%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">训练策略（优化器+学习率调度）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8%E9%87%87%E7%94%A8Adam"><span class="toc-number">4.1.</span> <span class="toc-text">优化器采用Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lr%E8%B0%83%E5%BA%A6"><span class="toc-number">4.2.</span> <span class="toc-text">lr调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E4%BB%A5%E5%9C%A8%E7%AE%97%E5%8A%9B%E6%9C%89%E9%99%90%E6%83%85%E5%86%B5%E4%B8%8B%E7%94%A8%E6%9B%B4%E5%A4%A7batch-size"><span class="toc-number">4.3.</span> <span class="toc-text">梯度累积以在算力有限情况下用更大batch_size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">4.4.</span> <span class="toc-text">训练用的数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">训练性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B91"><span class="toc-number">5.1.</span> <span class="toc-text">优化点1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B92-torch-compile-%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.2.</span> <span class="toc-text">优化点2 torch.compile()编译模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B93-Flash-Attention%E4%BD%BF%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text">优化点3 Flash Attention使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B94-%EF%BC%88Nice-Number%EF%BC%89%E6%AF%94%E8%BE%83%E6%8A%BD%E8%B1%A1%E7%9A%84%E4%B8%80%E4%B8%AA%E4%B8%9C%E8%A5%BF"><span class="toc-number">5.4.</span> <span class="toc-text">优化点4 （Nice Number）比较抽象的一个东西</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
     
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2025/01/10</span>
-    </span>
-    
-    
+  </span>
 </div>
-        
-        
-        <p class="fa fa-exclamation-triangle warning">
-            本文于<strong>
-                337</strong>
-            天之前发表，文中内容可能已经过时。
-        </p>
-        
-    </div>
+
     
-    <div class="post-body post-content">
-        <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，原始的NanoGPT是经典GPT-2结构的复现，而更现代化的LLM中的技术并没有集成在原项目代码中，本次只完整记录Karpathy在视频教程以及build_NanoGPT项目中实现的过程，而将在下一篇文章综合实现结合现代化LLM技术（RoPE、MLA、GQA、RMSNorm、SwiGLU等等）的新NanoGPT，先附上Karpathy的<a target="_blank" rel="noopener" href="https://github.com/karpathy/nanogpt">nanogpt源代码仓库链接</a>和<a target="_blank" rel="noopener" href="https://github.com/karpathy/build-nanogpt">build-nanogpt</a>。build-nanogpt是相对更新的一个项目，其项目结构很简洁：train_gpt2.py里定义了模型以及训练和验证代码，fineweb.py里写了下载fineweb数据集的脚本，hellaswag.py写了一个经常被用来作验证的数据集的相关脚本。其精华就在train_gpt2.py里了。不得不说这个视频教程真的让人兴奋，karpathy行云流水的操作以及对整个模型结构和训练Pipeline的思路之清晰让人佩服。<br>本文主要就train_gpt2.py进行代码讲解，一方面掺杂着自己的理解，一方面在分析的过程中将Karpathy配套视频中涉及到的一些细节一并记录下来（这部分零零散散可能有些杂乱）。PS : 整个近4小时的视频，讲解的相当全面了。</p>
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        NanoGPT从零开始搭建代码解读（Karpathy 教程项目）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-01-10T07:56:20.000Z" class="dt-published" itemprop="datePublished">2025-01-10</time>
+        
+        (Updated: <time datetime="2025-12-13T09:06:06.160Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/LLM-Training/">LLM-Training</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/NanoGPT/" rel="tag">NanoGPT</a>, <a class="p-category" href="/tags/%E8%AE%AD%E7%BB%83/" rel="tag">训练</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>学习小型LLM训练的目的是为了更好的掌握LLM原理，从实践出发体会LLM各组件的效用。NanoGPT是Andrej Karpathy 23年开源的一个GPT2规模的LLM教程项目。注意，原始的NanoGPT是经典GPT-2结构的复现，而更现代化的LLM中的技术并没有集成在原项目代码中，本次只完整记录Karpathy在视频教程以及build_NanoGPT项目中实现的过程，而将在下一篇文章综合实现结合现代化LLM技术（RoPE、MLA、GQA、RMSNorm、SwiGLU等等）的新NanoGPT，先附上Karpathy的<a target="_blank" rel="noopener" href="https://github.com/karpathy/nanogpt">nanogpt源代码仓库链接</a>和<a target="_blank" rel="noopener" href="https://github.com/karpathy/build-nanogpt">build-nanogpt</a>。build-nanogpt是相对更新的一个项目，其项目结构很简洁：train_gpt2.py里定义了模型以及训练和验证代码，fineweb.py里写了下载fineweb数据集的脚本，hellaswag.py写了一个经常被用来作验证的数据集的相关脚本。其精华就在train_gpt2.py里了。不得不说这个视频教程真的让人兴奋，karpathy行云流水的操作以及对整个模型结构和训练Pipeline的思路之清晰让人佩服。<br>本文主要就train_gpt2.py进行代码讲解，一方面掺杂着自己的理解，一方面在分析的过程中将Karpathy配套视频中涉及到的一些细节一并记录下来（这部分零零散散可能有些杂乱）。PS : 整个近4小时的视频，讲解的相当全面了。</p>
 <h2 id="二、模型结构与权重初始化方法"><a href="#二、模型结构与权重初始化方法" class="headerlink" title="二、模型结构与权重初始化方法"></a>二、模型结构与权重初始化方法</h2><p>这个项目复现的模型完全参考GPT-2，而其中一些模型或训练参数配置参考GPT-3，两篇论文arxiv链接放在文章最后。GPT系列工作与Bert系列工作不同，GPT系列是decoder-only的，这也是现代LLM通用架构，下图是Attention is all you need（transformer）的结构图。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518222227.png" alt="image.png"><br>对于Decoder-only的GPT-2，左半边Encoder部分舍弃了，其次Decoder部分的Multi-Head Attention，也就是Encoder输出和Decoder中Masked Multi-Head Attention输出的交互模块也舍弃了，其余都保留，然后GPT-2的实现中LN层是在输入Attention和输入FFN之前进行的，并且在输入LM-head之前又加了一层LN。其结构如下：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518223508.png" alt="image.png"></p>
 <p>上图是往上流传的最广的结构图，但其实有点问题，因为按照代码在一个Decoder layer中包含三个LayerNorm，其中还有一个在Attention之前使用的，所以这个结构其实需要更改，我这里做了个新图(途中省略了skip connection)：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/got2.png" alt="got2.png"><br>其和模型结构定义相关的的核心代码段：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GPT类实现（这里省略掉了参数初始化、加载预训练模型等等其他函数）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GPT</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.config = config</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.transformer = nn.ModuleDict(<span class="built_in">dict</span>(</span><br><span class="line">            wte = nn.Embedding(config.vocab_size, config.n_embd),</span><br><span class="line">            wpe = nn.Embedding(config.block_size, config.n_embd),</span><br><span class="line">            h = nn.ModuleList([Block(config) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(config.n_layer)]),</span><br><span class="line">            ln_f = nn.LayerNorm(config.n_embd),</span><br><span class="line">        ))</span><br><span class="line">        <span class="variable language_">self</span>.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># weight sharing scheme</span></span><br><span class="line">        <span class="comment"># lm_head和wte是相反的操作，但其参数大小一致，一个从vocab_size映射到n_embed维度</span></span><br><span class="line">        <span class="comment"># lm_head则是从n_embed维度映射回vocab_size，从而方便后续解码为自然语言</span></span><br><span class="line">        <span class="comment"># 两者参数量一致，而在实现上，GPT-2/3中将两组权重tie起来了，权重共享了</span></span><br><span class="line">        <span class="comment"># 这个细节节省了训练参数量，同时被验证有效</span></span><br><span class="line">        <span class="variable language_">self</span>.transformer.wte.weight = <span class="variable language_">self</span>.lm_head.weight</span><br><span class="line"></span><br><span class="line">        <span class="comment"># init params</span></span><br><span class="line">        <span class="variable language_">self</span>.apply(<span class="variable language_">self</span>._init_weights)    </span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, idx, targets=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># idx is of shape (B, T)</span></span><br><span class="line">        B, T = idx.size()</span><br><span class="line">        <span class="keyword">assert</span> T &lt;= <span class="variable language_">self</span>.config.block_size, <span class="string">f&quot;Cannot forward sequence of length <span class="subst">&#123;T&#125;</span>, block size is only <span class="subst">&#123;self.config.block_size&#125;</span>&quot;</span></span><br><span class="line">        <span class="comment"># forward the token and posisition embeddings</span></span><br><span class="line">        pos = torch.arange(<span class="number">0</span>, T, dtype=torch.long, device=idx.device) <span class="comment"># shape (T)</span></span><br><span class="line">        pos_emb = <span class="variable language_">self</span>.transformer.wpe(pos) <span class="comment"># position embeddings of shape (T, n_embd)</span></span><br><span class="line">        tok_emb = <span class="variable language_">self</span>.transformer.wte(idx) <span class="comment"># token embeddings of shape (B, T, n_embd)</span></span><br><span class="line">        x = tok_emb + pos_emb</span><br><span class="line">        <span class="comment"># forward the blocks of the transformer</span></span><br><span class="line">        <span class="keyword">for</span> block <span class="keyword">in</span> <span class="variable language_">self</span>.transformer.h:</span><br><span class="line">            x = block(x)</span><br><span class="line">        <span class="comment"># forward the final layernorm and the classifier</span></span><br><span class="line">        <span class="comment"># 可以看到这里第三个layernorm在Lm_head之前使用</span></span><br><span class="line">        x = <span class="variable language_">self</span>.transformer.ln_f(x)</span><br><span class="line">        logits = <span class="variable language_">self</span>.lm_head(x) <span class="comment"># (B, T, vocab_size)</span></span><br><span class="line">        loss = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> targets <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            loss = F.cross_entropy(logits.view(-<span class="number">1</span>, logits.size(-<span class="number">1</span>)), targets.view(-<span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> logits, loss</span><br><span class="line"></span><br><span class="line"><span class="comment"># 除了LM-head之外的结构，可以看到有两个layernorm，分别在attn和mlp之前使用</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Block</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.ln_1 = nn.LayerNorm(config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.attn = CausalSelfAttention(config)</span><br><span class="line">        <span class="variable language_">self</span>.ln_2 = nn.LayerNorm(config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.mlp = MLP(config)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = x + <span class="variable language_">self</span>.attn(<span class="variable language_">self</span>.ln_1(x))</span><br><span class="line">        x = x + <span class="variable language_">self</span>.mlp(<span class="variable language_">self</span>.ln_2(x))</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line"><span class="comment"># Masked MHA实现</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CausalSelfAttention</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="keyword">assert</span> config.n_embd % config.n_head == <span class="number">0</span></span><br><span class="line">        <span class="comment"># key, query, value projections for all heads, but in a batch</span></span><br><span class="line">        <span class="variable language_">self</span>.c_attn = nn.Linear(config.n_embd, <span class="number">3</span> * config.n_embd)</span><br><span class="line">        <span class="comment"># output projection</span></span><br><span class="line">        <span class="variable language_">self</span>.c_proj = nn.Linear(config.n_embd, config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj.NANOGPT_SCALE_INIT = <span class="number">1</span></span><br><span class="line">        <span class="comment"># regularization</span></span><br><span class="line">        <span class="variable language_">self</span>.n_head = config.n_head</span><br><span class="line">        <span class="variable language_">self</span>.n_embd = config.n_embd</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        B, T, C = x.size() <span class="comment"># batch size, sequence length, embedding dimensionality (n_embd)</span></span><br><span class="line">        <span class="comment"># calculate query, key, values for all heads in batch and move head forward to be the batch dim</span></span><br><span class="line">        <span class="comment"># nh is &quot;number of heads&quot;, hs is &quot;head size&quot;, and C (number of channels) = nh * hs</span></span><br><span class="line">        <span class="comment"># e.g. in GPT-2 (124M), n_head=12, hs=64, so nh*hs=C=768 channels in the Transformer</span></span><br><span class="line">        <span class="comment"># 一般qkv映射不用定义三个linear层，分别映射到想同纬度，而直接采用一个大linear</span></span><br><span class="line">        <span class="comment"># 将输入x直接映射到3倍大小维度，然后用split()将其拆分成q k v</span></span><br><span class="line">        <span class="comment"># 然后使用看k.view(B, T, ...)将B, T, hs维度转换为, B, nh, T/nh, hs维度</span></span><br><span class="line">        <span class="comment"># 也就是拆分成若干个head</span></span><br><span class="line">        qkv = <span class="variable language_">self</span>.c_attn(x)</span><br><span class="line">        q, k, v = qkv.split(<span class="variable language_">self</span>.n_embd, dim=<span class="number">2</span>)</span><br><span class="line">        k = k.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        q = q.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        v = v.view(B, T, <span class="variable language_">self</span>.n_head, C // <span class="variable language_">self</span>.n_head).transpose(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># (B, nh, T, hs)</span></span><br><span class="line">        <span class="comment"># scaled_dot_product_attention是pytorch2.0之后支持的</span></span><br><span class="line">        <span class="comment"># 这是FlashAttention的函数接口</span></span><br><span class="line">        y = F.scaled_dot_product_attention(q, k, v, is_causal=<span class="literal">True</span>) <span class="comment"># flash attention</span></span><br><span class="line">        y = y.transpose(<span class="number">1</span>, <span class="number">2</span>).contiguous().view(B, T, C) <span class="comment"># re-assemble all head outputs side by side</span></span><br><span class="line">        <span class="comment"># output projection</span></span><br><span class="line">        y = <span class="variable language_">self</span>.c_proj(y)</span><br><span class="line">        <span class="keyword">return</span> y</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MLP</span>(nn.Module):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, config</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.c_fc    = nn.Linear(config.n_embd, <span class="number">4</span> * config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.gelu    = nn.GELU(approximate=<span class="string">&#x27;tanh&#x27;</span>)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj  = nn.Linear(<span class="number">4</span> * config.n_embd, config.n_embd)</span><br><span class="line">        <span class="variable language_">self</span>.c_proj.NANOGPT_SCALE_INIT = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = <span class="variable language_">self</span>.c_fc(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.gelu(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.c_proj(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
@@ -287,106 +287,159 @@
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/685785987">https://zhuanlan.zhihu.com/p/685785987</a></li>
 </ol>
 
-    </div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
+  </div>
 </article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%A2%84%E8%AE%AD%E7%BB%83/" class="pre-post btn btn-default" title='NanoGPT中文大模型预训练（从零搭建）'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            NanoGPT中文大模型预训练（从零搭建）</span>
-    </a>
-    
-    
-</div>
-
-<div id="comments">
-    
-    
-<div class="utteranc">
-  
-  <script
-    src='https://utteranc.es/client.js'
-    repo='shenliyang/snippet-comment'
-    issue-term='pathname'
-    issue-number=''
-    theme='github-light'
-    label=''
-    crossorigin='anonymous'
-    async
-  ></script>
-</div>
 
 
 
-</div>
-
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E4%B8%8E%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-text">二、模型结构与权重初始化方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Dataloder%E5%92%8CTokenizer"><span class="toc-text">三、Dataloder和Tokenizer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tokenizer"><span class="toc-text">Tokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dataloader"><span class="toc-text">Dataloader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5%EF%BC%88%E4%BC%98%E5%8C%96%E5%99%A8-%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%EF%BC%89"><span class="toc-text">训练策略（优化器+学习率调度）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8%E9%87%87%E7%94%A8Adam"><span class="toc-text">优化器采用Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lr%E8%B0%83%E5%BA%A6"><span class="toc-text">lr调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E4%BB%A5%E5%9C%A8%E7%AE%97%E5%8A%9B%E6%9C%89%E9%99%90%E6%83%85%E5%86%B5%E4%B8%8B%E7%94%A8%E6%9B%B4%E5%A4%A7batch-size"><span class="toc-text">梯度累积以在算力有限情况下用更大batch_size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-text">训练用的数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-text">训练性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B91"><span class="toc-text">优化点1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B92-torch-compile-%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9E%8B"><span class="toc-text">优化点2 torch.compile()编译模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B93-Flash-Attention%E4%BD%BF%E7%94%A8"><span class="toc-text">优化点3 Flash Attention使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B94-%EF%BC%88Nice-Number%EF%BC%89%E6%AF%94%E8%BE%83%E6%8A%BD%E8%B1%A1%E7%9A%84%E4%B8%80%E4%B8%AA%E4%B8%9C%E8%A5%BF"><span class="toc-text">优化点4 （Nice Number）比较抽象的一个东西</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
         
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
     </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E4%B8%8E%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">二、模型结构与权重初始化方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Dataloder%E5%92%8CTokenizer"><span class="toc-number">3.</span> <span class="toc-text">三、Dataloder和Tokenizer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tokenizer"><span class="toc-number">3.1.</span> <span class="toc-text">Tokenizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dataloader"><span class="toc-number">3.2.</span> <span class="toc-text">Dataloader</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5%EF%BC%88%E4%BC%98%E5%8C%96%E5%99%A8-%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">训练策略（优化器+学习率调度）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%99%A8%E9%87%87%E7%94%A8Adam"><span class="toc-number">4.1.</span> <span class="toc-text">优化器采用Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lr%E8%B0%83%E5%BA%A6"><span class="toc-number">4.2.</span> <span class="toc-text">lr调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E7%B4%AF%E7%A7%AF%E4%BB%A5%E5%9C%A8%E7%AE%97%E5%8A%9B%E6%9C%89%E9%99%90%E6%83%85%E5%86%B5%E4%B8%8B%E7%94%A8%E6%9B%B4%E5%A4%A7batch-size"><span class="toc-number">4.3.</span> <span class="toc-text">梯度累积以在算力有限情况下用更大batch_size</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">4.4.</span> <span class="toc-text">训练用的数据集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">训练性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B91"><span class="toc-number">5.1.</span> <span class="toc-text">优化点1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B92-torch-compile-%E7%BC%96%E8%AF%91%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.2.</span> <span class="toc-text">优化点2 torch.compile()编译模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B93-Flash-Attention%E4%BD%BF%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text">优化点3 Flash Attention使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%82%B94-%EF%BC%88Nice-Number%EF%BC%89%E6%AF%94%E8%BE%83%E6%8A%BD%E8%B1%A1%E7%9A%84%E4%B8%80%E4%B8%AA%E4%B8%9C%E8%A5%BF"><span class="toc-number">5.4.</span> <span class="toc-text">优化点4 （Nice Number）比较抽象的一个东西</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&text=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&is_video=false&description=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）&body=Check out this article: https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&title=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&name=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/01/10/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97NanoGPT%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/&t=NanoGPT从零开始搭建代码解读（Karpathy 教程项目）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
 </footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="busuanzi">
-    
-</div>
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright &copy;
-                    2017
-                    
-                </span> |
-                <span>
-                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
-                </span> |
-                <span>
-                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
-                </span>
-            </div>
-        </div>
+
     </div>
-</div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
 
 </body>
 </html>

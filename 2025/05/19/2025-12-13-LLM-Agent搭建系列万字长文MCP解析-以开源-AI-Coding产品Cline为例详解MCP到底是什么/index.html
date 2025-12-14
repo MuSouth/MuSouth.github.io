@@ -1,190 +1,202 @@
-<!DOCTYPE HTML>
-<html lang="zh-CN">
-
+<!DOCTYPE html>
+<html lang=zh>
 <head>
-    <!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="MuSouth&#39;s Blog">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <meta name="theme-version" content="1.3.0">
-    <meta name="root" content="/">
-    <link rel="dns-prefetch" href="https://MuSouth.github.io">
-    <!--SEO-->
-
-<meta name="keywords" content="LLM-Agent,MCP" />
-
-
-<meta name="description" content="前言基于LLM的Agent设计是近两年最火爆的话题之一，所谓Agent就是以LLM作为大脑，能够自主解析并规划任务，然后通过引入外部工具使用的能力，让LLM能够真的操作一些工具，与外部环境形成交..." />
-
-
-<meta name="robots" content="all" />
-<meta name="google" content="all" />
-<meta name="googlebot" content="all" />
-<meta name="verify" content="all" />
-    <!--Title-->
-
-<title>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前言基于LLM的Agent设计是近两年最火爆的话题之一，所谓Agent就是以LLM作为大脑，能够自主解析并规划任务，然后通过引入外部工具使用的能力，让LLM能够真的操作一些工具，与外部环境形成交互。而在当前的Agent设计中，LLM调用工具的能力主要来自于Function Call，而近期被各大厂商所重视的MCP则和Function Call有着紧密的关系，严格意义上讲，MCP其实只是一种LLM调">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么">
+<meta property="og:url" content="https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="前言基于LLM的Agent设计是近两年最火爆的话题之一，所谓Agent就是以LLM作为大脑，能够自主解析并规划任务，然后通过引入外部工具使用的能力，让LLM能够真的操作一些工具，与外部环境形成交互。而在当前的Agent设计中，LLM调用工具的能力主要来自于Function Call，而近期被各大厂商所重视的MCP则和Function Call有着紧密的关系，严格意义上讲，MCP其实只是一种LLM调">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748144571751.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250518162016.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748161188354.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748165437013.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748165462195.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748165787242.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748161370614.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748161751215.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748162875884.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748165219577.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748171946587.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748172166013.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748174035498.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748174869591.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748175138197.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748175497844.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748175581402.png">
+<meta property="article:published_time" content="2025-05-19T07:56:20.000Z">
+<meta property="article:modified_time" content="2025-12-13T09:06:06.141Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="LLM-Agent">
+<meta property="article:tag" content="MCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748144571751.png">
     
-    【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么 |
     
-    MuSouth&#39;s Blog
-</title>
-
-<link rel="alternate" href="/atom.xml" title="MuSouth&#39;s Blog" type="application/atom+xml">
-
-
-<link rel="icon" href="/favicon.ico">
-
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
     
+    <!-- title -->
+    <title>【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
 
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7.css">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.7.0.css">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash.css">
+    <!-- Umami Analytics -->
 
+
+    <!-- styles -->
     
-<div class="hide">
-    <script type="text/javascript">
-    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-    document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-</div>
+<link rel="stylesheet" href="/css/style.css">
 
-
-
-
+    <!-- persian styles -->
     
-
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 7.3.0"></head>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
-<body>
-    <header class="main-header"  style="background-image:url(
-    /img/head-img.jpg)"
-     >
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title='MuSouth'>
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
-        </a>
-        <div class="branding">
-            <!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
-            
-            <h2>
-                从未如此简单有趣
-            </h2>
-            
-        </div>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/05/29/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97AIOS-LLM-Agent-Operating-System-Agent%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA-SDK-API%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/03/01/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97DeepSeek-R1%E8%92%B8%E9%A6%8FQwen7B-%E5%8F%8A-Llama-8B-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&text=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&is_video=false&description=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么&body=Check out this article: https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&name=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&t=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                        <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="https://MuSouth.github.io">
-                        MuSouth&#39;s Blog</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/"><i class="fa "></i>
-                                首页</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Agent/"><i class="fa "></i>
-                                LLM-Agent</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Technology/"><i class="fa "></i>
-                                LLM-技术</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Training/"><i class="fa "></i>
-                                LLM-训练</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/categories/LLM-Inference/"><i class="fa "></i>
-                                LLM-推理</a>
-                        </li>
-                        
-                        <li role="presentation" class="text-center">
-                            <a href="/archives/"><i class="fa "></i>
-                                归档</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么">
-            
-            【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么
-            
-        </h1>
-        <div class="post-meta">
-    
-    <span class="categories-meta fa-wrap">
-        <i class="fa fa-folder-open-o"></i>
-        <a class="category-link" href="/categories/LLM-Agent/">LLM-Agent</a>
-    </span>
     
     
-    <span class="fa-wrap">
-        <i class="fa fa-tags"></i>
-        <span class="tags-meta">
-            
-            <a class="tag-none-link" href="/tags/LLM-Agent/" rel="tag">LLM-Agent</a> <a class="tag-none-link" href="/tags/MCP/" rel="tag">MCP</a>
-            
-        </span>
-    </span>
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MCP%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%8EFunction-Call%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">1. MCP是什么，以及与Function Call的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90MCP%E7%9A%84%E7%BB%84%E4%BB%B6%E9%83%BD%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">2. 进一步分析MCP的组件都是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8Cline%E4%B8%ADMCP%E4%BA%A7%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="toc-number">4.</span> <span class="toc-text">在Cline中MCP产生了什么形式的交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cline%E5%A6%82%E4%BD%95%E4%B8%8ELLM%E4%BA%A4%E4%BA%92"><span class="toc-number">5.</span> <span class="toc-text">Cline如何与LLM交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP%E5%AD%98%E5%9C%A8%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">MCP存在安全问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">7.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
     
-    
-    
-    <span class="fa-wrap">
-        <i class="fa fa-clock-o"></i>
-        <span class="date-meta">
-            2025/05/19</span>
-    </span>
-    
-    
+  </span>
 </div>
-        
-        
-    </div>
+
     
-    <div class="post-body post-content">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于LLM的Agent设计是近两年最火爆的话题之一，所谓Agent就是以LLM作为大脑，能够自主解析并规划任务，然后通过引入外部工具使用的能力，让LLM能够真的操作一些工具，与外部环境形成交互。而在当前的Agent设计中，LLM调用工具的能力主要来自于Function Call，而近期被各大厂商所重视的MCP则和Function Call有着紧密的关系，严格意义上讲，MCP其实只是一种LLM调用外部工具函数的一种标准协议，规范了各大服务提供商为LLM提高函数接口时的调用范式。但当我们看很多教学视频或者文档时，很多时候他们并没有涉及MCP和Function Call的本质，只是简单演示了官方教学示例中，编写一个client.py和server.py，调用查询天气的函数，并且这种调用关系还只是展示了一种所谓的client和server一对一的关系，在client里运行命令行调用server里的工具函数，这就导致我们对Function Call和MCP的概念极易产生误解，产生”以为MCP就是Function Call的一种集成，或者MCP实现了多种Function Call等等”误区。</p>
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-05-19T07:56:20.000Z" class="dt-published" itemprop="datePublished">2025-05-19</time>
+        
+        (Updated: <time datetime="2025-12-13T09:06:06.141Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/LLM-Agent/">LLM-Agent</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LLM-Agent/" rel="tag">LLM-Agent</a>, <a class="p-category" href="/tags/MCP/" rel="tag">MCP</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于LLM的Agent设计是近两年最火爆的话题之一，所谓Agent就是以LLM作为大脑，能够自主解析并规划任务，然后通过引入外部工具使用的能力，让LLM能够真的操作一些工具，与外部环境形成交互。而在当前的Agent设计中，LLM调用工具的能力主要来自于Function Call，而近期被各大厂商所重视的MCP则和Function Call有着紧密的关系，严格意义上讲，MCP其实只是一种LLM调用外部工具函数的一种标准协议，规范了各大服务提供商为LLM提高函数接口时的调用范式。但当我们看很多教学视频或者文档时，很多时候他们并没有涉及MCP和Function Call的本质，只是简单演示了官方教学示例中，编写一个client.py和server.py，调用查询天气的函数，并且这种调用关系还只是展示了一种所谓的client和server一对一的关系，在client里运行命令行调用server里的工具函数，这就导致我们对Function Call和MCP的概念极易产生误解，产生”以为MCP就是Function Call的一种集成，或者MCP实现了多种Function Call等等”误区。</p>
 <p>但只要我们仔细探究两者本质，就会发现这两个Agent时代绕不开的两个话题其实是完全不同的概念，在Agent实现链路中处于不同位置。当然现在来看这条结论是很模糊的，下面就从Function Call和MCP的本质入手，借助一位B站up的视频，以及看到的几篇博客文章作辅助讲解。</p>
 <h2 id="1-MCP是什么，以及与Function-Call的关系"><a href="#1-MCP是什么，以及与Function-Call的关系" class="headerlink" title="1. MCP是什么，以及与Function Call的关系"></a>1. MCP是什么，以及与Function Call的关系</h2><p>Function Call是OpenAI 23年公布的一项机制，作为GPT模型的一种扩展能力，允许Agent调用预定义的工具函数。<strong>这里就出现了第一个误解：</strong> 很多人以为Function Call是指模型客户端调用函数的过程，但其实不是，这里再强调一遍，Function Call是LLM能够识别意图、判断调用工具并输出工具调用参数等的过程，它并不是指借助客户端或者其他方式真的调用函数的过程。如果用一张图说明（参考B站视频）：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748144571751.png" alt="1748144571751.png"><br><strong>一般容易认为Function Call是上图中的红色框部分，但实际上是蓝色框部分，也就是LLM产生调用工具回复的过程，这个误解主要来自于其Function Call的名字很容易误导人。</strong> 但只要想清楚了这个问题，那就绝不会将Function Call和MCP混为一谈了，MCP也不是Function Call的集合，两者解决的是Agent链路中不同阶段的问题。</p>
 <p>MCP (Model Context Protocol)是24年12月由Anthropic推出的一个开放标准协议，按照官方注解，这其实是为数据库、第三方API或者本地各种资源调用和外部资源调用等限定了某种标准，从而为后续LLM调用各种工具带来便利性。为什么会产生这种想法，实际上这还是因为Function Call时代，每个服务提供者的接口都有差异，例如某个调用天气查询的API可能需要提供经度、维度两个参数，而有的服务商可能提供API需要你发送国家、地区即可，而同样的LLM调用工具时的标准也有差异，比如有的LLM可能会输出json格式来确定函数名，以及函数参数等，传递给后续客户端或其他Agent代理来解析并调用函数，也可能会输出XML格式来实现数据传递。</p>
@@ -260,112 +272,159 @@
 <li><a target="_blank" rel="noopener" href="https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/tree/main">https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/tree/main</a></li>
 </ol>
 
-    </div>
-    
-    <div class="post-footer">
-        <div>
-            
-            转载声明：
-            商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
-            
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
+  </div>
 </article>
-<div class="article-nav prev-next-wrap clearfix">
-    
-    <a href="/2025/05/29/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97AIOS-LLM-Agent-Operating-System-Agent%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA-SDK-API%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3/" class="pre-post btn btn-default" title='【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解'>
-        <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-        <span class="hidden-xs">
-            【LLM-Agent搭建系列】AIOS-LLM Agent Operating System （多Agent操作系统）理论+SDK API代码讲解</span>
-    </a>
-    
-    
-    <a href="/2025/03/01/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97DeepSeek-R1%E8%92%B8%E9%A6%8FQwen7B-%E5%8F%8A-Llama-8B-%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/" class="next-post btn btn-default" title='【LLM训练系列】DeepSeek R1蒸馏Qwen7B 及 Llama 8B 模型微调'>
-        <span class="hidden-lg">下一篇</span>
-        <span class="hidden-xs">
-            【LLM训练系列】DeepSeek R1蒸馏Qwen7B 及 Llama 8B 模型微调</span><i class="fa fa-angle-right fa-fw"></i>
-    </a>
-    
-</div>
-
-<div id="comments">
-    
-    
-<div class="utteranc">
-  
-  <script
-    src='https://utteranc.es/client.js'
-    repo='shenliyang/snippet-comment'
-    issue-term='pathname'
-    issue-number=''
-    theme='github-light'
-    label=''
-    crossorigin='anonymous'
-    async
-  ></script>
-</div>
 
 
 
-</div>
-
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">
-            文章目录
-        </h3>
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MCP%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%8EFunction-Call%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-text">1. MCP是什么，以及与Function Call的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90MCP%E7%9A%84%E7%BB%84%E4%BB%B6%E9%83%BD%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">2. 进一步分析MCP的组件都是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8Cline%E4%B8%ADMCP%E4%BA%A7%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="toc-text">在Cline中MCP产生了什么形式的交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cline%E5%A6%82%E4%BD%95%E4%B8%8ELLM%E4%BA%A4%E4%BA%92"><span class="toc-text">Cline如何与LLM交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP%E5%AD%98%E5%9C%A8%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-text">MCP存在安全问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
         
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
     </div>
-</aside>
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-MCP%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E4%BB%A5%E5%8F%8A%E4%B8%8EFunction-Call%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">1. MCP是什么，以及与Function Call的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%88%86%E6%9E%90MCP%E7%9A%84%E7%BB%84%E4%BB%B6%E9%83%BD%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">2. 进一步分析MCP的组件都是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8Cline%E4%B8%ADMCP%E4%BA%A7%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="toc-number">4.</span> <span class="toc-text">在Cline中MCP产生了什么形式的交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cline%E5%A6%82%E4%BD%95%E4%B8%8ELLM%E4%BA%A4%E4%BA%92"><span class="toc-number">5.</span> <span class="toc-text">Cline如何与LLM交互</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP%E5%AD%98%E5%9C%A8%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">MCP存在安全问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">7.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&text=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&is_video=false&description=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么&body=Check out this article: https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&title=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&name=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/05/19/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97%E4%B8%87%E5%AD%97%E9%95%BF%E6%96%87MCP%E8%A7%A3%E6%9E%90-%E4%BB%A5%E5%BC%80%E6%BA%90-AI-Coding%E4%BA%A7%E5%93%81Cline%E4%B8%BA%E4%BE%8B%E8%AF%A6%E8%A7%A3MCP%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/&t=【LLM-Agent搭建系列】万字长文MCP解析——以开源 AI Coding产品Cline为例详解MCP到底是什么"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
     </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
 </footer>
-<a id="back-to-top" class="icon-btn hide">
-    <i class="fa fa-chevron-up"></i>
-</a>
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="busuanzi">
-    
-</div>
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright &copy;
-                    2017
-                    
-                </span> |
-                <span>
-                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
-                </span> |
-                <span>
-                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
-                </span>
-            </div>
-        </div>
+
     </div>
-</div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 
 
 
 
-<script src="/js/app.js?rev=@@hash.js"></script>
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
 
 </body>
 </html>
