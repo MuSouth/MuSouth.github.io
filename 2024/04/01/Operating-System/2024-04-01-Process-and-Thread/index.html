@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="进程与线程基础知识编写好的代码存储在硬盘，编译后生成二进制可执行文件，当运行这个可执行文件时，它会被装填到内存中，接着CPU会顺序执行程序中的指令，运行中的程序就叫做进程 Process。CPU单核情况下一次只能运行一个进程，但在1s内可能运行多个进程，这就是并发。 早期操作系统都是以进程为基本单位，到了后期又提出了线程这个更小的独立运行的单位。线程其实就是进程中一条执行流程，同一个进程内多个线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程与线程">
+<meta property="og:url" content="https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="进程与线程基础知识编写好的代码存储在硬盘，编译后生成二进制可执行文件，当运行这个可执行文件时，它会被装填到内存中，接着CPU会顺序执行程序中的指令，运行中的程序就叫做进程 Process。CPU单核情况下一次只能运行一个进程，但在1s内可能运行多个进程，这就是并发。 早期操作系统都是以进程为基本单位，到了后期又提出了线程这个更小的独立运行的单位。线程其实就是进程中一条执行流程，同一个进程内多个线程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357786847.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357816384.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527170638.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172759.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172749.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527174600.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527175100.png">
+<meta property="article:published_time" content="2024-04-01T02:46:18.000Z">
+<meta property="article:modified_time" content="2025-12-14T02:17:01.810Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="多线程">
+<meta property="article:tag" content="八股">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>进程与线程</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/04/01/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/03/01/%E7%AE%80%E5%8D%95%E7%90%86%E8%A7%A3Redis/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&text=进程与线程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&is_video=false&description=进程与线程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=进程与线程&body=Check out this article: https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&name=进程与线程&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&t=进程与线程"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">进程与线程基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">进程通信方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%B2%E7%AA%81"><span class="toc-number">3.</span> <span class="toc-text">多线程冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81"><span class="toc-number">4.</span> <span class="toc-text">如何避免死锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%A6%82%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">死锁概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81-1"><span class="toc-number">5.1.</span> <span class="toc-text">如何避免死锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E4%B9%90%E8%A7%82%E9%94%81%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">什么是悲观锁和乐观锁？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81"><span class="toc-number">6.1.</span> <span class="toc-text">互斥锁和自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E9%94%81"><span class="toc-number">6.2.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81"><span class="toc-number">6.3.</span> <span class="toc-text">乐观锁和悲观锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        进程与线程
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-04-01T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-04-01</time>
+        
+        (Updated: <time datetime="2025-12-14T02:17:01.810Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E5%85%AB%E8%82%A1/" rel="tag">八股</a>, <a class="p-category" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a>, <a class="p-category" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag">多线程</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="进程与线程基础知识"><a href="#进程与线程基础知识" class="headerlink" title="进程与线程基础知识"></a>进程与线程基础知识</h2><p>编写好的代码存储在硬盘，编译后生成二进制可执行文件，当运行这个可执行文件时，它会被装填到内存中，接着CPU会顺序执行程序中的指令，运行中的程序就叫做进程 Process。<br>CPU单核情况下一次只能运行一个进程，但在1s内可能运行多个进程，这就是并发。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527225303.png" alt="image.png"></p>
+<p>早期操作系统都是以进程为基本单位，到了后期又提出了线程这个更小的独立运行的单位。线程其实就是进程中一条执行流程，同一个进程内多个线程共享代码段、数据段等资源，但每个线程有自己独立的栈和寄存器资源。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357786847.png" alt="1748357786847.png"><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748357816384.png" alt="1748357816384.png"><br>第二种关系则是多对多，也可以一对一。用户线程是基于用户态的线程管理库实现的，线程控制块也是在库里实现的，操作系统看不到线程控制块Thread Control Block，所以对用户线程的整个线程管理和调度 操作系统不会直接参与，而是由这个库函数来完成线程的创建、终止、同步和调度等。</p>
+<p>内核线程则是由操作系统管理，线程对应的控制块放在操作系统里，线程的创建、终止管理等由操作系统负责。</p>
+<h2 id="进程通信方式"><a href="#进程通信方式" class="headerlink" title="进程通信方式"></a>进程通信方式</h2><p>进程间通信方式包括Socket、管道、消息队列、共享内存、信号量、信号。<br><a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/4_process/process_commu.html#%E7%AE%A1%E9%81%93">5.2 进程间有哪些通信方式？ | 小林coding (xiaolincoding.com)</a></p>
+<h2 id="多线程冲突"><a href="#多线程冲突" class="headerlink" title="多线程冲突"></a>多线程冲突</h2><p>单核CPU，如果要实现多程序进程同时运行，操作系统通常以时间片调度方式让每个进程执行一个时间片，时间片用完后会切换另外进程，时间片很短的时候就造成了并发现象，并发不是并行。<br>操作系统会为每个进程创建巨大的私有的虚拟内存假象，这种地址空间的抽象会使得每个程序好像拥有自己的内存，但实际OS会让多个地址空间复用物理内存。<br>当一个程序只有一个执行流程，这就是单线程，一个程序可以有多个执行流程，这就是所谓多线程。线程是调度的基本单位，进程是资源分配基本单位。线程之间可以共享进程资源，比如代码段、堆空间、数据段等，但每个线程拥有自己独立的栈空间。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527170638.png" alt="image.png"></p>
+<p>当多线程同时要使用共享资源时，就产生了资源竞争，假设有一个共享的全局变量资源 i&#x3D;0，然后定义一个代码段，这个函数里面的内容是循环N次，每次将i加1，当同时定义两个线程调用该函数时，理想结果是两个线程程序运行结束后结果应该是2N，但实际情况可能小于2N，这就是因为产生了竞争条件。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172759.png" alt="image.png"></p>
+<p>当多线程竞争操作共享变量时，可能会在执行过程中出现上下文切换，比如在线程1执行上述函数前，此时变量i&#x3D;50，然后线程1开始执行对i的自增操作，此时定时器中断产生，切换到线程2，线程2也读取变量i&#x3D;50，因为从计算完结果到将结果存到寄存器需要时间，线程2开始计算的时候这个变量的值未必在寄存器中已经更新好，所以导致两个线程同时并发时出现了混乱，这样就不是严格的执行了2N次自增操作了。这就是所谓的竞争条件，而这段描述了对公共变量进行循环自增的代码段叫做临界区，要想避免上述情况发生，就要避免临界区给多线程执行。</p>
+<p>换句话说，临界区应该保证互斥，保证一个线程在临界区执行的时候，另一个线程要被阻止进入临界区。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527172749.png" alt="image.png"><br>此外还有一个同步的概念，同步就是并发线程&#x2F;进程在一些关键点上需要互相等待或者互通消息，这种相互制约的等待与互通信息成为进程&#x2F;线程同步。形象理解就是线程A负责读取数据，线程B负责处理数据，所以线程B必须在线程A结束后被唤醒。这个和互斥有点区别，互斥单纯是指两个线程不可以同时执行，但并未必产生这种同步关系。</p>
+<p>对于如何解决这种并发的健康协作：</p>
+<ul>
+<li>锁：加锁、解锁操作<br>任何想进入临界区的线程必须先执行加锁操作，若加锁成功则顺利通过，线程可以进入临界区，完成临界区资源访问后再执行解锁操作，释放临界区资源。<br>根据锁的实现不同，分为忙等待锁，无忙等待锁。<br>忙等待锁是自旋锁，当线程获取不到锁时会一直while循环。而无忙等待锁在获取不到锁的时候不用自旋。  既然不想自旋，当没获取到锁的时候就把当前线程放到锁的等待队列中，执行调度程序把CPU让给其他线程。</li>
+<li>信号量：P和V两个原子操作<br>信号量表示资源数量，对应变量是一个整形sem变量。<br>其中P操作会让sem-1，如果减后sem&lt;0，则线程进入阻塞等待，否则继续，P操作会阻塞。<br>V操作会sem+1，如果加后sem&lt;&#x3D;0，唤醒一个等待中的线程，V操作不会阻塞。<br>P操作是在进入临界区前，V操作在离开临界区后。当想要实现互斥访问的时候，每类共享资源的信号量sem应该设置为1，这样就保证了一个线程在访问时，sem&#x3D;0，当下一个线程要访问时若执行P操作，sem&#x3D;-1&lt;0，所以被阻塞，只有当第一个线程离开时执行V操作，sem&#x3D;1时，下一个线程进行V操作后才不被阻塞。此时信号量三个状态：1表示没有线程进入临界区，0表示1个线程进入临界区，-1表示一个线程进入了临界区，一个线程在等待。<br>信号量还可以实现事件同步，方式就是sem初始值设置为0。</li>
+</ul>
+<h2 id="如何避免死锁"><a href="#如何避免死锁" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h2><h2 id="死锁概念"><a href="#死锁概念" class="headerlink" title="死锁概念"></a>死锁概念</h2><p>当两个线程为了保护两个不同的共享资源而使用了两个互斥锁，这两个互斥锁应用不当的时候，可能会造成两个线程都在等待对方释放锁，这就形成了死锁。死锁在满足以下4个条件时产生：</p>
+<ul>
+<li>互斥条件；</li>
+<li>持有并等待条件；</li>
+<li>不可剥夺条件；</li>
+<li>环路等待条件；<br>互斥条件就是指多个线程不能同时持有同一个资源，当线程A持有资源，线程B想申请这个资源的时候只能等待。<br>持有并等待条件是指假设线程A已经持有资源1，同时想要申请资源2，但是资源2在线程C手中，线程A只能等待，等待过程中A不会释放资源1。<br>不可剥夺条件是指当线程已经持有了资源，自己用完之前不能被其他线程获取。<br>最后环路等待条件是指死锁发生的时候，两个线程获取资源的顺序已经形成了环形链。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527174600.png" alt="image.png"></li>
+</ul>
+<h3 id="如何避免死锁-1"><a href="#如何避免死锁-1" class="headerlink" title="如何避免死锁"></a>如何避免死锁</h3><p>既然上述四个条件已经明确，要解决死锁就只要破坏四个条件之一就可以，<strong>最常见的就是资源有序分配法</strong>。资源有序分配法是指线程A以及线程B获取资源顺序要一致，假设A和B都需要申请资源1和2，那么两个线程申请资源的顺序都必须遵守先申请资源1，再申请资源2，这样就打破了死锁。</p>
+<p><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250527175100.png" alt="image.png"></p>
+<h2 id="什么是悲观锁和乐观锁？"><a href="#什么是悲观锁和乐观锁？" class="headerlink" title="什么是悲观锁和乐观锁？"></a>什么是悲观锁和乐观锁？</h2><p>多线程访问共享资源的时候，避免不了资源竞争导致的数据错乱问题，所以通常在访问共享资源之前加锁，最常用的就是互斥锁，还有很多不同的锁，比如自旋锁、读写锁、乐观锁等。高并发场景下不合适的锁可能导致性能退化很严重，因此结合分析业务中场景访问共享资源的方式，考虑并发资源访问冲突的概率，可以选择合适的锁以减小对高并发性能影响。</p>
+<p>下面就「互斥锁、自旋锁、读写锁、乐观锁和悲观锁」的选择和使用进行分析。</p>
+<h3 id="互斥锁和自旋锁"><a href="#互斥锁和自旋锁" class="headerlink" title="互斥锁和自旋锁"></a>互斥锁和自旋锁</h3><p>这两个锁是最基本的，高级锁大都基于它们实现，首先明确加锁的目的是保证共享资源在任意时间内只有一个线程可以访问，当有一个线程已经加锁后，其他线程加锁就会失败。</p>
+<ul>
+<li>互斥锁加锁失败后，线程会释放CPU，给其他线程</li>
+<li>自旋锁加锁失败后，线程会忙等待，直到它拿到锁<br>互斥锁加锁失败后，会从用户态陷入到内核态，内核切换线程，此时产生了两次线程上下文切换成本：</li>
+<li>首先加锁失败，内核会把线程状态从「运行」设置为「睡眠」，然后把CPU切换给其他线程运行</li>
+<li>当资源锁被释放时，之前睡眠状态的线程会变为就绪状态，然后内核会在合适时间把CPU切换给该线程运行。<br>此时发生的线程上下文切换就是开销，所谓的上下文切换针对的是线程的私有资源例如寄存器、计数器等数据会在线程切换后内核重新加载，不包括共享内存等资源。上下文切换的耗时在几十纳秒到几微秒之间，如果锁住的代码执行时间很短，可能上下文切换的时间都比代码运行时间长，那自然应该选择自旋锁，以减少上下文切换开销，反之使用互斥锁。</li>
+</ul>
+<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>读写锁明确区分读操作和写操作，考虑到当多个线程只需要读取共享资源，而不需要写入时，完全可以并发持有读锁，进而提高共享资源的访问效率。但加入写锁被线程持有后，所有线程都被阻塞。在读多写少的场景下，读写锁效率很高。而且读写锁可以分为 读优先和写优先。</p>
+<h3 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h3><p>前面提到的互斥锁、自旋锁、读写锁都属于悲观锁，悲观锁比较悲观，认为多线程同时修改共享资源的概率比较高，容易出现冲突，所以访问共享资源前需要上锁。<br>乐观锁则相反，它假定冲突概率很低，所以先修改完共享资源，再验证这段时间是否发生了冲突，如果没有其他线程正在修改资源，则操作完成，如果发现其他线程已经修改过，则放弃本次操作。放弃后只能重试，这个和具体业务有关，乐观锁全程不加锁，主要场景例如在线文档修改，如果使用悲观锁，当有一个用户在修改时其他用户就无法编辑了，这种能够多人同时编辑的情况就是用了乐观锁。Git也是用了乐观锁的思想，用户可以先修改代码，提交的时候根据版本号判断是否冲突了。<br>简而言之，乐观锁是先修改资源，再判断是否发生了冲突；悲观锁是修改资源前就要加锁，防止资源竞争。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://xiaolincoding.com/os/">图解系统介绍 | 小林coding (xiaolincoding.com)</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">进程与线程基础知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">进程通信方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%B2%E7%AA%81"><span class="toc-number">3.</span> <span class="toc-text">多线程冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81"><span class="toc-number">4.</span> <span class="toc-text">如何避免死锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%E6%A6%82%E5%BF%B5"><span class="toc-number">5.</span> <span class="toc-text">死锁概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81-1"><span class="toc-number">5.1.</span> <span class="toc-text">如何避免死锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%82%B2%E8%A7%82%E9%94%81%E5%92%8C%E4%B9%90%E8%A7%82%E9%94%81%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">什么是悲观锁和乐观锁？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E8%87%AA%E6%97%8B%E9%94%81"><span class="toc-number">6.1.</span> <span class="toc-text">互斥锁和自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E9%94%81"><span class="toc-number">6.2.</span> <span class="toc-text">读写锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81"><span class="toc-number">6.3.</span> <span class="toc-text">乐观锁和悲观锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&text=进程与线程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&is_video=false&description=进程与线程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=进程与线程&body=Check out this article: https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&title=进程与线程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&name=进程与线程&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/04/01/Operating-System/2024-04-01-Process-and-Thread/&t=进程与线程"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

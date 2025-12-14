@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="0 前言这是一篇相对全面的整理LLM相关技术的博客，主要内容包括包括大模型Pre-training&#x2F;Post-training&#x2F;Inference等相关技术，在大模型每个阶段都有更细节的技术分类，例如KV Cache、PD分离、RLHF、DPO、PageAttention、FlashAttention、RoPE等等。从技术细分来讲，这里的知识几乎无穷尽，因此参考haddiii的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM系列——理解现代LLM网络结构">
+<meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="0 前言这是一篇相对全面的整理LLM相关技术的博客，主要内容包括包括大模型Pre-training&#x2F;Post-training&#x2F;Inference等相关技术，在大模型每个阶段都有更细节的技术分类，例如KV Cache、PD分离、RLHF、DPO、PageAttention、FlashAttention、RoPE等等。从技术细分来讲，这里的知识几乎无穷尽，因此参考haddiii的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230813.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231718.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231707.png">
+<meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
+<meta property="article:modified_time" content="2025-12-13T09:11:29.882Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="网络结构">
+<meta property="article:tag" content="基础理论">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>LLM系列——理解现代LLM网络结构</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&text=LLM系列——理解现代LLM网络结构"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&is_video=false&description=LLM系列——理解现代LLM网络结构"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM系列——理解现代LLM网络结构&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&name=LLM系列——理解现代LLM网络结构&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&t=LLM系列——理解现代LLM网络结构"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0 前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E8%80%83"><span class="toc-number">1.1.</span> <span class="toc-text">主要参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A4%A7%E6%A8%A1%E5%9E%8BOverview"><span class="toc-number">2.</span> <span class="toc-text">1. 大模型Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 基础模型训练阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMSNorm"><span class="toc-number">2.2.</span> <span class="toc-text">RMSNorm</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Normalization%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. Normalization是什么</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Batch-Normalization"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. Batch Normalization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Layer-Norm"><span class="toc-number">2.2.3.</span> <span class="toc-text">3. Layer Norm</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-RMS-Norm-%E5%9D%87%E6%96%B9%E6%A0%B9%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.2.4.</span> <span class="toc-text">4. RMS Norm 均方根层归一化</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        LLM系列——理解现代LLM网络结构
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
+        
+        (Updated: <time datetime="2025-12-13T09:11:29.882Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/LLM-Foundation/">LLM-Foundation</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LLM/" rel="tag">LLM</a>, <a class="p-category" href="/tags/%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA/" rel="tag">基础理论</a>, <a class="p-category" href="/tags/%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84/" rel="tag">网络结构</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0 前言"></a>0 前言</h2><p>这是一篇相对全面的整理LLM相关技术的博客，主要内容包括包括大模型Pre-training&#x2F;Post-training&#x2F;Inference等相关技术，在大模型每个阶段都有更细节的技术分类，例如KV Cache、PD分离、RLHF、DPO、PageAttention、FlashAttention、RoPE等等。从技术细分来讲，这里的知识几乎无穷尽，因此参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/713794852">haddiii</a>的这篇知乎博客带给我的启发，不妨按照LLM的不同阶段，先按照模型训练到推理不同的阶段拉起一个较宏观的框架，再往这个框架中不断填充内容，在持续学习中不断完善和加深理解。</p>
+<h3 id="主要参考"><a href="#主要参考" class="headerlink" title="主要参考"></a>主要参考</h3><p><a target="_blank" rel="noopener" href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/">https://ai.meta.com/research/publications/the-llama-3-herd-of-models/</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/713794852">从Llama 3报告出发的一些LLM技术整理 - 知乎 (zhihu.com)</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/T7aD9diSNymHhv68FSaSZA">https://mp.weixin.qq.com/s/T7aD9diSNymHhv68FSaSZA</a><br><a target="_blank" rel="noopener" href="https://www.youtube.com/@AndrejKarpathy/videos">https://www.youtube.com/@AndrejKarpathy/videos</a><br>还是看下Andrej Karpathy的视频，一个是从0开始完整搭建GPT2（<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=kCc8FmEb1nY&t=792s" title="Let&#39;s build GPT: from scratch, in code, spelled out.">Let’s build GPT: from scratch, in code, spelled out.</a>），一个是3小时ChatGPT大模型沉浸式讲解（<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=7xTGNNLPyMI&t=1s" title="Deep Dive into LLMs like ChatGPT">Deep Dive into LLMs like ChatGPT</a>）。通过这两个视频，一定可以更好理解整个大模型工程过程，<strong>注意工程这个词</strong>，仅仅理解大模型相关理论是不够的，很多优化技术都是针对工程实现上的困难而作出的，对于大模型来说，理论与工程同等重要。</p>
+<h2 id="1-大模型Overview"><a href="#1-大模型Overview" class="headerlink" title="1. 大模型Overview"></a>1. 大模型Overview</h2><h3 id="1-1-基础模型训练阶段"><a href="#1-1-基础模型训练阶段" class="headerlink" title="1.1 基础模型训练阶段"></a>1.1 基础模型训练阶段</h3><p>（1）预训练阶段pre-training：next word prediction，用交叉熵损失训练。<br>（2）后训练阶段post-training：包括SFT(监督微调)技术，以及RLHF(强化学习人类反馈)、DPO(直接偏好优化 direct preference optimization)、PPO等强化学习技术。将模型偏好对齐到人类喜好上，或让模型在特定任务上的能力提升。<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/20922850916">LLM中的强化学习：从RLHF到DPO - 知乎 (zhihu.com)</a></p>
+<h3 id="RMSNorm"><a href="#RMSNorm" class="headerlink" title="RMSNorm"></a>RMSNorm</h3><p>【其他博客】<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42295205/article/details/144963811">【归一化】RMSNorm_rms norm-CSDN博客</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012856866/article/details/146639778?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-146639778-blog-144963811.235%5Ev43%5Epc_blog_bottom_relevance_base6&spm=1001.2101.3001.4242.1&utm_relevant_index=2">【大模型】归一化方法之Batch Norm, Layer Norm, RMS Norm-CSDN博客</a></p>
+<h4 id="1-Normalization是什么"><a href="#1-Normalization是什么" class="headerlink" title="1. Normalization是什么"></a>1. Normalization是什么</h4><p>在统计学中，一般翻译成归一化，或正则化。还有一个概念叫Standardization，叫做标准化。归一化一般是将数据缩放到0 - 1之间，标准化是将数据缩放到均值为0，方差为1的正态分布。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230004.png" alt="image.png"><br>在神经网络中，最早的Batch Normalization，到后边Transformer常用的Layer Norm，严格意义来讲都是Standardization，也就是将特征数据调整到均值为0，方差为1的缩放平移操作，一般这种标准化是为了消除输入数据的量纲。</p>
+<h4 id="2-Batch-Normalization"><a href="#2-Batch-Normalization" class="headerlink" title="2. Batch Normalization"></a>2. Batch Normalization</h4><p>批归一化，最早2015年Sergey loffe等提出，BatchNorm 主要解决的问题是在训练深度神经网络时出现的内部协变量偏移（Internal Covariate Shift），即网络中各层输入数据分布的变化。所谓的内部协变量偏移是指随着网络层数加深，每一层的输入数据的分布（前一层的输出）会发生变化，导致训练梯度消失或爆炸问题，从而影响网络的收敛速度和稳定性。<br>BN关注的是批次每一列数据，表示不同样本的同一维特征，这个特性也是Transformer不使用的BN的原因，因为Transformer的输入序列长度不恒定，无法保证一个Batch里的数据有相同的长度。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515230813.png" alt="image.png"></p>
+<h4 id="3-Layer-Norm"><a href="#3-Layer-Norm" class="headerlink" title="3. Layer Norm"></a>3. Layer Norm</h4><p>LayerNorm（Layer Normalization），层归一化是一种在深度学习中用于稳定神经网络训练和提高性能的技术。它是由 Jimmy Lei Ba、Jamie Ryan Kiros、Geoffrey E. Hinton 在 2016 年提出的。LayerNorm 与 Batch Normalization 类似，都旨在减少内部协变量偏移，但它们在归一化的具体实现上有所不同。<br>Layer Norm对每个样本所有特征作标准化，而不是基于一个批次。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231718.png" alt="image.png"></p>
+<h4 id="4-RMS-Norm-均方根层归一化"><a href="#4-RMS-Norm-均方根层归一化" class="headerlink" title="4. RMS Norm 均方根层归一化"></a>4. RMS Norm 均方根层归一化</h4><p>RMS Norm（Root MeanSquare Layer Norm），均方根层归一化 是 LayerNorm 的一个简单变体，来自 2019 年的论文 Root Mean Square Layer Normalization，被当前主流的大模型（ LLama，Qwen, DeepSeek等 ）所使用。可以说目前大模型基本都用这个归一化方法，RMSNorm认为 LN很好，但每次都要计算均值和方差，LN成功的原因是re-scaling，因为方差计算的过程中用到了均值，而RMSNorm不再使用均值计算方差，而是直接使用均方根RMS代替方差Var。<br>RMSNorm不再需要计算均值和方差，而只需要计算 均方根RMS 一个统计量即可。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250515231707.png" alt="image.png"><br>上述公式中$g_i$是可学习的缩放因子，偏移参数$b_i$移除掉了。实验验证RMSNorm与LN性能相当，但节省7%到64%的计算量。其代码实现也很简单：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LlamaRMSNorm</span>(nn.Module):</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, hidden_size, eps=<span class="number">1e-6</span></span>):</span><br><span class="line">		<span class="built_in">super</span>().__init__()</span><br><span class="line">		<span class="variable language_">self</span>.weight = nn.Parameter(torch.ones(hidden_size))</span><br><span class="line">		<span class="variable language_">self</span>.variance_eps = eps</span><br><span class="line">	<span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, hidden_states</span>):</span><br><span class="line">		input_dtype = hidden_states.dtype</span><br><span class="line">		variance = hidden_states.<span class="built_in">pow</span>(<span class="number">2</span>).mean(-<span class="number">1</span>, keepdim=<span class="literal">True</span>) // 最后一维求均值</span><br><span class="line">		<span class="comment"># torch.rsqrt计算每个元素的平方根的倒数</span></span><br><span class="line">		<span class="comment"># out_i = 1 / sqrt(x_i)</span></span><br><span class="line">		hidden_states = hidden_states * torch.rsqrt(variance + <span class="variable language_">self</span>.variance_eps)</span><br><span class="line">		<span class="keyword">return</span> (<span class="variable language_">self</span>.weight * hidden_states).to(input_dtype)</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0 前言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E5%8F%82%E8%80%83"><span class="toc-number">1.1.</span> <span class="toc-text">主要参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A4%A7%E6%A8%A1%E5%9E%8BOverview"><span class="toc-number">2.</span> <span class="toc-text">1. 大模型Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 基础模型训练阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMSNorm"><span class="toc-number">2.2.</span> <span class="toc-text">RMSNorm</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Normalization%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. Normalization是什么</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Batch-Normalization"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. Batch Normalization</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Layer-Norm"><span class="toc-number">2.2.3.</span> <span class="toc-text">3. Layer Norm</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-RMS-Norm-%E5%9D%87%E6%96%B9%E6%A0%B9%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.2.4.</span> <span class="toc-text">4. RMS Norm 均方根层归一化</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&text=LLM系列——理解现代LLM网络结构"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&is_video=false&description=LLM系列——理解现代LLM网络结构"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM系列——理解现代LLM网络结构&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&title=LLM系列——理解现代LLM网络结构"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&name=LLM系列——理解现代LLM网络结构&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-understanding-modern-llm-network-structure/&t=LLM系列——理解现代LLM网络结构"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

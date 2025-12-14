@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。 一些前言大概等了四天左右，本站的域名备案完成，也就说明网站可以正式上线了，前文《在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程》我们讲过使用域名以及网站上线和在本地或者服务器上测试部署还是有些差异的，因此本篇博客主要分享如何开放公共网络访">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）">
+<meta property="og:url" content="https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。 一些前言大概等了四天左右，本站的域名备案完成，也就说明网站可以正式上线了，前文《在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程》我们讲过使用域名以及网站上线和在本地或者服务器上测试部署还是有些差异的，因此本篇博客主要分享如何开放公共网络访">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/20241128171532.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785526882.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793786473.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793869684.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794219164.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794561133.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/avator.jpg">
+<meta property="article:published_time" content="2024-11-27T02:46:18.000Z">
+<meta property="article:modified_time" content="2025-12-14T02:17:43.550Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="图床">
+<meta property="article:tag" content="Picturebed">
+<meta property="article:tag" content="网站上线">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/11/27/%E5%BB%BA%E7%AB%99%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-Github-PicGo-Obsidian-ImageBed-Tutorial/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&text=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&is_video=false&description=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）&body=Check out this article: https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&name=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&t=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Github-PicGo-Obsidian%E2%80%94%E2%80%94%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E5%A5%BD%E7%94%A8%E7%9A%84%E5%9B%BE%E5%BA%8A%E6%8A%80%E6%9C%AF%E9%93%BE%EF%BC%88-%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一些前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">一、网站上线的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Nginx%E9%85%8D%E7%BD%AE-%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF"><span class="toc-number">1.3.</span> <span class="toc-text">二、Nginx配置+网站上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Github-PicGo-Obsidian-%E4%B8%80%E6%AC%BE%E5%A5%BD%E7%94%A8%E4%B8%94%E6%96%B9%E4%BE%BF%E5%9B%BE%E5%83%8F%E7%AE%A1%E7%90%86%E5%AD%98%E5%82%A8%E7%9A%84Markdown%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">三、Github+PicGo+Obsidian&#x3D;一款好用且方便图像管理存储的Markdown编辑器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 所需工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Github%E5%9B%BE%E5%BA%8A%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. Github图床基本原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 配置步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B0%8F%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">四、小结</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-27T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-11-27</time>
+        
+        (Updated: <time datetime="2025-12-14T02:17:43.550Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E5%88%B6%E4%BD%9C%E6%95%99%E7%A8%8B/">博客制作教程</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="p-category" href="/tags/Picturebed/" rel="tag">Picturebed</a>, <a class="p-category" href="/tags/%E5%9B%BE%E5%BA%8A/" rel="tag">图床</a>, <a class="p-category" href="/tags/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF/" rel="tag">网站上线</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Github-PicGo-Obsidian——一套完整好用的图床技术链（-网站上线）"><a href="#Github-PicGo-Obsidian——一套完整好用的图床技术链（-网站上线）" class="headerlink" title="Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"></a>Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）</h1><p>欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。</p>
+<h2 id="一些前言"><a href="#一些前言" class="headerlink" title="一些前言"></a>一些前言</h2><p>大概等了四天左右，本站的域名备案完成，也就说明网站可以正式上线了，前文《<a target="_blank" rel="noopener" href="http://www.aidenlee.tech/2024/11/27/%E5%BB%BA%E7%AB%99%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93/">在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程</a>》我们讲过使用域名以及网站上线和在本地或者服务器上测试部署还是有些差异的，因此本篇博客主要分享如何开放公共网络访问。并顺便分享了如何DIY自己的在线图床，从而节省服务器本地存储图片的空间（<em>最新测试可以使用</em>）。</p>
+<h2 id="一、网站上线的原理"><a href="#一、网站上线的原理" class="headerlink" title="一、网站上线的原理"></a>一、网站上线的原理</h2><p>作为一个静态博客网站，网站上线的核心原理在于将开发好的静态文件（例如HTML、CSS、JavaScript等）放置在服务器上，并通过Web服务器（例如<a target="_blank" rel="noopener" href="https://nginx.org/en/">Nginx</a>和<a target="_blank" rel="noopener" href="https://httpd.apache.org/download.cgi">Apache</a>）将这些文件提供给访问者，整个过程主要分为以下几步：</p>
+<ul>
+<li><strong>域名解析</strong>：用户在浏览器输入域名时，DNS 服务器将域名解析为服务器的 IP 地址。</li>
+<li><strong>请求处理</strong>：用户的浏览器向 Web 服务器发送 HTTP 请求，请求特定的文件（如网页）。</li>
+<li><strong>文件响应</strong>：Web 服务器接收到请求后，根据请求的 URL 找到相应的文件，并将其发送回用户的浏览器。</li>
+<li><strong>页面渲染</strong>：用户的浏览器接收到文件后进行解析和渲染，最终展示给用户。<br>这时不熟悉Web技术的同学们可能产生了疑问，那我之前按照你的教程只安装了Node.js以及Hexo，为什么开放特定端口（例如hexo server -p 8080）后<strong>可以访问</strong>，但我直接开放端口80（PS:端口80是广泛使用的基本默认的网站开放端口，一般情况下网址链接上都会省略不写，但实际访问的就是80端口）为什么<strong>不能访问网站</strong>呢？其实这是因为Hexo自带一个内置的用于开发测试的Node.js服务器，它会监听本地请求，通常是默认的localhost:4000地址（也可以通过访问http:&#x2F;&#x2F;你的服务器IP:4000来访问），当然这个4000可以根据你的需求去更改，但一定要记得到服务器防火墙安全组处开放对应端口。</li>
+</ul>
+<p>看到这里你应该大概明白了，尽管我的服务器已经默认开放了80端口，且域名备案完成了，但是我缺少一个Web服务器来负责文件处理和反向代理请求，因此本文将教会你如何使用和设置Nginx以正式开放网站。</p>
+<h2 id="二、Nginx配置-网站上线"><a href="#二、Nginx配置-网站上线" class="headerlink" title="二、Nginx配置+网站上线"></a>二、Nginx配置+网站上线</h2><ul>
+<li><p>使用apt包管理工具安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install nginx</span><br><span class="line"><span class="comment"># 验证安装</span></span><br><span class="line">nginx -v</span><br></pre></td></tr></table></figure></li>
+<li><p>编辑nginx配置文件，通常在<code>/etc/nginx/conf.d/hexo.conf</code>下，如没有可创建一个</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/nginx/conf.d/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">touch</span> hexo.conf</span><br><span class="line">vi hexo.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在hexo.conf中输入以下程序</span></span><br><span class="line">server &#123; </span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.aidenlee.tech; <span class="comment"># 替换为您的域名</span></span><br><span class="line">	location / &#123; root /path/to/your/hexo/public; <span class="comment"># 替换为您的 Hexo 公共目录路径         index index.html index.htm; </span></span><br><span class="line">	try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ =404; </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里public文件夹就在你所创建的博客文件夹的根目录，要确认里面有<code>index.html</code>。且注意要同时修改博客根目录下<code>_config.yml</code>配置文件里的url参数，修改为你自己的域名。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785086099.png" alt="1732785086099.png"></p>
+</li>
+<li><p>启动Nginx服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查Nginx配置语法或格式是否正确</span></span><br><span class="line"><span class="built_in">sudo</span> nginx -t</span><br><span class="line"><span class="comment"># 启动Nginx</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart nginx</span><br></pre></td></tr></table></figure>
+<p><strong>若不出意外，那么就可以访问自己的博客网站啦。</strong><br>(<em>^_^</em>)，但是博主这里还是出了些意外，我认为这也可能是比较常见的情况~<strong>403 Forbidden！！</strong><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/20241128171532.png" alt="image.png"><br>有问题就解决问题，出现403错误的最可能的原因是你给的权限不够，Nginx无法访问你的<code>public</code>目录，在Nginx中有一个用户的概念，查看<code>/etc/nginx/nginx.conf</code>文件可以看到Nginx的用户名，一般情况下就是<code>www-data</code>：<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732785526882.png" alt="1732785526882.png"></p>
+</li>
+</ul>
+<p>然后你需要开放Nginx用户<code>www-data</code>对你博客目录下<code>public</code>文件夹的读取权限，这里至少需要<code>755</code>（<strong>这里简单说明下Linux系统下文件权限的问题</strong>，在Linux中文件权限分为八级，以二进制类似的形式排列组合了读r&#x2F;写w&#x2F;执行x三种权限，且对于每个文件的权限分为三个组，所有者Owner、用户组Group、其他用户Others，不同的权限可以用对应的排列组合样式表示，同时可以按照二进制的计算原则转换成十进制数字，从而对应每一个排列，例如只读是<code>r--</code>，换算成十进制就是4，只写是<code>-w-</code>，换算成十进制就是2，同样可执行权限<code>--x</code>则对应1，如果该文件具有所有权限则表示为<code>rwx</code>，对应数字7，如果配置一个文件的权限要同时按照所有者&#x2F;用户组&#x2F;其他的顺序，赋予三个组权限，例如我提到的<code>755</code>就是分别赋予所有者、用户组、其他以可读写执行、可读可执行、可读可执行的权限，查看文件或目录权限使用<code>ls -l filename</code>，更改权限则使用<code>chmod 755 filename</code>详细的可以参考这篇博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/lv8549510/article/details/85406215">Linux文件权限详解</a>）。</p>
+<p><strong>言归正传</strong>，当然如果发现只给了<code>public</code>目录权限后依旧403，那么就将其父目录同时提升权限，确保顺利访问到<code>public</code>目录即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查询目录权限 </span></span><br><span class="line"><span class="built_in">ls</span> -ld /home/admin/AidenStation/AidenBlog/public</span><br><span class="line"><span class="comment"># 更改目录权限 </span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 755 /home/admin/AidenStation/AidenBlog/public</span><br><span class="line"><span class="comment"># 给nginx用户授予读取权限</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R www-data:www-data /home/admin/AidenStation/AidenBlog/public</span><br></pre></td></tr></table></figure>
+<p>当然这里同时有个馊点子，你注意到了上图中<code>nginx.conf</code>的user选项，如果你将其直接更改为<code>root</code>那么就不需要再授予其权限了，但同时这样做风险很大，例如一旦受到利用Nginx漏洞发起的攻击，网络攻击者就能够获得你系统的root权限，本着”最小权限原则“，我们只需要赋予Nginx访问网站静态文件和进行基本的网络操作的权限即可。</p>
+<p>此外如果你的系统不是Ubuntu，而是Centos或RedHat等，可能会存在一个SELinux的问题，此时需要做一些简单设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查SELinux状态</span></span><br><span class="line">sestatus</span><br><span class="line"><span class="comment"># 如果启用，临时禁用</span></span><br><span class="line"><span class="built_in">sudo</span> setenforce 0</span><br><span class="line"><span class="comment"># 如果权限问题</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chcon</span> -R -t httpd_sys_content_t /path/to/your/hexo/public</span><br></pre></td></tr></table></figure>
+
+<p><strong>好了到现在，你的网站应该已经可以访问了，恭喜你，下面我们做一个在线图床，方便作图像线上存储管理。</strong></p>
+<h2 id="三、Github-PicGo-Obsidian-一款好用且方便图像管理存储的Markdown编辑器"><a href="#三、Github-PicGo-Obsidian-一款好用且方便图像管理存储的Markdown编辑器" class="headerlink" title="三、Github+PicGo+Obsidian&#x3D;一款好用且方便图像管理存储的Markdown编辑器"></a>三、Github+PicGo+Obsidian&#x3D;一款好用且方便图像管理存储的Markdown编辑器</h2><p>在现代写作和创作中，图片的使用变得越来越普遍。为了方便管理和存储这些图片，许多创作者选择搭建自己的图床。本文将详细介绍如何使用 Github、PicGo 和 Obsidian 打造一个高效的个人图床系统。</p>
+<h3 id="1-所需工具"><a href="#1-所需工具" class="headerlink" title="1. 所需工具"></a>1. 所需工具</h3><ul>
+<li>Github：用于存储和管理图片的云端仓库</li>
+<li>PicGo：一款开源的图床助手，支持多种图床服务</li>
+<li>Obsidian：一款强大的笔记软件，支持Markdown格式文档</li>
+</ul>
+<h3 id="2-Github图床基本原理"><a href="#2-Github图床基本原理" class="headerlink" title="2. Github图床基本原理"></a>2. Github图床基本原理</h3><p>Github （或者考虑使用Gitee，但是经博主测试，Gitee应该是加装了防盗链，可能早就禁止使用于图床了）可以用作图床，原理是将图片上传至 Github 仓库，然后在博客中使用 URL 链接来访问这些图片。而通过 PicGo+Obsidian，我们可以在编辑Markdown过程中顺手复制粘贴一张图片，即可轻松上传图片至Github仓库，并自动生成对应的URL链接，方便同时在本地 Obsidian以及服务器博客中进行管理。</p>
+<h3 id="3-配置步骤"><a href="#3-配置步骤" class="headerlink" title="3. 配置步骤"></a>3. 配置步骤</h3><ul>
+<li><p>登录Github账号，并创建一个新的仓库<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793786473.png" alt="1732793786473.png"></p>
+</li>
+<li><p>填写基本的仓库信息，包括Repo仓库名，分支就用默认的main就好，然后可以添加一个Readme。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732793869684.png" alt="1732793869684.png"></p>
+</li>
+<li><p>获取Personal Access Tokens，后续PicGo配置要使用<br>   登录Github，点击右上角头像，选择<code>Settings</code>，在左侧菜单栏中下滑到底，选择<code>Developer settings</code>，然后选择<code>Personal access tokens</code>、<code>Tokens(classic)</code>即可，点击<code>Generate new token(classic)</code>，创建时一定记得勾选<code>repo</code>，期限可以选择永久。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794219164.png" alt="1732794219164.png"><br>  <strong>拿到Token后记录下来，将在PicGo中使用。</strong></p>
+</li>
+<li><p>安装并配置<a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo/releases">PicGo</a><br>  在图床设置中找到Github图床，打开相关设置，填写示例如下<br>  <img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732794561133.png" alt="1732794561133.png"><br>  这里的自定义域名中填写的是<code>https://jsdelivr.codeqihan.com/gh/Your_user_name/Your_repo_name@main</code>，前面这部分是使用了一个开源的公共内容分发网络服务（CDN），它可以从多个源（如npm、Github、wordpress）提供文件，通过分布在全球的服务器，jsDelivr能够快速提供内容。</p>
+<p>  <strong>题外话：什么是CDN？</strong><br>  这类CDN即内容分发网络概念性来说就是一种通过分布在全球各地的边缘节点来缓存和分发内容的技术，CDN 由多个分布在不同地理位置的服务器组成，这些服务器称为边缘节点。这些节点存储和缓存来自源服务器的静态内容。<strong>分布式网络</strong>：当用户请求某个资源时，CDN 会根据用户的地理位置选择离用户最近的边缘节点。<strong>内容缓存：</strong>边缘节点会检查是否已经缓存了该内容。如果缓存中存在该资源，CDN 将直接从边缘节点提供资源，从而提高访问速度。<strong>回源策略</strong>：如果请求的资源不在边缘节点的缓存中，CDN 会将请求转发到源服务器。源服务器响应请求后，CDN 会将该内容缓存到边缘节点，以便后续请求能够更快地响应。<strong>负载均衡</strong>：CDN 通过智能算法进行负载均衡，将用户的请求分配到不同的边缘节点，这不仅提高了访问速度，还能有效减少源服务器的压力。<strong>自动化和优化</strong>：CDN 提供自动化的管理和优化功能，包括内容更新、缓存失效策略、压缩、代码优化等。这些功能可以帮助开发者更好地管理资源并提升性能。以jsDelivr为例，其工作流程大致可以总结为：</p>
+<ul>
+<li><strong>文件上传</strong>：开发者将静态资源（例如 JavaScript 库）上传到 GitHub、npm 或其他源。    </li>
+<li><strong>请求处理</strong>：当用户在网页中引用 jsDelivr 的 CDN 链接时，用户的浏览器向 jsDelivr 的边缘节点发送请求。    </li>
+<li><strong>缓存检查</strong>：边缘节点检查缓存是否有用户请求的文件。如果有，直接返回缓存的文件。    </li>
+<li><strong>回源请求</strong>：如果缓存中没有请求的文件，边缘节点会向原始源（如 GitHub 或 npm）请求该文件。    </li>
+<li><strong>内容交付</strong>：获取到资源后，边缘节点将其缓存并返回给用户。之后，任何后续请求都将直接从缓存中响应。</li>
+</ul>
+<p>  <strong>我们回到正题，配置好PicGo后，记得最后一步，将其设置为默认图床！</strong></p>
+</li>
+<li><p>最后一步，安装并配置<a target="_blank" rel="noopener" href="https://obsidian.md/">Obsidian</a><br>  在Obsidian设置中找到<code>Community plugins</code>，然后点击<code>Browse</code>查找第三方插件<code>image auto upload plugin</code>并安装，如果由于网络原因无法在Obsidian插件市场直接安装，可参考这篇博文：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/403001135">如何安装插件？【玩转Obsidian的保姆级教程】 - 知乎 (zhihu.com)</a>，用离线安装的方式实现。安装完成后选择PicGo作为默认App，然后基本也不用配置什么，PicGo和Obsidian默认的监听端口都是36677。</p>
+</li>
+</ul>
+<p><strong>到这一步，终于完成了图床功能的搭建，可以在Obsidian中测试下图床功能了，比如上传一张Aiden的头像。</strong><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/avator.jpg" alt="avator.jpg"></p>
+<p><strong>你是不是发现图片的链接已经自动替换成Github仓库地址中那张图片的链接了呢？</strong></p>
+<h2 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h2><p>这篇博客进行到这里已经基本完成了，但这里要注意两点，一是注意Github单个仓库的容量限制，大概在500MB到1GB吧，超出容量限制要尽快创建一个新仓库用来存储了，并且每个Github用户的总容量是有限制的，不过用于个人博客的一些图片的存储还是足够的，如果不够就另寻他法咯，比如使用阿里云OSS、Amazon S3等数据存储服务，这就是另外的价钱了。此外，自建图床有几点劣势，最显著的特点就是数据隐私性差，且缺乏一些内容优化工具，例如自动压缩、缓存管理、格式支持等，当然这些功能我们依旧可以自己设计，我将会放在后续博客慢慢介绍。这篇博客主要介绍了网站上线和图床搭建两个环节，如果能帮助到你，那我觉得太棒了。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Github-PicGo-Obsidian%E2%80%94%E2%80%94%E4%B8%80%E5%A5%97%E5%AE%8C%E6%95%B4%E5%A5%BD%E7%94%A8%E7%9A%84%E5%9B%BE%E5%BA%8A%E6%8A%80%E6%9C%AF%E9%93%BE%EF%BC%88-%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一些前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">一、网站上线的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Nginx%E9%85%8D%E7%BD%AE-%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF"><span class="toc-number">1.3.</span> <span class="toc-text">二、Nginx配置+网站上线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Github-PicGo-Obsidian-%E4%B8%80%E6%AC%BE%E5%A5%BD%E7%94%A8%E4%B8%94%E6%96%B9%E4%BE%BF%E5%9B%BE%E5%83%8F%E7%AE%A1%E7%90%86%E5%AD%98%E5%82%A8%E7%9A%84Markdown%E7%BC%96%E8%BE%91%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">三、Github+PicGo+Obsidian&#x3D;一款好用且方便图像管理存储的Markdown编辑器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%80%E9%9C%80%E5%B7%A5%E5%85%B7"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 所需工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Github%E5%9B%BE%E5%BA%8A%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. Github图床基本原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 配置步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B0%8F%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">四、小结</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&text=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&is_video=false&description=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）&body=Check out this article: https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&title=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&name=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/27/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF%E5%85%8D%E8%B4%B9%E5%9B%BE%E5%BA%8A%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/&t=Github+PicGo+Obsidian——一套完整好用的图床技术链（+网站上线）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

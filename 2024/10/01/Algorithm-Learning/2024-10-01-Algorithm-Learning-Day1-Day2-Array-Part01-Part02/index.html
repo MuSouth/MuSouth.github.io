@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="数组理论基础与基础操作数据属于最基础的数据结构，这块的题目思维不难，主要是代码细节，例如一些边界条件需要非常清晰才可以。首先数组的定义：数组是存放在内存空间上的相同类型数据的集合。 数组可以通过下标索引快速获取对应下标位置的数据。数组满足以下两点：  数组下标从0开始 数组内存空间地址连续对于数组来说常用操作包括： 初始化数组123456&#x2F;&#x2F; 存储在栈上，内存由系统程序自动管理int arr[5]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法学习第一天&amp;第二天：数组part01&amp;part02">
+<meta property="og:url" content="https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="数组理论基础与基础操作数据属于最基础的数据结构，这块的题目思维不难，主要是代码细节，例如一些边界条件需要非常清晰才可以。首先数组的定义：数组是存放在内存空间上的相同类型数据的集合。 数组可以通过下标索引快速获取对应下标位置的数据。数组满足以下两点：  数组下标从0开始 数组内存空间地址连续对于数组来说常用操作包括： 初始化数组123456&#x2F;&#x2F; 存储在栈上，内存由系统程序自动管理int arr[5]">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513222314.png">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513223048.png">
+<meta property="article:published_time" content="2024-10-01T02:46:18.000Z">
+<meta property="article:modified_time" content="2025-12-14T02:16:57.400Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="数组相关算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>算法学习第一天&amp;第二天：数组part01&amp;part02</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/10/01/%E7%AC%AC%E4%B8%80%E5%A4%A9&%E7%AC%AC%E4%BA%8C%E5%A4%A9%EF%BC%9A%E6%95%B0%E7%BB%84part01&part02/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/04/01/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&text=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&is_video=false&description=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=算法学习第一天&amp;第二天：数组part01&amp;part02&body=Check out this article: https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&name=算法学习第一天&amp;第二天：数组part01&amp;part02&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&t=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">数组理论基础与基础操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%95%B0%E7%BB%84%E4%BB%A3%E7%A0%81%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">常见数组代码题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#704-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-number">2.1.</span> <span class="toc-text">704. 二分查找</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%EF%BC%8C%E5%B7%A6%E9%97%AD%E5%8F%B3%E9%97%AD"><span class="toc-number">2.1.1.</span> <span class="toc-text">第一种，左闭右闭</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%EF%BC%8C%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80"><span class="toc-number">2.1.2.</span> <span class="toc-text">第二种，左闭右开</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#27-%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">2.2.</span> <span class="toc-text">27. 移除元素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#977-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E5%B9%B3%E6%96%B9"><span class="toc-number">3.</span> <span class="toc-text">977. 有序数组的平方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        算法学习第一天&amp;第二天：数组part01&amp;part02
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-01T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-10-01</time>
+        
+        (Updated: <time datetime="2025-12-14T02:16:57.400Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E6%95%B0%E7%BB%84%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95/" rel="tag">数组相关算法</a>, <a class="p-category" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="数组理论基础与基础操作"><a href="#数组理论基础与基础操作" class="headerlink" title="数组理论基础与基础操作"></a>数组理论基础与基础操作</h2><p>数据属于最基础的数据结构，这块的题目思维不难，主要是代码细节，例如一些边界条件需要非常清晰才可以。首先数组的定义：<strong>数组是存放在内存空间上的相同类型数据的集合。</strong> 数组可以通过下标索引快速获取对应下标位置的数据。数组满足以下两点：</p>
+<ul>
+<li>数组下标从0开始</li>
+<li>数组内存空间地址连续<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1747143263934.png" alt="1747143263934.png"><br>对于数组来说常用操作包括：</li>
+<li>初始化数组<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 存储在栈上，内存由系统程序自动管理</span></span><br><span class="line"><span class="type">int</span> arr[<span class="number">5</span>];</span><br><span class="line"><span class="type">int</span> nums[<span class="number">5</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="comment">// 存储在堆上，内存需要手动释放</span></span><br><span class="line"><span class="type">int</span>* arr1 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">5</span>];</span><br><span class="line"><span class="type">int</span>* nums1 = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">5</span>] &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br></pre></td></tr></table></figure></li>
+<li>访问元素<br>数组索引从0开始，索引本质上是内存地址的偏移量。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">randomAccess</span><span class="params">(<span class="type">int</span> * nums, <span class="type">int</span> size)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> randomIndex = <span class="built_in">rand</span>() % size;</span><br><span class="line">	<span class="type">int</span> randomNum = nums[randomIndex];</span><br><span class="line">	<span class="keyword">return</span> randomNum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>插入元素<br>在某个位置插入元素后，需要将之后的元素后移动一位，而且如果数组长度固定，原本数组末尾数字会消失。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> size, <span class="type">int</span> num, <span class="type">int</span> index)</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 倒着插入数据一次遍历即可，这种倒着进行遍历的思想算法中有很多</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = size - <span class="number">1</span>; i &gt; index; i--) &#123;</span><br><span class="line">		nums[i] = nums[i - <span class="number">1</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	nums[index] = num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>删除元素<br>  删除某个元素后，其之后的元素都往前移动一位。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">remove</span><span class="params">(<span class="type">int</span>* num, <span class="type">int</span> size, <span class="type">int</span> index)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = index; i &lt; size - <span class="number">1</span>; i--) &#123;</span><br><span class="line">		nums[i] = nums[i + <span class="number">1</span>];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+对数组的查询&#x2F;删除&#x2F;插入等都属于最基本的操作，这里不再详细解释。可以看到，虽然数组查询的时间复杂度很低O(1)，但是插入和删除时平均时间复杂度都达到了O(n)，而且数组插入元素时，可能导致超出数组长度的元素丢。</li>
+<li>遍历数组<br>就是根据索引走一遍数组每个元素<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> size)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> count = <span class="number">0</span>; </span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		count += nums[i];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>数组扩容<br>在复杂系统环境中，难以保证数组之后的内存空间是可用的，因此无法安全的扩展数组容量，因此大多数编程语言中数组容量不可变，一般扩容数组都是重新建立一个更大的数组，然后把原数组的元素依次复制到新数组中，这是O(n)的复杂度，数组大时很慢。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 数组扩容 */</span></span><br><span class="line"><span class="function"><span class="type">int</span> *<span class="title">extend</span><span class="params">(<span class="type">int</span>* nums, <span class="type">int</span> size, <span class="type">int</span> enlarge)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> *res = <span class="keyword">new</span> <span class="type">int</span>[size + enlarge];</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		res[i] = nums[i];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">delete</span>[] nums;</span><br><span class="line">	<span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+数组的优点不必多言：数组存储在连续空间，元素类型相同，空间效率高，支持随机访问，并且具备缓存局部性，当访问数组元素时，计算机还会加载其周围数据，提升后续操作的执行速度。但数组的缺点也存在：长度不可变，空间可能被浪费，插入和删除时间效率低。</li>
+</ul>
+<h2 id="常见数组代码题"><a href="#常见数组代码题" class="headerlink" title="常见数组代码题"></a>常见数组代码题</h2><h3 id="704-二分查找"><a href="#704-二分查找" class="headerlink" title="704. 二分查找"></a>704. 二分查找</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/binary-search/">力扣题目   链接</a><br>给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1。</p>
+<p>思路：这道题前提是数组有序，而且还没有重复元素，属于最简单的二分查找用法。这里要注意的重点是：二分查找的边界条件设定，到底是while(left &lt; right)还是while(left &lt;&#x3D; right)，是right &#x3D; middle，还是right &#x3D; middle - 1，或者left &#x3D; middle或left &#x3D; middle + 1等等。这里要重点搞清一个概念，区间的定义是不变量，二分查找过程要保持不变量。在二分查找过程中，区间定义有两种，一种是全闭，即左闭右闭[left, right]，左闭右开[left,right)。</p>
+<h4 id="第一种，左闭右闭"><a href="#第一种，左闭右闭" class="headerlink" title="第一种，左闭右闭"></a>第一种，左闭右闭</h4><p>因为这里定义target在[left, right]区间，这就决定了二分法的代码应该如何写，<strong>因为定义target在[left, right]区间，所以有如下两点：</strong></p>
+<ul>
+<li>while (left &lt;&#x3D; right) 要使用 &lt;&#x3D; ，因为left &#x3D;&#x3D; right是有意义的，所以使用 &lt;&#x3D;</li>
+<li>if (nums[middle] &gt; target) right 要赋值为 middle - 1，因为当前这个nums[middle]一定不是target，那么接下来要查找的左区间结束下标位置就是 middle - 1</li>
+</ul>
+<p>例如在数组：1,2,3,4,7,9,10中查找元素2，如图所示：<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513222314.png" alt="image.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [left, right]左闭右闭，要保证这个区间上任何一个值都是有效索引</span></span><br><span class="line"><span class="comment">// 就要保证right = Len - 1，因为索引从0 -- N- 1</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> right = nums.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span> (left &lt;= right) &#123; <span class="comment">// 因为right==left有意义，因此这里取&lt;=</span></span><br><span class="line">		<span class="type">int</span> mid = left + (right - left) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (nums[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) right = mid - <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">else</span> left = mid + <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="第二种，左闭右开"><a href="#第二种，左闭右开" class="headerlink" title="第二种，左闭右开"></a>第二种，左闭右开</h4><p>如果说定义 target 是在一个在左闭右开的区间里，也就是[left, right)。<br>有如下两点：</p>
+<ul>
+<li>while (left &lt; right)，这里使用 &lt; ,因为left &#x3D;&#x3D; right在区间[left, right)是没有意义的</li>
+<li>if (nums[middle] &gt; target) right 更新为 middle，因为当前nums[middle]不等于target，去左区间继续寻找，而寻找区间是左闭右开区间，所以right更新为middle，即：下一个查询区间不会去比较nums[middle]</li>
+</ul>
+<p>在数组：1,2,3,4,7,9,10中查找元素2，如图所示：（<strong>注意和方法一的区别</strong>）<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513223048.png" alt="image.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">search</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> right = nums.<span class="built_in">size</span>();</span><br><span class="line">	<span class="keyword">while</span> (left &lt; right) &#123; <span class="comment">// 因为right==left有意义，因此这里取&lt;=</span></span><br><span class="line">		<span class="type">int</span> mid = left + (right - left) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">if</span> (nums[mid] == target) <span class="keyword">return</span> mid;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &gt; target) right = mid;</span><br><span class="line">		<span class="keyword">else</span> left = mid + <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>边界条件是很多算法中最容易混淆的东西，只能多写</strong></p>
+<h3 id="27-移除元素"><a href="#27-移除元素" class="headerlink" title="27. 移除元素"></a>27. 移除元素</h3><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element/">力扣题目链接</a><br>给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并<strong>原地</strong>修改输入数组。<br>元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。<br>示例 1: 给定 nums &#x3D; [3,2,2,3], val &#x3D; 3, 函数应该返回新的长度 2, 并且 nums 中的前两个元素均为 2。 你不需要考虑数组中超出新长度后面的元素。<br>示例 2: 给定 nums &#x3D; [0,1,2,2,3,0,4,2], val &#x3D; 2, 函数应该返回新的长度 5, 并且 nums 中的前五个元素为 0, 1, 3, 0, 4。</p>
+<p>暴力思路：直接两层循环，第一层循环遍历数组，遇到等于val的元素，利用第二层循环更新数组，将该元素后的所有数据往前移动，这个解法复杂度O(n^2)，所以这里了解一个更好的解法，利用双指针（快慢指针）在一个for循环下做两个for的工作。</p>
+<p>首先定义快慢指针的含义：<br>快指针：遍历原数组；<br>慢指针：新数组下标位置。<br>当快指针指向的元素是要删除的值时，停止更新慢指针，快指针空走；<br>当快指针指向的元素不是要删除的值时，快慢指针都往前走，并且时刻把快指针的元素送给慢指针的元素。<br>这里直接上代码，思路就明晰了：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 暴力法也写下吧 作为对比</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">removeEle</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> size = nums.<span class="built_in">size</span>();</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		<span class="keyword">if</span> (nums[i] == val) &#123;</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; size; j++) &#123;</span><br><span class="line">				nums[j - <span class="number">1</span>] = nums[j];</span><br><span class="line">			&#125;</span><br><span class="line">			i--; </span><br><span class="line">			size--;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 双指针法</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">removeEle</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> slowInd = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> fastInd = <span class="number">0</span>; fastInd &lt; nums.<span class="built_in">size</span>(); fastInd++) &#123;</span><br><span class="line">		<span class="comment">// 如果nums当前元素不是指定val，那么正常给slowInd赋值</span></span><br><span class="line">		<span class="comment">// 反之，如果是val，那么slowInd不更新，只把fastInd更新</span></span><br><span class="line">		<span class="comment">// 变相的实现了元素删除，且slowInd就是更新后的数组长度</span></span><br><span class="line">		<span class="comment">// 这个思路很可以</span></span><br><span class="line">		<span class="keyword">if</span> (nums[fastInd] != val) &#123;</span><br><span class="line">			nums[slowInd++] = nums[fastInd];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> slowInd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="977-有序数组的平方"><a href="#977-有序数组的平方" class="headerlink" title="977. 有序数组的平方"></a>977. 有序数组的平方</h2><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/squares-of-a-sorted-array/">力扣题目链接(opens new window)</a></p>
+<p>给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。<br>示例 1：</p>
+<ul>
+<li>输入：nums &#x3D; [-4,-1,0,3,10]</li>
+<li>输出：[0,1,9,16,100]</li>
+<li>解释：平方后，数组变为 [16,1,0,9,100]，排序后，数组变为 [0,1,9,16,100]</li>
+</ul>
+<p>示例 2：</p>
+<ul>
+<li>输入：nums &#x3D; [-7,-3,2,3,11]</li>
+<li>输出：[4,9,9,49,121]</li>
+</ul>
+<p>思路：先把所有元素更新为平方值，再排序；这种暴力解法O(n + nlogn)的，分别是遍历的时间复杂度和快排的时间复杂度。这道题同样可以考虑双指针，因为数组本身有序，只不过负数平方后可能顺序改变，数组平方的最大值只会在数组两端，不是左边就是右边，不会是中间。</p>
+<p>因此这道题用双指针法，定义一个新数组，大小和输入数组一致，让i和j分别从0和数组末尾开始往中间走，比较两个位置元素平方谁大谁就把平方值放到新数组，新数组倒着往前放值</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sortedSquares</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; A)</span> </span>&#123;</span><br><span class="line">	<span class="type">int</span> k = A.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">	vector&lt;<span class="type">int</span>&gt;<span class="built_in">res</span> (A.<span class="built_in">size</span>(), <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>, j = A.<span class="built_in">size</span>() - <span class="number">1</span>; i &lt;= j; )&#123;</span><br><span class="line">		<span class="keyword">if</span> (A[i] * A[i] &lt; A[j] * A[j]) &#123;</span><br><span class="line">			res[k--] = A[j] * A[j];</span><br><span class="line">			j--;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			res[k--] = A[i] * A[i];</span><br><span class="line">			i++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然这道题也可以用归并的思想来做，首先找到正负数的分界，然后分成的两个子数组分别平方后排序，再分别遍历两个子数组，分别比较两个子数组元素大小，按从小到大顺序依次放到新数组中。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://programmercarl.com/%E6%95%B0%E7%BB%84%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80.html">代码随想录 (programmercarl.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/krahets/hello-algo">https://github.com/krahets/hello-algo</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%E4%B8%8E%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">数组理论基础与基础操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%95%B0%E7%BB%84%E4%BB%A3%E7%A0%81%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">常见数组代码题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#704-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="toc-number">2.1.</span> <span class="toc-text">704. 二分查找</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%EF%BC%8C%E5%B7%A6%E9%97%AD%E5%8F%B3%E9%97%AD"><span class="toc-number">2.1.1.</span> <span class="toc-text">第一种，左闭右闭</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%EF%BC%8C%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80"><span class="toc-number">2.1.2.</span> <span class="toc-text">第二种，左闭右开</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#27-%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">2.2.</span> <span class="toc-text">27. 移除元素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#977-%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E5%B9%B3%E6%96%B9"><span class="toc-number">3.</span> <span class="toc-text">977. 有序数组的平方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&text=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&is_video=false&description=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=算法学习第一天&amp;第二天：数组part01&amp;part02&body=Check out this article: https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&title=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&name=算法学习第一天&amp;第二天：数组part01&amp;part02&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/10/01/Algorithm-Learning/2024-10-01-Algorithm-Learning-Day1-Day2-Array-Part01-Part02/&t=算法学习第一天&amp;第二天：数组part01&amp;part02"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

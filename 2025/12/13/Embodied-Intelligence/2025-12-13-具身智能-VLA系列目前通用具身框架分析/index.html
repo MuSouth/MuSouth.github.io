@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前言一、ACT核心提出了Action Chunking方法，防止误差随着自回归过程越来越大 二、Pi0pi0使用互联网大规模视觉语言预训练、开源机器人操作数据集以及8个不同机器人的灵巧任务组成的数据集作为输入，这些灵巧操作由7种不同的机器人配置、68种不同任务。 核心是一个VLM （siglip）和一个动作专家(Conditional Flow Matching)，这里backbone里还有一个G">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一、ACT">
+<meta property="og:url" content="https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="前言一、ACT核心提出了Action Chunking方法，防止误差随着自回归过程越来越大 二、Pi0pi0使用互联网大规模视觉语言预训练、开源机器人操作数据集以及8个不同机器人的灵巧任务组成的数据集作为输入，这些灵巧操作由7种不同的机器人配置、68种不同任务。 核心是一个VLM （siglip）和一个动作专家(Conditional Flow Matching)，这里backbone里还有一个G">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png">
+<meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
+<meta property="article:modified_time" content="2025-12-13T09:06:06.167Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="LLM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>一、ACT</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&text=一、ACT"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&is_video=false&description=一、ACT"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一、ACT&body=Check out this article: https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&name=一、ACT&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&t=一、ACT"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81ACT"><span class="toc-number">2.</span> <span class="toc-text">一、ACT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Pi0"><span class="toc-number">3.</span> <span class="toc-text">二、Pi0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Pi0-Fast"><span class="toc-number">4.</span> <span class="toc-text">三、Pi0-Fast</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RDT-1B"><span class="toc-number">5.</span> <span class="toc-text">四、RDT-1B</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81Go-1"><span class="toc-number">6.</span> <span class="toc-text">五、Go-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        一、ACT
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
+        
+        (Updated: <time datetime="2025-12-13T09:06:06.167Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Embodied-Intelligence/">Embodied-Intelligence</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/LLM/" rel="tag">LLM</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="一、ACT"><a href="#一、ACT" class="headerlink" title="一、ACT"></a>一、ACT</h2><p>核心提出了Action Chunking方法，防止误差随着自回归过程越来越大</p>
+<h2 id="二、Pi0"><a href="#二、Pi0" class="headerlink" title="二、Pi0"></a>二、Pi0</h2><p>pi0使用互联网大规模视觉语言预训练、开源机器人操作数据集以及8个不同机器人的灵巧任务组成的数据集作为输入，这些灵巧操作由7种不同的机器人配置、68种不同任务。<br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250804002758.png" alt="image.png"></p>
+<p>核心是一个VLM （siglip）和一个动作专家(Conditional Flow Matching)，这里backbone里还有一个Gemma大模型，Google开源的一套轻量级大语言模型。此外要关注的是Flow Macthing，这个和Diffusion之间的关系，以及当前Flow Macthing似乎热度很高。对于最终输出的关于Manipulation或者Locomotion这类输出，是xDoF或者其他物体位姿数据等，这个作为操作的中间表示。<br>其实这么看来要去理解这套技术并非多难，可以把当前主流的结构都过一遍。</p>
+<h2 id="三、Pi0-Fast"><a href="#三、Pi0-Fast" class="headerlink" title="三、Pi0-Fast"></a>三、Pi0-Fast</h2><p>核心在Tokenization方法上提出了一种FAST方法，依赖于DCT压缩技术，将DCT与字节编码BPE结合，将原始动作token压缩成少量的密集action token，每个token包含原来正常状态下30到60个token。</p>
+<h2 id="四、RDT-1B"><a href="#四、RDT-1B" class="headerlink" title="四、RDT-1B"></a>四、RDT-1B</h2><h2 id="五、Go-1"><a href="#五、Go-1" class="headerlink" title="五、Go-1"></a>五、Go-1</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1918794606549636945">(99+ 封私信 &#x2F; 80 条消息) 2025 | π0、π0-FAST、π0.5通用具身智能技术解读 - 知乎 (zhihu.com)</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81ACT"><span class="toc-number">2.</span> <span class="toc-text">一、ACT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Pi0"><span class="toc-number">3.</span> <span class="toc-text">二、Pi0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Pi0-Fast"><span class="toc-number">4.</span> <span class="toc-text">三、Pi0-Fast</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81RDT-1B"><span class="toc-number">5.</span> <span class="toc-text">四、RDT-1B</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81Go-1"><span class="toc-number">6.</span> <span class="toc-text">五、Go-1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">7.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&text=一、ACT"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&is_video=false&description=一、ACT"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一、ACT&body=Check out this article: https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&title=一、ACT"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&name=一、ACT&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/Embodied-Intelligence/2025-12-13-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-VLA%E7%B3%BB%E5%88%97%E7%9B%AE%E5%89%8D%E9%80%9A%E7%94%A8%E5%85%B7%E8%BA%AB%E6%A1%86%E6%9E%B6%E5%88%86%E6%9E%90/&t=一、ACT"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。 一些前言回想第一次产生自建网站或者博客的想法，是在3年前，但是由于时间和技术原因一直没有去动手实现，其实最初我也做了点简单尝试，例如结合Github的托管服务，在Github Pages上部署一个Hexo个人博客，当然这方面的教程很多且操作很简单，但由于众所周知的原因，git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程">
+<meta property="og:url" content="https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/index.html">
+<meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。 一些前言回想第一次产生自建网站或者博客的想法，是在3年前，但是由于时间和技术原因一直没有去动手实现，其实最初我也做了点简单尝试，例如结合Github的托管服务，在Github Pages上部署一个Hexo个人博客，当然这方面的教程很多且操作很简单，但由于众所周知的原因，git">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/Aliyun-Screenshot.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710611227.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732709743344.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710366167.png">
+<meta property="og:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710431509.png">
+<meta property="article:published_time" content="2024-11-27T02:46:18.000Z">
+<meta property="article:modified_time" content="2025-12-14T02:17:18.261Z">
+<meta property="article:author" content="MuSouth">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="Cloud">
+<meta property="article:tag" content="Fluid">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/Aliyun-Screenshot.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="MuSouth&#39;s Blog" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/11/27/Blog-Tutorial/2024-11-27-cdn-jsdelivr-alternative/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2024/10/06/%E7%AC%AC%E4%BA%94%E5%A4%A9%EF%BC%9A%E5%9B%BE%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95part02/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&text=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&is_video=false&description=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程&body=Check out this article: https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&name=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&t=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%90%AD%E5%BB%BAHexo-Fluid%E4%B8%BB%E9%A2%98-%E5%8D%9A%E5%AE%A2%E2%80%94%E2%80%94%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一些前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%8A%E5%8D%9A%E5%AE%A2%E6%A1%86%E6%9E%B6%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.</span> <span class="toc-text">一、服务器及博客框架选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%80%89%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 服务器选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E6%A1%86%E6%9E%B6%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 网站搭建框架选择</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Hexo%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">二、Hexo环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Node-js%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. Node.js安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%951%EF%BC%8C%E4%BD%BF%E7%94%A8Ubuntu%E9%BB%98%E8%AE%A4%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">方法1，使用Ubuntu默认仓库安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%952%EF%BC%8C%E4%BD%BF%E7%94%A8NodeSource-PPA%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">方法2，使用NodeSource PPA安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%953%EF%BC%8C%E4%BD%BF%E7%94%A8Node%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8NVM%E5%AE%89%E8%A3%85%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">方法3，使用Node版本管理器NVM安装（推荐）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85Git%E4%BB%A5%E5%8F%8AHexo-cli"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 安装Git以及Hexo-cli</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%8C%E5%AE%89%E8%A3%85Git"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">步骤一，安装Git</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%8Chexo-cli%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">步骤二，hexo-cli安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo%E6%A1%86%E6%9E%B6%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA"><span class="toc-number">1.4.</span> <span class="toc-text">三、Hexo框架博客搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.4.1.</span> <span class="toc-text">步骤一，初始化博客文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%8C%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%8C%E5%B9%B6%E8%BF%9B%E8%A1%8C%E5%88%9D%E6%AD%A5%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">步骤二，编辑配置文件，并进行初步测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%8C%E6%9B%B4%E6%8D%A2%E4%B8%BB%E9%A2%98%E8%87%B3Hexo-Fluid"><span class="toc-number">1.4.3.</span> <span class="toc-text">步骤三，更换主题至Hexo-Fluid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%8C%E5%8D%9A%E5%AE%A2%E9%95%BF%E6%9C%9F%E8%BF%90%E8%A1%8C"><span class="toc-number">1.4.4.</span> <span class="toc-text">步骤四，博客长期运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B0%8F%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">四、小结</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">MuSouth</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-27T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-11-27</time>
+        
+        (Updated: <time datetime="2025-12-14T02:17:18.261Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E5%8D%9A%E5%AE%A2%E5%88%B6%E4%BD%9C%E6%95%99%E7%A8%8B/">博客制作教程</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Cloud/" rel="tag">Cloud</a>, <a class="p-category" href="/tags/Fluid/" rel="tag">Fluid</a>, <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="在阿里云服务器上搭建Hexo-Fluid主题-博客——完整流程"><a href="#在阿里云服务器上搭建Hexo-Fluid主题-博客——完整流程" class="headerlink" title="在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"></a>在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程</h1><p>欢迎来到Aiden的博客，这里我将分享一些有趣的想法和经验。</p>
+<h2 id="一些前言"><a href="#一些前言" class="headerlink" title="一些前言"></a>一些前言</h2><p>回想第一次产生自建网站或者博客的想法，是在3年前，但是由于时间和技术原因一直没有去动手实现，其实最初我也做了点简单尝试，例如结合Github的托管服务，在Github Pages上部署一个Hexo个人博客，当然这方面的教程很多且操作很简单，但由于众所周知的原因，github.io一般访问起来没有那么顺畅(魔法例外)，因此我就一直挂念着什么时候自己搭个网站跑起来，或者用自己的主机作为服务器，或者租一个云服务器，于是这篇文章得以产生。总的来说，写这篇博文是用于总结这一周的尝试和思考，并形成一个相对详细的流程总结，以便帮助有类似想法但没有相关技术经验的小伙伴顺利构建属于自己的博客空间。</p>
+<h2 id="一、服务器及博客框架选择"><a href="#一、服务器及博客框架选择" class="headerlink" title="一、服务器及博客框架选择"></a>一、服务器及博客框架选择</h2><h3 id="1-服务器选型"><a href="#1-服务器选型" class="headerlink" title="1. 服务器选型"></a>1. 服务器选型</h3><p>正如前文所说，搭建个人网站可以考虑使用个人PC作为服务器，然后通过内网穿透等其他技术将搭建好的网站映射到公网，但考虑到大多数同学的电脑都另有他用，我们也不会保证个人电脑24小时开机以维持网站运行，所以租用一个云服务器似乎是更好的选择。</p>
+<p>当前云服务器平台有很多，大一些的平台包括阿里云、腾讯云、华为云等等，推荐使用大平台租用服务器，因为大的平台相对有更好的售后保障能力，同时有较高的抗风险能力。这里博主选择<a target="_blank" rel="noopener" href="https://www.aliyun.com/">阿里云</a>(PS:因为有活动，所以36块搞了个一年的2Core-2G-3M的服务器，同时注册了一个域名，关于域名注册以及解析及备案流程后续分享)。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/Aliyun-Screenshot.png" width="50%" height="50%"><br>服务器系统选择的是纯净的<strong>Ubuntu 24.04</strong>，然后远程连接进服务器，准备开始配置环境，这里推荐直接使用官方远程连接工具，当然也可以使用Xshell等终端连接工具。</p>
+<h3 id="2-网站搭建框架选择"><a href="#2-网站搭建框架选择" class="headerlink" title="2. 网站搭建框架选择"></a>2. 网站搭建框架选择</h3><p>众所周知，网站可以分为<strong>静态</strong>和<strong>动态</strong>两种，这里的静态和动态不是依据页面上是不是具备什么绚丽的动画来区分，而是以内容生成、交互方式、技术架构等方面为区分，对于静态网站来说，一般由固定的HTML页面组成，用户访问网站时，浏览器直接加载HTML页面然后到本地渲染，而对于动态网站来说，页面内容可能根据用户请求、数据库内容等实时生成，简单来说它一般带有数据库数据请求先来填充完善HTML模板，服务器脚本通常涉及了PHP、Ruby等来实现交互。</p>
+<p>一想到建站(个人博客)，很多朋友可能想到使用<a target="_blank" rel="noopener" href="https://www.bt.cn/new/index.html">宝塔面板</a>，或者相对更纯净精简的<a target="_blank" rel="noopener" href="https://1panel.cn/">1Panel</a>面板，这些服务器运维面板可以很轻易的帮助我们建立起自己的网页，只需要按照引导安装相关依赖，然后找个工具例如<a target="_blank" rel="noopener" href="https://cn.wordpress.org/">WordPress</a>等CMS(Content Management System)来管理网站数字内容，就轻而易举的实现了很多功能，况且WordPress目前占据全球网站工具使用比率的近30%，它不仅能帮助建立个人博客这类轻量网站，同时也适合为企业搭建商务网站，它具有很丰富的第三方插件库，尽管它有种种优点，但是对于个人博客来说其功能完备甚至到冗杂，却反而可能带来缺陷，例如加载速度慢等问题。</p>
+<p>因此使用Hexo这类静态网站框架搭建个人博客空间似乎是更好的方式，这里又带来几种选择，例如由Go语言编写的号称最快的网页编译框架<a target="_blank" rel="noopener" href="https://gohugo.io/">Hugo</a>，还有Github大力支持的基于Ruby语言开发的<a target="_blank" rel="noopener" href="https://jekyllcn.com/docs/home/">Jekyll</a>框架，当然还包括Javascript编写的<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>，选择哪种看自己口味，博主这里思考再三还是选择了Hexo，一方面Hexo框架中有我特别喜欢的主题，能够省去大量的魔改时间，且Hexo社区比较活跃，技术支持也比较完备，是个不错的选择。</p>
+<h2 id="二、Hexo环境配置"><a href="#二、Hexo环境配置" class="headerlink" title="二、Hexo环境配置"></a>二、Hexo环境配置</h2><h3 id="1-Node-js安装"><a href="#1-Node-js安装" class="headerlink" title="1. Node.js安装"></a>1. Node.js安装</h3><h4 id="方法1，使用Ubuntu默认仓库安装"><a href="#方法1，使用Ubuntu默认仓库安装" class="headerlink" title="方法1，使用Ubuntu默认仓库安装"></a>方法1，使用Ubuntu默认仓库安装</h4><ul>
+<li>更新本地包索引<br>  <code>sudo apt update</code></li>
+<li>安装Node.js<br><code>sudo apt install nodejs</code></li>
+<li>安装npm(Nodejs包管理器)<br><code>sudo apt install npm</code></li>
+<li>验证安装<br><code>node -v</code></li>
+</ul>
+<h4 id="方法2，使用NodeSource-PPA安装"><a href="#方法2，使用NodeSource-PPA安装" class="headerlink" title="方法2，使用NodeSource PPA安装"></a>方法2，使用NodeSource PPA安装</h4><ul>
+<li>下载特定版本的NodeSource安装脚本（以v20.x为例）<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line">curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh </span><br><span class="line"><span class="built_in">sudo</span> bash nodesource_setup.sh</span><br></pre></td></tr></table></figure></li>
+<li>安装Node.js<br><code>sudo apt install nodejs</code></li>
+<li>验证安装<br><code>node -v</code></li>
+</ul>
+<h4 id="方法3，使用Node版本管理器NVM安装（推荐）"><a href="#方法3，使用Node版本管理器NVM安装（推荐）" class="headerlink" title="方法3，使用Node版本管理器NVM安装（推荐）"></a>方法3，使用Node版本管理器NVM安装（推荐）</h4><p>博主喜欢清爽的环境，因此这里推荐使用NVM安装并管理Node版本。</p>
+<ul>
+<li>安装nvm<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 能访问Github则用下面命令</span></span><br><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash</span><br><span class="line"><span class="comment"># 不能访问则使用Gitee链接</span></span><br><span class="line">curl -o- https://gitee.com/RubyMetric/nvm-cn/raw/main/install.sh | bash</span><br><span class="line"><span class="comment"># 然后执行下面两条命令</span></span><br><span class="line"><span class="built_in">chmod</span> +x ~/.nvm/nvm.sh  </span><br><span class="line"><span class="built_in">source</span> ~/.bashrc```</span><br><span class="line">- 安装特定版本nodejs</span><br><span class="line">```bash</span><br><span class="line"><span class="comment"># 列出所有可安装的版本</span></span><br><span class="line">nvm <span class="built_in">ls</span></span><br><span class="line"><span class="comment"># 安装某个版本的nodejs</span></span><br><span class="line">nvm install 20</span><br><span class="line"><span class="comment"># 或者如下</span></span><br><span class="line">nvm install v20.xx.xx</span><br></pre></td></tr></table></figure></li>
+<li>验证安装<br>  <code>node -v</code><br>  <code>npm -v</code><blockquote>
+<p>PS: 如果在执行上述nvm ls后没有东西，并且后续安装node提示找不到，可以执行下列命令。</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist</span><br><span class="line"><span class="built_in">source</span> ~/.nvm/nvm.sh</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line">NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist nvm ls-remote</span><br></pre></td></tr></table></figure>
+<h3 id="2-安装Git以及Hexo-cli"><a href="#2-安装Git以及Hexo-cli" class="headerlink" title="2. 安装Git以及Hexo-cli"></a>2. 安装Git以及Hexo-cli</h3><h4 id="步骤一，安装Git"><a href="#步骤一，安装Git" class="headerlink" title="步骤一，安装Git"></a>步骤一，安装Git</h4><p>Git是一种分布式版本控制系统，跟踪文件变化，协助多人开发项目，有效管理代码版本。安装Git直接通过apt包管理工具就可以，当然也可以上官网自行下载最新release版本，这里不再详解。<br><code>sudo apt-get install git</code></p>
+<h4 id="步骤二，hexo-cli安装"><a href="#步骤二，hexo-cli安装" class="headerlink" title="步骤二，hexo-cli安装"></a>步骤二，hexo-cli安装</h4><p>hexo-cli就是封装了命令行的hexo程序包，一般安装hexo-cli即可完整管理博客。<br><code>npm install -g hexo-cli</code><br>要注意换源，否则下载速度很慢，注意淘宝最新的镜像源如下：<br><code>npm config set registry https://registry.npmmirror.com</code><br>换完源后，可以考虑安装淘宝命令工具cnpm：<br><code>npm install -g cnpm --registry=https://registry.npmmirror.com</code><br>之后就可以使用cnpm来进行包安装和管理了，相比于直接国内直接使用npm，速度上有很大优势。<br>安装完hexo-cli后，执行下列命令验证：<br><code>hexo version</code></p>
+<blockquote>
+<p>PS: 国内npm镜像源还有如下：<br>腾讯:<a target="_blank" rel="noopener" href="http://mirrors.cloud.tencent.com/npm/">http://mirrors.cloud.tencent.com/npm/</a><br>华为：<a target="_blank" rel="noopener" href="https://mirrors.huaweicloud.com/repository/npm/">https://mirrors.huaweicloud.com/repository/npm/</a><br>中科大镜像:<a target="_blank" rel="noopener" href="https://registry.npmjs.org/">https://registry.npmjs.org/</a></p>
+</blockquote>
+<h2 id="三、Hexo框架博客搭建"><a href="#三、Hexo框架博客搭建" class="headerlink" title="三、Hexo框架博客搭建"></a>三、Hexo框架博客搭建</h2><p>Hexo的基本命令可以参考手册：<a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a>，下面一起走一遍基本流程。</p>
+<h3 id="步骤一，初始化博客文件夹"><a href="#步骤一，初始化博客文件夹" class="headerlink" title="步骤一，初始化博客文件夹"></a>步骤一，初始化博客文件夹</h3><ul>
+<li>创建文件夹<br>  <code>mkdir myblog</code></li>
+<li>Hexo初始化文件夹<br>  <code>hexo init myblog</code></li>
+<li>安装依赖<br>  <code>cd myblog</code><br>  <code>npm install</code></li>
+</ul>
+<h3 id="步骤二，编辑配置文件，并进行初步测试"><a href="#步骤二，编辑配置文件，并进行初步测试" class="headerlink" title="步骤二，编辑配置文件，并进行初步测试"></a>步骤二，编辑配置文件，并进行初步测试</h3><ul>
+<li><p>编辑配置文件_config.yml<br>  <code>vi _config.yml</code><br>  <img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710611227.png" alt="1732710611227.png"></p>
+</li>
+<li><p>编译文件<br>  <code>hexo g</code></p>
+</li>
+<li><p>部署博客<br>  <code>hexo d</code></p>
+</li>
+<li><p>博客”上线“<br>  <code>hexo server -p your_port</code></p>
+<blockquote>
+<p>这里说明下，your_port替换成你的端口，对于服务器端口来说，一般范围在1到65535，但有些约定俗成的协议，即针对特定的服务开放专用的端口，这里可以参考下文章：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1925309">常用端口及范围</a>。</p>
+</blockquote>
+</li>
+</ul>
+<p>这里考虑到刚申请的域名还未完成ICP备案，因此无法直接开放访问80端口，因此为了测试网站效果在服务器安全组开放了8080端口作暂时测试，此时要指定your_port为8080才能正常访问。</p>
+<p><strong>到这一步，已经基本完成了云服务器上Hexo博客的初步搭建，访问网站可以看到Hexo的欢迎页，接下来对博客作初步的美化设计，这里推荐Hexo-Fluid主题，也是博主认为相对优雅且功能完备的一套主题。</strong></p>
+<h3 id="步骤三，更换主题至Hexo-Fluid"><a href="#步骤三，更换主题至Hexo-Fluid" class="headerlink" title="步骤三，更换主题至Hexo-Fluid"></a>步骤三，更换主题至Hexo-Fluid</h3><p>这一步可以直接参考：<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/start/#%E6%90%AD%E5%BB%BA-hexo-%E5%8D%9A%E5%AE%A2">开始使用 | Hexo Fluid 用户手册 (fluid-dev.com)</a>即可，Fluid用户手册写的十分详细，且安装好后基础的配置教程也在这里。下面以Github克隆仓库到本地的部署方式为例，简要介绍下注意事项。</p>
+<ol>
+<li>在博客根目录下，执行克隆主题仓库到本地操作<br> <code>git clone https://github.com/fluid-dev/hexo-theme-fluid.git theme/fluid</code></li>
+<li>将主题中的_config.yml复制一份，并更名为_config.fluid.yml到博客根目录，对于Hexo5.0以上的版本，能够自动识别根目录下_config.xx主题.yml的配置文件，并将其设置为优先级最高，从而调整该文件可视为对主题配置做了调整。</li>
+<li>将博客根目录下_config.yml文件中的theme项，修改为fluid。</li>
+<li>重新执行hexo clean、hexo g、hexo d以及hexo server等命令即完成了主题更换。<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732709743344.png" alt="博客页面"><br><strong>到此位置，个人博客就初具雏形了，鼓掌！！！</strong></li>
+</ol>
+<h3 id="步骤四，博客长期运行"><a href="#步骤四，博客长期运行" class="headerlink" title="步骤四，博客长期运行"></a>步骤四，博客长期运行</h3><p>也许你会产生疑问，如果一旦退出云服务器链接，那么hexo server命令就会自动终端，从而网站也没办法访问了，有没有解决办法呢？当然有，而且很简单。<br>pm2是一个管理nodejs process的工具，用简单的指令即可启动nodejs进程，并保证在后台不被杀死。</p>
+<ul>
+<li>首先安装pm2<br><code>npm install -g pm2</code></li>
+<li>进入博客根目录，新建文件：run.js<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//run.js</span><br><span class="line">const &#123; <span class="built_in">exec</span> &#125; = require(<span class="string">&#x27;child_process&#x27;</span>)</span><br><span class="line"><span class="built_in">exec</span>(<span class="string">&#x27;hexo server -s -p your_port&#x27;</span>,(error, stdout, stderr) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(error)&#123;</span><br><span class="line">                console.log(<span class="string">&#x27;exec error: $&#123;error&#125;&#x27;</span>)</span><br><span class="line">                <span class="built_in">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        console.log(<span class="string">&#x27;stdout: $&#123;stdout&#125;&#x27;</span>);</span><br><span class="line">        console.log(<span class="string">&#x27;stderr: $&#123;stderr&#125;&#x27;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>启动进程服务<br>  <code>pm2 start run.js</code><br>启动后，一般会输出如下结果，即表示成功：<br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710366167.png" alt="1732710366167.png"></li>
+<li>结束进程服务<br>  <code>pm2 stop run.js</code><br><img src="https://jsdelivr.codeqihan.com/gh/MuSouth/PicsBed@main/img/1732710431509.png" alt="1732710431509.png"><br>此外还有很多应用方式，各位感兴趣可以自行查看手册<a target="_blank" rel="noopener" href="https://pm2.fenxianglu.cn/docs/start">快速开始 | PM2中文网 (fenxianglu.cn)</a>。</li>
+</ul>
+<h2 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h2><p>教程进行到这里基本算完成了，后面如果做一些博客个人化定制、美化工作，可能会继续更一些该主题美化的教程，也或者是干脆分享一些比较好的美化教程链接供大家参考。最后希望各位能从这篇博客里学到一些东西，如果能帮助到你，那我觉得太棒了。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a href="/categories/LLM-Agent/">LLM-Agent</a></li>
+        
+          <li><a href="/categories/LLM-Technology/">LLM-技术</a></li>
+        
+          <li><a href="/categories/LLM-Training/">LLM-训练</a></li>
+        
+          <li><a href="/categories/LLM-Inference/">LLM-推理</a></li>
+        
+          <li><a href="/search/">搜索</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E6%90%AD%E5%BB%BAHexo-Fluid%E4%B8%BB%E9%A2%98-%E5%8D%9A%E5%AE%A2%E2%80%94%E2%80%94%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">一些前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%8A%E5%8D%9A%E5%AE%A2%E6%A1%86%E6%9E%B6%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.</span> <span class="toc-text">一、服务器及博客框架选择</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%80%89%E5%9E%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 服务器选型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA%E6%A1%86%E6%9E%B6%E9%80%89%E6%8B%A9"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 网站搭建框架选择</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Hexo%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">二、Hexo环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Node-js%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. Node.js安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%951%EF%BC%8C%E4%BD%BF%E7%94%A8Ubuntu%E9%BB%98%E8%AE%A4%E4%BB%93%E5%BA%93%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">方法1，使用Ubuntu默认仓库安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%952%EF%BC%8C%E4%BD%BF%E7%94%A8NodeSource-PPA%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">方法2，使用NodeSource PPA安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%953%EF%BC%8C%E4%BD%BF%E7%94%A8Node%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8NVM%E5%AE%89%E8%A3%85%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">方法3，使用Node版本管理器NVM安装（推荐）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85Git%E4%BB%A5%E5%8F%8AHexo-cli"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 安装Git以及Hexo-cli</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%8C%E5%AE%89%E8%A3%85Git"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">步骤一，安装Git</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%8Chexo-cli%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">步骤二，hexo-cli安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo%E6%A1%86%E6%9E%B6%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA"><span class="toc-number">1.4.</span> <span class="toc-text">三、Hexo框架博客搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8D%9A%E5%AE%A2%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.4.1.</span> <span class="toc-text">步骤一，初始化博客文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%8C%E7%BC%96%E8%BE%91%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%8C%E5%B9%B6%E8%BF%9B%E8%A1%8C%E5%88%9D%E6%AD%A5%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.2.</span> <span class="toc-text">步骤二，编辑配置文件，并进行初步测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%8C%E6%9B%B4%E6%8D%A2%E4%B8%BB%E9%A2%98%E8%87%B3Hexo-Fluid"><span class="toc-number">1.4.3.</span> <span class="toc-text">步骤三，更换主题至Hexo-Fluid</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%8C%E5%8D%9A%E5%AE%A2%E9%95%BF%E6%9C%9F%E8%BF%90%E8%A1%8C"><span class="toc-number">1.4.4.</span> <span class="toc-text">步骤四，博客长期运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%B0%8F%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">四、小结</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&text=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&is_video=false&description=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程&body=Check out this article: https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&title=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&name=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-Hexo-Blog-Setup-on-Aliyun-Server/&t=在阿里云服务器上搭建Hexo(Fluid主题)博客——完整流程"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2025
+    MuSouth
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Agent/">LLM-Agent</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Technology/">LLM-技术</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Training/">LLM-训练</a></li><!--
+     --><!--
+       --><li><a href="/categories/LLM-Inference/">LLM-推理</a></li><!--
+     --><!--
+       --><li><a href="/search/">搜索</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
