@@ -145,6 +145,35 @@
   searchWord.onfocus = function () {
     searchWord.addEventListener("input", search);
   };
+  
+  // 添加搜索按钮点击事件
+  if (searchLocal) {
+    searchLocal.onclick = function (e) {
+      e.preventDefault();
+      var key = searchWord.value.trim();
+      if (!key) {
+        render("");
+        return;
+      }
+      var regExp = new RegExp(key.replace(/[ ]/g, "|"), "gmi");
+      loadData(function (data) {
+        var result = data.filter(function (post) {
+          return matcher(post, regExp);
+        });
+        render(result);
+      });
+      searchShow();
+    };
+    
+    // 添加回车键搜索支持
+    searchWord.onkeypress = function (e) {
+      if (e.keyCode === 13 || e.which === 13) {
+        e.preventDefault();
+        searchLocal.click();
+      }
+    };
+  }
+  
   searchMask.onclick = function () {
     searchHide();
   };
