@@ -83,11 +83,11 @@
     
     
     <entry>
-      <title>LLM技术解读位置编码——从三角函数绝对位置编码到旋转位置编码</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/</url>
+      <title>位置编码</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于大模型的位置编码的演变过程而言，我们在之前文章中分析过了，网上也有很多博客分析。那现代LLM中如何实现超长上下文的呢？比如经常听到的128K，甚至于现在有模型把上下文长度扩展到了4M大小，因为上下文长度，也就是token序列长度与注意力计算复杂度息息相关，虽然已经有了很多工作例如FlashAttention等降低计算复杂度，但4M的上下文长度还是让人震惊，所以本文就目前主流的大模型技术进行技术调研，探究超长上下文到底使用了什么技术设计。</p><h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://zhuanlan.zhihu.com/p/711623293">备忘：关于LLM中的位置编码与context扩展 - 知乎 (zhihu.com)</a></li><li><a href="https://zhuanlan.zhihu.com/p/693368080">大语言模型中上下文长度扩展技术的内容、原因和方式-综述 - 知乎 (zhihu.com)</a></li></ol>]]></content>
       
       
       <categories>
@@ -108,11 +108,11 @@
     
     
     <entry>
-      <title>位置编码</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/</url>
+      <title>LLM技术解读位置编码——从三角函数绝对位置编码到旋转位置编码</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81-%E4%BB%8E%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%BB%9D%E5%AF%B9%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%88%B0%E6%97%8B%E8%BD%AC%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/</url>
       
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于大模型的位置编码的演变过程而言，我们在之前文章中分析过了，网上也有很多博客分析。那现代LLM中如何实现超长上下文的呢？比如经常听到的128K，甚至于现在有模型把上下文长度扩展到了4M大小，因为上下文长度，也就是token序列长度与注意力计算复杂度息息相关，虽然已经有了很多工作例如FlashAttention等降低计算复杂度，但4M的上下文长度还是让人震惊，所以本文就目前主流的大模型技术进行技术调研，探究超长上下文到底使用了什么技术设计。</p><h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://zhuanlan.zhihu.com/p/711623293">备忘：关于LLM中的位置编码与context扩展 - 知乎 (zhihu.com)</a></li><li><a href="https://zhuanlan.zhihu.com/p/693368080">大语言模型中上下文长度扩展技术的内容、原因和方式-综述 - 知乎 (zhihu.com)</a></li></ol>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
       
       <categories>
@@ -158,31 +158,6 @@
     
     
     <entry>
-      <title>LLM技术解读激活函数——从ReLU到SwiGLU</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      <categories>
-          
-          <category> LLM-Foundation </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 激活函数 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>以KV-Cache为中心设计</title>
       <link href="/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97PD%E5%88%86%E7%A6%BBMoonCake/"/>
       <url>/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97PD%E5%88%86%E7%A6%BBMoonCake/</url>
@@ -200,6 +175,31 @@
         <tags>
             
             <tag> 推理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>LLM技术解读激活函数——从ReLU到SwiGLU</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM-Foundation </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 激活函数 </tag>
             
         </tags>
       
@@ -303,9 +303,9 @@
       
         <tags>
             
-            <tag> RLHF </tag>
-            
             <tag> 训练 </tag>
+            
+            <tag> RLHF </tag>
             
         </tags>
       
@@ -319,31 +319,6 @@
       <url>/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E8%A7%A3%E6%9E%90/</url>
       
         <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单的分布式训练我们都尝试过，torch本身就支持，使用torchrun或torch.distributed.launch实现，但真正分布式训练底层设计的技术很少有了解，本文总结并解析和分布式训练或推理相关的通信机制以及关于大模型训练过程中常用的分布式技术，涉及到并行方法、通信原语等，涉及知识范围很广。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://zhuanlan.zhihu.com/p/649468433">初识RDMA技术——RDMA概念，特点，协议，通信流程 - 知乎 (zhihu.com)</a></li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> LLM-Training </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 训练 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>LLM训练系列小型版llama2-Chinese中文大模型</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%B0%8F%E5%9E%8B%E7%89%88llama2-Chinese%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%B0%8F%E5%9E%8B%E7%89%88llama2-Chinese%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://github.com/DLLXW/baby-llama2-chinese">https://github.com/DLLXW/baby-llama2-chinese</a></p>]]></content>
       
       
       <categories>
@@ -380,11 +355,11 @@
       
         <tags>
             
-            <tag> RLHF </tag>
+            <tag> 微调 </tag>
             
             <tag> 训练 </tag>
             
-            <tag> 微调 </tag>
+            <tag> RLHF </tag>
             
         </tags>
       
@@ -393,23 +368,23 @@
     
     
     <entry>
-      <title>（三）LLM系列——LLM推理引擎中的技术</title>
-      <link href="/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/"/>
-      <url>/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/</url>
+      <title>LLM训练系列小型版llama2-Chinese中文大模型</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%B0%8F%E5%9E%8B%E7%89%88llama2-Chinese%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E8%AE%AD%E7%BB%83%E7%B3%BB%E5%88%97%E5%B0%8F%E5%9E%8B%E7%89%88llama2-Chinese%E4%B8%AD%E6%96%87%E5%A4%A7%E6%A8%A1%E5%9E%8B/</url>
       
-        <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw">https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw</a></p>]]></content>
+        <content type="html"><![CDATA[<p><a href="https://github.com/DLLXW/baby-llama2-chinese">https://github.com/DLLXW/baby-llama2-chinese</a></p>]]></content>
       
       
       <categories>
           
-          <category> LLM-Inference </category>
+          <category> LLM-Training </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 推理 </tag>
+            <tag> 训练 </tag>
             
         </tags>
       
@@ -447,23 +422,23 @@
     
     
     <entry>
-      <title>（三）uv pip install使用</title>
-      <link href="/2025/12/13/2025-12-13-uv-pip-install-usage/"/>
-      <url>/2025/12/13/2025-12-13-uv-pip-install-usage/</url>
+      <title>（三）LLM系列——LLM推理引擎中的技术</title>
+      <link href="/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/"/>
+      <url>/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/</url>
       
-        <content type="html"><![CDATA[<p><a href="https://www.cnblogs.com/itech/p/18808522">python 工具uv - iTech - 博客园 (cnblogs.com)</a></p><p>官方文档<br><a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748269347770.png" alt="1748269347770.png"></p>]]></content>
+        <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw">https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw</a></p>]]></content>
       
       
       <categories>
           
-          <category> LLM </category>
+          <category> LLM-Inference </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> LLM </tag>
+            <tag> 推理 </tag>
             
         </tags>
       
@@ -497,13 +472,25 @@
     
     
     <entry>
-      <title>Hello World</title>
-      <link href="/2025/12/13/hello-world/"/>
-      <url>/2025/12/13/hello-world/</url>
+      <title>（三）uv pip install使用</title>
+      <link href="/2025/12/13/2025-12-13-uv-pip-install-usage/"/>
+      <url>/2025/12/13/2025-12-13-uv-pip-install-usage/</url>
       
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+        <content type="html"><![CDATA[<p><a href="https://www.cnblogs.com/itech/p/18808522">python 工具uv - iTech - 博客园 (cnblogs.com)</a></p><p>官方文档<br><a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748269347770.png" alt="1748269347770.png"></p>]]></content>
       
       
+      <categories>
+          
+          <category> LLM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> LLM </tag>
+            
+        </tags>
       
     </entry>
     
@@ -582,9 +569,9 @@
             
             <tag> LLM-Agent </tag>
             
-            <tag> 训练 </tag>
-            
             <tag> 微调 </tag>
+            
+            <tag> 训练 </tag>
             
         </tags>
       
