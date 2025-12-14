@@ -31,31 +31,6 @@
     
     
     <entry>
-      <title>低代码开发框架</title>
-      <link href="/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97Agent%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8%E4%B8%8E%E9%80%89%E5%9E%8B/"/>
-      <url>/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97Agent%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8%E4%B8%8E%E9%80%89%E5%9E%8B/</url>
-      
-        <content type="html"><![CDATA[<h2 id="低代码开发框架"><a href="#低代码开发框架" class="headerlink" title="低代码开发框架"></a>低代码开发框架</h2><h3 id="Coze"><a href="#Coze" class="headerlink" title="Coze"></a>Coze</h3><h3 id="Dify"><a href="#Dify" class="headerlink" title="Dify"></a>Dify</h3><h3 id="LangFlow"><a href="#LangFlow" class="headerlink" title="LangFlow"></a>LangFlow</h3><h2 id="代码开发框架"><a href="#代码开发框架" class="headerlink" title="代码开发框架"></a>代码开发框架</h2><h3 id="LangChain"><a href="#LangChain" class="headerlink" title="LangChain"></a>LangChain</h3><p> LangChain是一个开源的编排框架，旨在简化使用大型语言模型开发应用程序的过程。它就像是一个多功能的工具箱，提供了一系列工具、组件和接口，几乎可以作为所有LLM的通用接口，为构建LLM应用程序并将其与外部数据源和软件工作流程集成提供了集中式开发环境。通过LangChain，开发者能够轻松地将大语言模型集成到各种应用中，实现诸如聊天机器人、智能搜索、问答系统、总结服务等功能。</p><h3 id="LangGraph"><a href="#LangGraph" class="headerlink" title="LangGraph"></a>LangGraph</h3><h3 id="LlamaIndex"><a href="#LlamaIndex" class="headerlink" title="LlamaIndex"></a>LlamaIndex</h3><h2 id="Multi-Agent开发框架"><a href="#Multi-Agent开发框架" class="headerlink" title="Multi-Agent开发框架"></a>Multi-Agent开发框架</h2><h3 id="基于Langchain-的-CrewAI"><a href="#基于Langchain-的-CrewAI" class="headerlink" title="基于Langchain 的 CrewAI"></a>基于Langchain 的 CrewAI</h3><h3 id="Swarm"><a href="#Swarm" class="headerlink" title="Swarm"></a>Swarm</h3><h3 id="OpenAI闭源的Assistant-API"><a href="#OpenAI闭源的Assistant-API" class="headerlink" title="OpenAI闭源的Assistant API"></a>OpenAI闭源的Assistant API</h3><h3 id="AutoGen"><a href="#AutoGen" class="headerlink" title="AutoGen"></a>AutoGen</h3><h3 id="MetaGPT"><a href="#MetaGPT" class="headerlink" title="MetaGPT"></a>MetaGPT</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://blog.csdn.net/linshantang/article/details/147755403">LangChain和LangGraph：大模型应用开发的得力助手_langchain langgraph-CSDN博客</a></li><li><a href="https://www.bilibili.com/video/BV16NBJYRE3s/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">12项Agent智能体开发框架入门与选型！｜Coze、Dify、LangChain、LangGraph、AutoGen等工具对比分析与选型建议！_哔哩哔哩_bilibili</a></li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> LLM-Agent </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> LLM-Agent </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>参考</title>
       <link href="/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
       <url>/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</url>
@@ -75,6 +50,31 @@
             <tag> LLM-Agent </tag>
             
             <tag> RAG </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>低代码开发框架</title>
+      <link href="/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97Agent%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8%E4%B8%8E%E9%80%89%E5%9E%8B/"/>
+      <url>/2025/12/13/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97Agent%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E5%85%A5%E9%97%A8%E4%B8%8E%E9%80%89%E5%9E%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="低代码开发框架"><a href="#低代码开发框架" class="headerlink" title="低代码开发框架"></a>低代码开发框架</h2><h3 id="Coze"><a href="#Coze" class="headerlink" title="Coze"></a>Coze</h3><h3 id="Dify"><a href="#Dify" class="headerlink" title="Dify"></a>Dify</h3><h3 id="LangFlow"><a href="#LangFlow" class="headerlink" title="LangFlow"></a>LangFlow</h3><h2 id="代码开发框架"><a href="#代码开发框架" class="headerlink" title="代码开发框架"></a>代码开发框架</h2><h3 id="LangChain"><a href="#LangChain" class="headerlink" title="LangChain"></a>LangChain</h3><p> LangChain是一个开源的编排框架，旨在简化使用大型语言模型开发应用程序的过程。它就像是一个多功能的工具箱，提供了一系列工具、组件和接口，几乎可以作为所有LLM的通用接口，为构建LLM应用程序并将其与外部数据源和软件工作流程集成提供了集中式开发环境。通过LangChain，开发者能够轻松地将大语言模型集成到各种应用中，实现诸如聊天机器人、智能搜索、问答系统、总结服务等功能。</p><h3 id="LangGraph"><a href="#LangGraph" class="headerlink" title="LangGraph"></a>LangGraph</h3><h3 id="LlamaIndex"><a href="#LlamaIndex" class="headerlink" title="LlamaIndex"></a>LlamaIndex</h3><h2 id="Multi-Agent开发框架"><a href="#Multi-Agent开发框架" class="headerlink" title="Multi-Agent开发框架"></a>Multi-Agent开发框架</h2><h3 id="基于Langchain-的-CrewAI"><a href="#基于Langchain-的-CrewAI" class="headerlink" title="基于Langchain 的 CrewAI"></a>基于Langchain 的 CrewAI</h3><h3 id="Swarm"><a href="#Swarm" class="headerlink" title="Swarm"></a>Swarm</h3><h3 id="OpenAI闭源的Assistant-API"><a href="#OpenAI闭源的Assistant-API" class="headerlink" title="OpenAI闭源的Assistant API"></a>OpenAI闭源的Assistant API</h3><h3 id="AutoGen"><a href="#AutoGen" class="headerlink" title="AutoGen"></a>AutoGen</h3><h3 id="MetaGPT"><a href="#MetaGPT" class="headerlink" title="MetaGPT"></a>MetaGPT</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://blog.csdn.net/linshantang/article/details/147755403">LangChain和LangGraph：大模型应用开发的得力助手_langchain langgraph-CSDN博客</a></li><li><a href="https://www.bilibili.com/video/BV16NBJYRE3s/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">12项Agent智能体开发框架入门与选型！｜Coze、Dify、LangChain、LangGraph、AutoGen等工具对比分析与选型建议！_哔哩哔哩_bilibili</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM-Agent </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> LLM-Agent </tag>
             
         </tags>
       
@@ -133,23 +133,23 @@
     
     
     <entry>
-      <title>FlashAttention系列</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%B9%8B-MHA-MQA-GQA-FlashAttention1-2-3%E8%A7%A3%E8%AF%BB/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%B9%8B-MHA-MQA-GQA-FlashAttention1-2-3%E8%A7%A3%E8%AF%BB/</url>
+      <title>推测性解码原理</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/</url>
       
-        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于MHA (Multi-Head-Attention)的变体注意力有很多，目前应用比较主流的包括MQA (Multi-Query-Attention)和GQA (Group-Query-Attention)，MHA作为基础的注意力机制，将输入分割成多个头，并行计算注意力，每个头计算不同维度输入部分，最后合并结果以捕获序列中的不同信息，而MQA让所有头共享KV以减少参数量和计算量，GQA则作为MHA和MQA的折中方案，将Q分组，每组共享KV。这些方案的核心目的是减小KV Cache缓存大小，经典的MHA由于其稠密性质，导致长序列下KV Cache占据很大空间，而这种稀疏化的过程能很好的减小空间消耗。<br>FlashAttention系列也是非常经典的变体，旨在加速注意力计算、减少内存占用，核心原理是通过将输入分块，并在每个块上执行注意力计算，减少对HBM (High Bandwidth memory)的读写操作。具体而言FlashAttention通过平铺和重计算等技术，将输入块从HBM加载到SRAM (Static Random-Access Memory)，在SRAM上执行注意力操作，结果更新回HBM，从而减少内存读写量，而是在快速缓存中计算注意力。</p><h2 id="FlashAttention系列"><a href="#FlashAttention系列" class="headerlink" title="FlashAttention系列"></a>FlashAttention系列</h2><p><a href="https://www.bilibili.com/video/BV1ExFreTEYa/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">Flash Attention-v1,v2,v3 论文精读_哔哩哔哩_bilibili</a>这个B站视频讲的很好，配套资料很值得精读一遍。</p><h3 id="1-FlashAttention-v1"><a href="#1-FlashAttention-v1" class="headerlink" title="1. FlashAttention v1"></a>1. FlashAttention v1</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://zhuanlan.zhihu.com/p/1905369792745017821">极简代码复现MHA、MQA、GQA——面试终结者 - 知乎 (zhihu.com)</a></li><li><a href="https://zhuanlan.zhihu.com/p/676655352">Flash Attention原理详解(含代码讲解) - 知乎 (zhihu.com)</a></li><li><a href="https://blog.csdn.net/v_JULY_v/article/details/133619540">通透理解FlashAttention(含其2代和第3代)：全面降低显存读写、加快计算速度-CSDN博客</a></li><li><a href="https://www.bilibili.com/video/BV1ExFreTEYa/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">Flash Attention-v1,v2,v3 论文精读_哔哩哔哩_bilibili</a></li></ol>]]></content>
+        <content type="html"><![CDATA[<h2 id="推测性解码原理"><a href="#推测性解码原理" class="headerlink" title="推测性解码原理"></a>推测性解码原理</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.elecfans.com/d/2391087.html">LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)</a><br><a href="https://zhuanlan.zhihu.com/p/1920447613800547342">https://zhuanlan.zhihu.com/p/1920447613800547342</a></p>]]></content>
       
       
       <categories>
           
-          <category> LLM-Technology </category>
+          <category> LLM-Inference </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 注意力机制 </tag>
+            <tag> 推理 </tag>
             
         </tags>
       
@@ -183,6 +183,31 @@
     
     
     <entry>
+      <title>FlashAttention系列</title>
+      <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%B9%8B-MHA-MQA-GQA-FlashAttention1-2-3%E8%A7%A3%E8%AF%BB/"/>
+      <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%B9%8B-MHA-MQA-GQA-FlashAttention1-2-3%E8%A7%A3%E8%AF%BB/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基于MHA (Multi-Head-Attention)的变体注意力有很多，目前应用比较主流的包括MQA (Multi-Query-Attention)和GQA (Group-Query-Attention)，MHA作为基础的注意力机制，将输入分割成多个头，并行计算注意力，每个头计算不同维度输入部分，最后合并结果以捕获序列中的不同信息，而MQA让所有头共享KV以减少参数量和计算量，GQA则作为MHA和MQA的折中方案，将Q分组，每组共享KV。这些方案的核心目的是减小KV Cache缓存大小，经典的MHA由于其稠密性质，导致长序列下KV Cache占据很大空间，而这种稀疏化的过程能很好的减小空间消耗。<br>FlashAttention系列也是非常经典的变体，旨在加速注意力计算、减少内存占用，核心原理是通过将输入分块，并在每个块上执行注意力计算，减少对HBM (High Bandwidth memory)的读写操作。具体而言FlashAttention通过平铺和重计算等技术，将输入块从HBM加载到SRAM (Static Random-Access Memory)，在SRAM上执行注意力操作，结果更新回HBM，从而减少内存读写量，而是在快速缓存中计算注意力。</p><h2 id="FlashAttention系列"><a href="#FlashAttention系列" class="headerlink" title="FlashAttention系列"></a>FlashAttention系列</h2><p><a href="https://www.bilibili.com/video/BV1ExFreTEYa/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">Flash Attention-v1,v2,v3 论文精读_哔哩哔哩_bilibili</a>这个B站视频讲的很好，配套资料很值得精读一遍。</p><h3 id="1-FlashAttention-v1"><a href="#1-FlashAttention-v1" class="headerlink" title="1. FlashAttention v1"></a>1. FlashAttention v1</h3><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol><li><a href="https://zhuanlan.zhihu.com/p/1905369792745017821">极简代码复现MHA、MQA、GQA——面试终结者 - 知乎 (zhihu.com)</a></li><li><a href="https://zhuanlan.zhihu.com/p/676655352">Flash Attention原理详解(含代码讲解) - 知乎 (zhihu.com)</a></li><li><a href="https://blog.csdn.net/v_JULY_v/article/details/133619540">通透理解FlashAttention(含其2代和第3代)：全面降低显存读写、加快计算速度-CSDN博客</a></li><li><a href="https://www.bilibili.com/video/BV1ExFreTEYa/?spm_id_from=333.337.search-card.all.click&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">Flash Attention-v1,v2,v3 论文精读_哔哩哔哩_bilibili</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM-Technology </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 注意力机制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>LLM技术解读激活函数——从ReLU到SwiGLU</title>
       <link href="/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/"/>
       <url>/2025/12/13/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BB%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-%E4%BB%8EReLU%E5%88%B0SwiGLU/</url>
@@ -200,31 +225,6 @@
         <tags>
             
             <tag> 激活函数 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>推测性解码原理</title>
-      <link href="/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"/>
-      <url>/2025/12/13/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/</url>
-      
-        <content type="html"><![CDATA[<h2 id="推测性解码原理"><a href="#推测性解码原理" class="headerlink" title="推测性解码原理"></a>推测性解码原理</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.elecfans.com/d/2391087.html">LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)</a><br><a href="https://zhuanlan.zhihu.com/p/1920447613800547342">https://zhuanlan.zhihu.com/p/1920447613800547342</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> LLM-Inference </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 推理 </tag>
             
         </tags>
       
@@ -422,6 +422,31 @@
     
     
     <entry>
+      <title>（三）uv pip install使用</title>
+      <link href="/2025/12/13/2025-12-13-uv-pip-install-usage/"/>
+      <url>/2025/12/13/2025-12-13-uv-pip-install-usage/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://www.cnblogs.com/itech/p/18808522">python 工具uv - iTech - 博客园 (cnblogs.com)</a></p><p>官方文档<br><a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748269347770.png" alt="1748269347770.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> LLM </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>（三）LLM系列——LLM推理引擎中的技术</title>
       <link href="/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/"/>
       <url>/2025/12/13/2025-12-13-llm-series-inference-engine-technologies/</url>
@@ -457,31 +482,6 @@
       <categories>
           
           <category> Embodied-Intelligence </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> LLM </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>（三）uv pip install使用</title>
-      <link href="/2025/12/13/2025-12-13-uv-pip-install-usage/"/>
-      <url>/2025/12/13/2025-12-13-uv-pip-install-usage/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://www.cnblogs.com/itech/p/18808522">python 工具uv - iTech - 博客园 (cnblogs.com)</a></p><p>官方文档<br><a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a><br><img src="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/1748269347770.png" alt="1748269347770.png"></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> LLM </category>
           
       </categories>
       
