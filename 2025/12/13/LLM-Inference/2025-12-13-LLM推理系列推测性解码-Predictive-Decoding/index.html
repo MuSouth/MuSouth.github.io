@@ -6,17 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="推测性解码原理参考LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;1920447613800547342">
+    <meta name="description" content="前言推测性解码（Speculative Decoding）是一种加速大语言模型推理的技术，通过使用较小的”草稿模型”（draft model）生成候选token，然后用较大的”目标模型”（target model）进行验证，从而在不改变输出分布的情况下加速推理。 一、推测性解码原理1.1 基本思想推测性解码的核心思想是：  草稿模型生成：使用较小的模型快速生成多个候选token 目标模型验证：使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="推测性解码原理">
+<meta property="og:title" content="LLM推理系列推测性解码-Predictive-Decoding">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="推测性解码原理参考LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;1920447613800547342">
+<meta property="og:description" content="前言推测性解码（Speculative Decoding）是一种加速大语言模型推理的技术，通过使用较小的”草稿模型”（draft model）生成候选token，然后用较大的”目标模型”（target model）进行验证，从而在不改变输出分布的情况下加速推理。 一、推测性解码原理1.1 基本思想推测性解码的核心思想是：  草稿模型生成：使用较小的模型快速生成多个候选token 目标模型验证：使用">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.150Z">
+<meta property="article:modified_time" content="2025-12-14T02:19:24.364Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="推理">
+<meta property="article:tag" content="推测性解码">
+<meta property="article:tag" content="Speculative-Decoding">
 <meta name="twitter:card" content="summary">
     
     
@@ -37,7 +39,7 @@
       
     
     <!-- title -->
-    <title>推测性解码原理</title>
+    <title>LLM推理系列推测性解码-Predictive-Decoding</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -109,23 +111,23 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&text=推测性解码原理"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&is_video=false&description=推测性解码原理"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=推测性解码原理&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&name=推测性解码原理&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&t=推测性解码原理"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&text=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&is_video=false&description=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM推理系列推测性解码-Predictive-Decoding&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&name=LLM推理系列推测性解码-Predictive-Decoding&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&t=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">推测性解码原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">一、推测性解码原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 工作流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF"><span class="toc-number">3.</span> <span class="toc-text">二、技术优势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 性能提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E7%8E%B0%E8%A6%81%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text">三、实现要点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%8D%89%E7%A8%BF%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 草稿模型选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 生成策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8F%98%E4%BD%93%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">四、变体与优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%A4%9A%E8%8D%89%E7%A8%BF%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 多草稿模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%87%AA%E9%80%82%E5%BA%94%E9%95%BF%E5%BA%A6"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 自适应长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%A0%91%E7%8A%B6%E6%8E%A8%E6%B5%8B%E8%A7%A3%E7%A0%81"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 树状推测解码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
   </span>
@@ -138,7 +140,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        推测性解码原理
+        LLM推理系列推测性解码-Predictive-Decoding
     </h1>
 
 
@@ -152,7 +154,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.150Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:19:24.364Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -168,7 +170,7 @@
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/%E6%8E%A8%E7%90%86/" rel="tag">推理</a>
+        <a class="p-category" href="/tags/Speculative-Decoding/" rel="tag">Speculative-Decoding</a>, <a class="p-category" href="/tags/%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81/" rel="tag">推测性解码</a>, <a class="p-category" href="/tags/%E6%8E%A8%E7%90%86/" rel="tag">推理</a>
     </div>
 
 
@@ -177,7 +179,43 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="推测性解码原理"><a href="#推测性解码原理" class="headerlink" title="推测性解码原理"></a>推测性解码原理</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.elecfans.com/d/2391087.html">LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1920447613800547342">https://zhuanlan.zhihu.com/p/1920447613800547342</a></p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>推测性解码（Speculative Decoding）是一种加速大语言模型推理的技术，通过使用较小的”草稿模型”（draft model）生成候选token，然后用较大的”目标模型”（target model）进行验证，从而在不改变输出分布的情况下加速推理。</p>
+<h2 id="一、推测性解码原理"><a href="#一、推测性解码原理" class="headerlink" title="一、推测性解码原理"></a>一、推测性解码原理</h2><h3 id="1-1-基本思想"><a href="#1-1-基本思想" class="headerlink" title="1.1 基本思想"></a>1.1 基本思想</h3><p>推测性解码的核心思想是：</p>
+<ol>
+<li><strong>草稿模型生成</strong>：使用较小的模型快速生成多个候选token</li>
+<li><strong>目标模型验证</strong>：使用大模型并行验证这些候选token</li>
+<li><strong>接受&#x2F;拒绝机制</strong>：根据验证结果决定接受或拒绝候选token</li>
+</ol>
+<h3 id="1-2-工作流程"><a href="#1-2-工作流程" class="headerlink" title="1.2 工作流程"></a>1.2 工作流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 草稿模型生成 k 个候选token: [t1, t2, ..., tk]</span><br><span class="line">2. 目标模型并行验证这 k 个token的概率</span><br><span class="line">3. 对于每个token ti：</span><br><span class="line">   - 如果 P_target(ti) &gt;= P_draft(ti)，接受该token</span><br><span class="line">   - 否则，以概率 P_target(ti) / P_draft(ti) 接受，否则拒绝</span><br><span class="line">4. 如果所有token都被接受，继续生成；否则从拒绝位置重新开始</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、技术优势"><a href="#二、技术优势" class="headerlink" title="二、技术优势"></a>二、技术优势</h2><h3 id="2-1-性能提升"><a href="#2-1-性能提升" class="headerlink" title="2.1 性能提升"></a>2.1 性能提升</h3><ul>
+<li><strong>加速比</strong>：通常可以实现2-3倍的加速</li>
+<li><strong>质量保证</strong>：输出分布与直接使用目标模型相同</li>
+<li><strong>内存友好</strong>：草稿模型通常很小，内存开销小</li>
+</ul>
+<h3 id="2-2-适用场景"><a href="#2-2-适用场景" class="headerlink" title="2.2 适用场景"></a>2.2 适用场景</h3><ul>
+<li><strong>批量推理</strong>：多个请求可以共享草稿模型</li>
+<li><strong>长文本生成</strong>：在生成长文本时效果更明显</li>
+<li><strong>资源受限</strong>：在GPU资源有限时特别有用</li>
+</ul>
+<h2 id="三、实现要点"><a href="#三、实现要点" class="headerlink" title="三、实现要点"></a>三、实现要点</h2><h3 id="3-1-草稿模型选择"><a href="#3-1-草稿模型选择" class="headerlink" title="3.1 草稿模型选择"></a>3.1 草稿模型选择</h3><ul>
+<li><strong>模型大小</strong>：通常为目标模型的1&#x2F;10到1&#x2F;5</li>
+<li><strong>架构相似性</strong>：与目标模型架构相似效果更好</li>
+<li><strong>训练方式</strong>：可以使用目标模型的蒸馏版本</li>
+</ul>
+<h3 id="3-2-生成策略"><a href="#3-2-生成策略" class="headerlink" title="3.2 生成策略"></a>3.2 生成策略</h3><ul>
+<li><strong>贪婪解码</strong>：草稿模型使用贪婪解码</li>
+<li><strong>长度控制</strong>：控制草稿模型生成的token数量（通常3-8个）</li>
+<li><strong>并行验证</strong>：目标模型并行验证所有候选token</li>
+</ul>
+<h2 id="四、变体与优化"><a href="#四、变体与优化" class="headerlink" title="四、变体与优化"></a>四、变体与优化</h2><h3 id="4-1-多草稿模型"><a href="#4-1-多草稿模型" class="headerlink" title="4.1 多草稿模型"></a>4.1 多草稿模型</h3><p>使用多个草稿模型生成不同的候选序列，提高接受率。</p>
+<h3 id="4-2-自适应长度"><a href="#4-2-自适应长度" class="headerlink" title="4.2 自适应长度"></a>4.2 自适应长度</h3><p>根据接受率动态调整草稿模型生成的token数量。</p>
+<h3 id="4-3-树状推测解码"><a href="#4-3-树状推测解码" class="headerlink" title="4.3 树状推测解码"></a>4.3 树状推测解码</h3><p>构建树状结构，同时探索多个候选路径。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.elecfans.com/d/2391087.html">LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1920447613800547342">Speculative Decoding - 知乎</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2211.17192">Fast Inference from Transformers via Speculative Decoding</a><br><a target="_blank" rel="noopener" href="https://www.elecfans.com/d/2391087.html">LLM推理加速新范式！推测解码（Speculative Decoding）最新综述-电子发烧友网 (elecfans.com)</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/1920447613800547342">https://zhuanlan.zhihu.com/p/1920447613800547342</a></li>
+</ol>
 
   </div>
 </article>
@@ -213,23 +251,23 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">推测性解码原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">一、推测性解码原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 工作流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF"><span class="toc-number">3.</span> <span class="toc-text">二、技术优势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 性能提升</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E7%8E%B0%E8%A6%81%E7%82%B9"><span class="toc-number">4.</span> <span class="toc-text">三、实现要点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E8%8D%89%E7%A8%BF%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 草稿模型选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 生成策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8F%98%E4%BD%93%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">四、变体与优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%A4%9A%E8%8D%89%E7%A8%BF%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 多草稿模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%87%AA%E9%80%82%E5%BA%94%E9%95%BF%E5%BA%A6"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 自适应长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%A0%91%E7%8A%B6%E6%8E%A8%E6%B5%8B%E8%A7%A3%E7%A0%81"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 树状推测解码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&text=推测性解码原理"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&is_video=false&description=推测性解码原理"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=推测性解码原理&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=推测性解码原理"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&name=推测性解码原理&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&t=推测性解码原理"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&text=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&is_video=false&description=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM推理系列推测性解码-Predictive-Decoding&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&title=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&name=LLM推理系列推测性解码-Predictive-Decoding&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E6%B5%8B%E6%80%A7%E8%A7%A3%E7%A0%81-Predictive-Decoding/&t=LLM推理系列推测性解码-Predictive-Decoding"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

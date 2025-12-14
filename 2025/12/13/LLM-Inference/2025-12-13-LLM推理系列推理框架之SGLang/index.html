@@ -6,13 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta property="og:type" content="article">
+    <meta name="description" content="前言SGLang是一个高性能的大语言模型推理框架，专注于提升复杂提示（prompt）的处理效率。它通过RadixAttention等技术优化了KV Cache的管理，特别适合处理包含大量重复内容的提示。 一、SGLang概述SGLang（Structured Generation Language）由LMSYS开发，主要特点包括：  RadixAttention：基于前缀树的KV Cache管理">
+<meta property="og:type" content="article">
 <meta property="og:title" content="LLM推理系列推理框架之SGLang">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BSGLang/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
+<meta property="og:description" content="前言SGLang是一个高性能的大语言模型推理框架，专注于提升复杂提示（prompt）的处理效率。它通过RadixAttention等技术优化了KV Cache的管理，特别适合处理包含大量重复内容的提示。 一、SGLang概述SGLang（Structured Generation Language）由LMSYS开发，主要特点包括：  RadixAttention：基于前缀树的KV Cache管理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.151Z">
+<meta property="article:modified_time" content="2025-12-14T02:19:13.300Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="推理">
 <meta property="article:tag" content="SGLang">
@@ -123,6 +125,10 @@
     </div>
     
     
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81SGLang%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、SGLang概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">二、核心特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-RadixAttention"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 RadixAttention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%8EvLLM%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">4.</span> <span class="toc-text">三、与vLLM的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">四、使用示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
   </span>
 </div>
 
@@ -147,7 +153,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.151Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:19:13.300Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -172,7 +178,61 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>SGLang是一个高性能的大语言模型推理框架，专注于提升复杂提示（prompt）的处理效率。它通过RadixAttention等技术优化了KV Cache的管理，特别适合处理包含大量重复内容的提示。</p>
+<h2 id="一、SGLang概述"><a href="#一、SGLang概述" class="headerlink" title="一、SGLang概述"></a>一、SGLang概述</h2><p>SGLang（Structured Generation Language）由LMSYS开发，主要特点包括：</p>
+<ul>
+<li><strong>RadixAttention</strong>：基于前缀树的KV Cache管理</li>
+<li><strong>自动前缀缓存</strong>：智能识别和复用重复内容</li>
+<li><strong>高性能推理</strong>：相比vLLM在某些场景下性能更优</li>
+</ul>
+<h2 id="二、核心特性"><a href="#二、核心特性" class="headerlink" title="二、核心特性"></a>二、核心特性</h2><h3 id="2-1-RadixAttention"><a href="#2-1-RadixAttention" class="headerlink" title="2.1 RadixAttention"></a>2.1 RadixAttention</h3><p>RadixAttention是SGLang的核心技术，通过构建前缀树（Radix Tree）来管理KV Cache：</p>
+<ul>
+<li><strong>前缀共享</strong>：相同前缀的请求共享KV Cache</li>
+<li><strong>动态管理</strong>：根据请求模式动态调整缓存策略</li>
+<li><strong>内存高效</strong>：减少重复内容的存储开销</li>
+</ul>
+<h3 id="2-2-适用场景"><a href="#2-2-适用场景" class="headerlink" title="2.2 适用场景"></a>2.2 适用场景</h3><p>SGLang特别适合以下场景：</p>
+<ul>
+<li><strong>复杂提示处理</strong>：包含大量模板和示例的提示</li>
+<li><strong>批量推理</strong>：多个相似请求的批量处理</li>
+<li><strong>长上下文</strong>：需要处理长文本的场景</li>
+</ul>
+<h2 id="三、与vLLM的对比"><a href="#三、与vLLM的对比" class="headerlink" title="三、与vLLM的对比"></a>三、与vLLM的对比</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>SGLang</th>
+<th>vLLM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KV Cache管理</td>
+<td>RadixAttention</td>
+<td>PagedAttention</td>
+</tr>
+<tr>
+<td>前缀缓存</td>
+<td>自动识别</td>
+<td>需要手动配置</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>复杂提示、批量推理</td>
+<td>通用推理场景</td>
+</tr>
+<tr>
+<td>性能优势</td>
+<td>重复内容多的场景</td>
+<td>通用场景性能稳定</td>
+</tr>
+</tbody></table>
+<h2 id="四、使用示例"><a href="#四、使用示例" class="headerlink" title="四、使用示例"></a>四、使用示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sglang <span class="keyword">as</span> sgl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型</span></span><br><span class="line">runtime = sgl.Runtime(model_path=<span class="string">&quot;your_model_path&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行推理</span></span><br><span class="line">response = runtime.generate(</span><br><span class="line">    prompt=<span class="string">&quot;Your prompt here&quot;</span>,</span><br><span class="line">    max_new_tokens=<span class="number">512</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/sgl-project/sglang">SGLang GitHub Repository</a></li>
+<li><a target="_blank" rel="noopener" href="https://sglang.readthedocs.io/">SGLang Documentation</a></li>
+</ol>
+
   </div>
 </article>
 
@@ -206,6 +266,10 @@
 
     
     
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81SGLang%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、SGLang概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">二、核心特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-RadixAttention"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 RadixAttention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%B8%8EvLLM%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">4.</span> <span class="toc-text">三、与vLLM的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">四、使用示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
 
     <div id="share-footer" style="display: none">
       <ul>
@@ -226,6 +290,8 @@
 
     <div id="actions-footer">
         <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
         
         <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
         <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>

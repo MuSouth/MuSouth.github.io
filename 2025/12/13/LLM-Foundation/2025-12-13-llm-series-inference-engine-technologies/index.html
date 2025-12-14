@@ -6,17 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;rthLDuMBajEdAmUr7sOQYw">
+    <meta name="description" content="前言LLM推理引擎是实现高效推理的关键，涉及KV Cache管理、批处理、量化、编译优化等多个方面。本文将对LLM推理引擎中的核心技术进行概述。 一、推理引擎概述1.1 推理引擎的作用 性能优化：提升推理速度和吞吐量 资源管理：高效管理GPU内存和计算资源 批处理：支持批量推理请求 服务化：提供API服务接口  1.2 主要推理框架 vLLM：基于PagedAttention的高性能框架 Tens">
 <meta property="og:type" content="article">
-<meta property="og:title" content="（三）LLM系列——LLM推理引擎中的技术">
+<meta property="og:title" content="LLM系列——LLM推理引擎中的技术">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;rthLDuMBajEdAmUr7sOQYw">
+<meta property="og:description" content="前言LLM推理引擎是实现高效推理的关键，涉及KV Cache管理、批处理、量化、编译优化等多个方面。本文将对LLM推理引擎中的核心技术进行概述。 一、推理引擎概述1.1 推理引擎的作用 性能优化：提升推理速度和吞吐量 资源管理：高效管理GPU内存和计算资源 批处理：支持批量推理请求 服务化：提供API服务接口  1.2 主要推理框架 vLLM：基于PagedAttention的高性能框架 Tens">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.172Z">
+<meta property="article:modified_time" content="2025-12-14T02:21:23.348Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="推理">
+<meta property="article:tag" content="推理引擎">
 <meta name="twitter:card" content="summary">
     
     
@@ -37,7 +38,7 @@
       
     
     <!-- title -->
-    <title>（三）LLM系列——LLM推理引擎中的技术</title>
+    <title>LLM系列——LLM推理引擎中的技术</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -109,20 +110,24 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&text=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&is_video=false&description=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=（三）LLM系列——LLM推理引擎中的技术&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&name=（三）LLM系列——LLM推理引擎中的技术&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&t=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&text=LLM系列——LLM推理引擎中的技术"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&is_video=false&description=LLM系列——LLM推理引擎中的技术"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM系列——LLM推理引擎中的技术&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&name=LLM系列——LLM推理引擎中的技术&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&t=LLM系列——LLM推理引擎中的技术"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、推理引擎概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 推理引擎的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%B8%BB%E8%A6%81%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 主要推理框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF"><span class="toc-number">3.</span> <span class="toc-text">二、核心技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-KV-Cache%E4%BC%98%E5%8C%96"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 KV Cache优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%87%8F%E5%8C%96%E6%8A%80%E6%9C%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 量化技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 编译优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">三、性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%89%B9%E5%A4%84%E7%90%86%E4%BC%98%E5%8C%96"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 批处理优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 内存优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">四、实际应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 性能调优</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
     
   </span>
 </div>
@@ -134,7 +139,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        （三）LLM系列——LLM推理引擎中的技术
+        LLM系列——LLM推理引擎中的技术
     </h1>
 
 
@@ -148,7 +153,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.172Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:21:23.348Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -157,14 +162,14 @@
       
     <div class="article-category">
         <i class="fa-solid fa-archive"></i>
-        <a class="category-link" href="/categories/LLM-Inference/">LLM-Inference</a>
+        <a class="category-link" href="/categories/LLM-Foundation/">LLM-Foundation</a>
     </div>
 
 
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/%E6%8E%A8%E7%90%86/" rel="tag">推理</a>
+        <a class="p-category" href="/tags/%E6%8E%A8%E7%90%86/" rel="tag">推理</a>, <a class="p-category" href="/tags/%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E/" rel="tag">推理引擎</a>
     </div>
 
 
@@ -173,7 +178,60 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw">https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw</a></p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>LLM推理引擎是实现高效推理的关键，涉及KV Cache管理、批处理、量化、编译优化等多个方面。本文将对LLM推理引擎中的核心技术进行概述。</p>
+<h2 id="一、推理引擎概述"><a href="#一、推理引擎概述" class="headerlink" title="一、推理引擎概述"></a>一、推理引擎概述</h2><h3 id="1-1-推理引擎的作用"><a href="#1-1-推理引擎的作用" class="headerlink" title="1.1 推理引擎的作用"></a>1.1 推理引擎的作用</h3><ul>
+<li><strong>性能优化</strong>：提升推理速度和吞吐量</li>
+<li><strong>资源管理</strong>：高效管理GPU内存和计算资源</li>
+<li><strong>批处理</strong>：支持批量推理请求</li>
+<li><strong>服务化</strong>：提供API服务接口</li>
+</ul>
+<h3 id="1-2-主要推理框架"><a href="#1-2-主要推理框架" class="headerlink" title="1.2 主要推理框架"></a>1.2 主要推理框架</h3><ul>
+<li><strong>vLLM</strong>：基于PagedAttention的高性能框架</li>
+<li><strong>TensorRT-LLM</strong>：NVIDIA的优化推理框架</li>
+<li><strong>SGLang</strong>：专注于复杂提示的推理框架</li>
+<li><strong>TGI</strong>：HuggingFace的推理服务框架</li>
+</ul>
+<h2 id="二、核心技术"><a href="#二、核心技术" class="headerlink" title="二、核心技术"></a>二、核心技术</h2><h3 id="2-1-KV-Cache优化"><a href="#2-1-KV-Cache优化" class="headerlink" title="2.1 KV Cache优化"></a>2.1 KV Cache优化</h3><ul>
+<li><strong>PagedAttention</strong>：分页管理KV Cache</li>
+<li><strong>Prefix Caching</strong>：前缀缓存共享</li>
+<li><strong>Continuous Batching</strong>：连续批处理</li>
+</ul>
+<h3 id="2-2-量化技术"><a href="#2-2-量化技术" class="headerlink" title="2.2 量化技术"></a>2.2 量化技术</h3><ul>
+<li><strong>INT8量化</strong>：8位整数量化</li>
+<li><strong>INT4量化</strong>：4位整数量化</li>
+<li><strong>GPTQ</strong>：后训练量化</li>
+<li><strong>AWQ</strong>：激活感知量化</li>
+</ul>
+<h3 id="2-3-编译优化"><a href="#2-3-编译优化" class="headerlink" title="2.3 编译优化"></a>2.3 编译优化</h3><ul>
+<li><strong>Torch Compile</strong>：PyTorch编译优化</li>
+<li><strong>TensorRT</strong>：NVIDIA的推理优化</li>
+<li><strong>ONNX Runtime</strong>：跨平台推理优化</li>
+</ul>
+<h2 id="三、性能优化"><a href="#三、性能优化" class="headerlink" title="三、性能优化"></a>三、性能优化</h2><h3 id="3-1-批处理优化"><a href="#3-1-批处理优化" class="headerlink" title="3.1 批处理优化"></a>3.1 批处理优化</h3><ul>
+<li><strong>动态批处理</strong>：动态调整批次大小</li>
+<li><strong>连续批处理</strong>：连续处理多个请求</li>
+<li><strong>优先级调度</strong>：根据优先级调度请求</li>
+</ul>
+<h3 id="3-2-内存优化"><a href="#3-2-内存优化" class="headerlink" title="3.2 内存优化"></a>3.2 内存优化</h3><ul>
+<li><strong>KV Cache管理</strong>：高效的内存管理</li>
+<li><strong>激活值优化</strong>：减少激活值内存占用</li>
+<li><strong>内存池</strong>：预分配内存池</li>
+</ul>
+<h2 id="四、实际应用"><a href="#四、实际应用" class="headerlink" title="四、实际应用"></a>四、实际应用</h2><h3 id="4-1-服务部署"><a href="#4-1-服务部署" class="headerlink" title="4.1 服务部署"></a>4.1 服务部署</h3><ul>
+<li><strong>API服务</strong>：提供RESTful API</li>
+<li><strong>负载均衡</strong>：多实例负载均衡</li>
+<li><strong>监控告警</strong>：性能监控和告警</li>
+</ul>
+<h3 id="4-2-性能调优"><a href="#4-2-性能调优" class="headerlink" title="4.2 性能调优"></a>4.2 性能调优</h3><ul>
+<li><strong>参数调优</strong>：根据硬件调整参数</li>
+<li><strong>模型选择</strong>：选择合适的模型版本</li>
+<li><strong>资源分配</strong>：合理分配GPU资源</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rthLDuMBajEdAmUr7sOQYw">LLM推理引擎技术 - 微信文章</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.06180">vLLM: Easy, Fast, and Cheap LLM Serving with PagedAttention</a></li>
+<li><a target="_blank" rel="noopener" href="https://nvidia.github.io/TensorRT-LLM/">TensorRT-LLM Documentation</a></li>
+</ol>
 
   </div>
 </article>
@@ -208,26 +266,32 @@
 
     
     
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、推理引擎概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 推理引擎的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%B8%BB%E8%A6%81%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 主要推理框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF"><span class="toc-number">3.</span> <span class="toc-text">二、核心技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-KV-Cache%E4%BC%98%E5%8C%96"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 KV Cache优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%87%8F%E5%8C%96%E6%8A%80%E6%9C%AF"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 量化技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E7%BC%96%E8%AF%91%E4%BC%98%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 编译优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">三、性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%89%B9%E5%A4%84%E7%90%86%E4%BC%98%E5%8C%96"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 批处理优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 内存优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">四、实际应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 服务部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 性能调优</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&text=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&is_video=false&description=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=（三）LLM系列——LLM推理引擎中的技术&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&name=（三）LLM系列——LLM推理引擎中的技术&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&t=（三）LLM系列——LLM推理引擎中的技术"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&text=LLM系列——LLM推理引擎中的技术"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&is_video=false&description=LLM系列——LLM推理引擎中的技术"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM系列——LLM推理引擎中的技术&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&title=LLM系列——LLM推理引擎中的技术"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&name=LLM系列——LLM推理引擎中的技术&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-llm-series-inference-engine-technologies/&t=LLM系列——LLM推理引擎中的技术"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
 
     <div id="actions-footer">
         <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
         
         <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
         <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>

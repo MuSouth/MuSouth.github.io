@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="前言RAG给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。 参考 RAG(检索增强生成)系统实践与调优_rag系统课程实验-CSDN博客 (99+ 封私信 &#x2F; 80">
+    <meta name="description" content="前言RAG（Retrieval-Augmented Generation）给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。 一、RAG系统架构概述RAG系统主要由以下几个组件构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="参考">
+<meta property="og:title" content="LLM-Agent搭建系列RAG性能调优">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="前言RAG给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。 参考 RAG(检索增强生成)系统实践与调优_rag系统课程实验-CSDN博客 (99+ 封私信 &#x2F; 80">
+<meta property="og:description" content="前言RAG（Retrieval-Augmented Generation）给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。 一、RAG系统架构概述RAG系统主要由以下几个组件构">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.140Z">
+<meta property="article:modified_time" content="2025-12-14T02:19:03.343Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="LLM-Agent">
 <meta property="article:tag" content="RAG">
@@ -38,7 +38,7 @@
       
     
     <!-- title -->
-    <title>参考</title>
+    <title>LLM-Agent搭建系列RAG性能调优</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -110,23 +110,23 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&text=参考"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&is_video=false&description=参考"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=参考&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&name=参考&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&t=参考"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&text=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&is_video=false&description=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM-Agent搭建系列RAG性能调优&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&name=LLM-Agent搭建系列RAG性能调优&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&t=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81RAG%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、RAG系统架构概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Embedding%E6%A8%A1%E5%9E%8B%E9%80%89%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">二、Embedding模型选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9%E6%A0%87%E5%87%86"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 模型选择标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%B8%B8%E7%94%A8Embedding%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 常用Embedding模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E6%A1%A3%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">三、文档分块策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%88%86%E5%9D%97%E5%8E%9F%E5%88%99"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 分块原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%88%86%E5%9D%97%E6%96%B9%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 分块方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%A3%80%E7%B4%A2%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">四、检索优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 检索策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 检索增强技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81Prompt%E6%A8%A1%E6%9D%BF%E4%BC%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">五、Prompt模板优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Prompt%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 Prompt设计原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%B8%B8%E7%94%A8Prompt%E6%A8%A1%E6%9D%BF"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 常用Prompt模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">7.</span> <span class="toc-text">六、性能评估指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%A3%80%E7%B4%A2%E6%8C%87%E6%A0%87"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 检索指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E7%94%9F%E6%88%90%E6%8C%87%E6%A0%87"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 生成指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">8.</span> <span class="toc-text">七、常见问题与解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%A3%80%E7%B4%A2%E4%B8%8D%E5%87%86%E7%A1%AE"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 检索不准确</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E7%94%9F%E6%88%90%E8%B4%A8%E9%87%8F%E5%B7%AE"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 生成质量差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E5%93%8D%E5%BA%94%E9%80%9F%E5%BA%A6%E6%85%A2"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 响应速度慢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
   </span>
@@ -139,7 +139,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        参考
+        LLM-Agent搭建系列RAG性能调优
     </h1>
 
 
@@ -153,7 +153,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.140Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:19:03.343Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -178,7 +178,78 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>RAG给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。</p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>RAG（Retrieval-Augmented Generation）给LLM带来破解幻觉、提升生成质量、在垂类应用场景下最小代价实现专业助手构建，RAG的应用很广泛且重要，但对RAG的性能调优存在多维度的挑战。从Embedding模型的选型开始，到后续文档等其他类型数据的分块和嵌入处理，到后续检索过程增强，再到后续prompt模板构建等。</p>
+<h2 id="一、RAG系统架构概述"><a href="#一、RAG系统架构概述" class="headerlink" title="一、RAG系统架构概述"></a>一、RAG系统架构概述</h2><p>RAG系统主要由以下几个组件构成：</p>
+<ol>
+<li><strong>文档处理</strong>：文档加载、分块、预处理</li>
+<li><strong>向量化</strong>：使用Embedding模型将文档转换为向量</li>
+<li><strong>存储</strong>：向量数据库存储和检索</li>
+<li><strong>检索</strong>：相似度搜索和相关性排序</li>
+<li><strong>生成</strong>：LLM基于检索到的上下文生成答案</li>
+</ol>
+<h2 id="二、Embedding模型选型"><a href="#二、Embedding模型选型" class="headerlink" title="二、Embedding模型选型"></a>二、Embedding模型选型</h2><h3 id="2-1-模型选择标准"><a href="#2-1-模型选择标准" class="headerlink" title="2.1 模型选择标准"></a>2.1 模型选择标准</h3><p>选择合适的Embedding模型是RAG系统性能的基础，需要考虑以下因素：</p>
+<ul>
+<li><strong>语义理解能力</strong>：模型对中文&#x2F;英文语义的理解程度</li>
+<li><strong>向量维度</strong>：影响存储和检索效率</li>
+<li><strong>推理速度</strong>：影响系统响应时间</li>
+<li><strong>领域适配性</strong>：是否针对特定领域进行优化</li>
+</ul>
+<h3 id="2-2-常用Embedding模型"><a href="#2-2-常用Embedding模型" class="headerlink" title="2.2 常用Embedding模型"></a>2.2 常用Embedding模型</h3><ul>
+<li><strong>通用模型</strong>：OpenAI text-embedding-ada-002、BGE系列</li>
+<li><strong>中文模型</strong>：BGE-large-zh、m3e-base</li>
+<li><strong>多语言模型</strong>：multilingual-e5-base</li>
+</ul>
+<h2 id="三、文档分块策略"><a href="#三、文档分块策略" class="headerlink" title="三、文档分块策略"></a>三、文档分块策略</h2><h3 id="3-1-分块原则"><a href="#3-1-分块原则" class="headerlink" title="3.1 分块原则"></a>3.1 分块原则</h3><ul>
+<li><strong>语义完整性</strong>：保证每个chunk的语义完整</li>
+<li><strong>长度控制</strong>：通常200-500 tokens，根据模型上下文窗口调整</li>
+<li><strong>重叠处理</strong>：chunk之间适当重叠，避免语义割裂</li>
+</ul>
+<h3 id="3-2-分块方法"><a href="#3-2-分块方法" class="headerlink" title="3.2 分块方法"></a>3.2 分块方法</h3><ol>
+<li><strong>固定长度分块</strong>：简单但可能割裂语义</li>
+<li><strong>语义分块</strong>：基于句子或段落边界</li>
+<li><strong>递归分块</strong>：多层级分块策略</li>
+<li><strong>文档结构感知</strong>：考虑标题、列表等结构</li>
+</ol>
+<h2 id="四、检索优化"><a href="#四、检索优化" class="headerlink" title="四、检索优化"></a>四、检索优化</h2><h3 id="4-1-检索策略"><a href="#4-1-检索策略" class="headerlink" title="4.1 检索策略"></a>4.1 检索策略</h3><ul>
+<li><strong>相似度计算</strong>：余弦相似度、点积、欧氏距离</li>
+<li><strong>重排序（Rerank）</strong>：使用专门的rerank模型提升精度</li>
+<li><strong>多路检索</strong>：结合关键词检索和向量检索</li>
+<li><strong>混合检索</strong>：BM25 + 向量检索</li>
+</ul>
+<h3 id="4-2-检索增强技术"><a href="#4-2-检索增强技术" class="headerlink" title="4.2 检索增强技术"></a>4.2 检索增强技术</h3><ol>
+<li><strong>查询扩展</strong>：同义词扩展、查询改写</li>
+<li><strong>上下文窗口优化</strong>：动态调整检索数量</li>
+<li><strong>元数据过滤</strong>：基于文档元数据筛选</li>
+</ol>
+<h2 id="五、Prompt模板优化"><a href="#五、Prompt模板优化" class="headerlink" title="五、Prompt模板优化"></a>五、Prompt模板优化</h2><h3 id="5-1-Prompt设计原则"><a href="#5-1-Prompt设计原则" class="headerlink" title="5.1 Prompt设计原则"></a>5.1 Prompt设计原则</h3><ul>
+<li><strong>明确指令</strong>：清晰说明任务要求</li>
+<li><strong>上下文组织</strong>：合理组织检索到的文档</li>
+<li><strong>输出格式</strong>：指定期望的输出格式</li>
+</ul>
+<h3 id="5-2-常用Prompt模板"><a href="#5-2-常用Prompt模板" class="headerlink" title="5.2 常用Prompt模板"></a>5.2 常用Prompt模板</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">基于以下上下文信息回答问题：</span><br><span class="line">&#123;context&#125;</span><br><span class="line"></span><br><span class="line">问题：&#123;question&#125;</span><br><span class="line"></span><br><span class="line">请基于上下文信息回答，如果上下文中没有相关信息，请说明。</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、性能评估指标"><a href="#六、性能评估指标" class="headerlink" title="六、性能评估指标"></a>六、性能评估指标</h2><h3 id="6-1-检索指标"><a href="#6-1-检索指标" class="headerlink" title="6.1 检索指标"></a>6.1 检索指标</h3><ul>
+<li><strong>Recall@K</strong>：前K个结果中包含正确答案的比例</li>
+<li><strong>MRR（Mean Reciprocal Rank）</strong>：平均倒数排名</li>
+<li><strong>NDCG</strong>：归一化折损累积增益</li>
+</ul>
+<h3 id="6-2-生成指标"><a href="#6-2-生成指标" class="headerlink" title="6.2 生成指标"></a>6.2 生成指标</h3><ul>
+<li><strong>BLEU</strong>：生成文本与参考答案的相似度</li>
+<li><strong>ROUGE</strong>：召回导向的评估</li>
+<li><strong>人工评估</strong>：相关性、准确性、流畅性</li>
+</ul>
+<h2 id="七、常见问题与解决方案"><a href="#七、常见问题与解决方案" class="headerlink" title="七、常见问题与解决方案"></a>七、常见问题与解决方案</h2><h3 id="7-1-检索不准确"><a href="#7-1-检索不准确" class="headerlink" title="7.1 检索不准确"></a>7.1 检索不准确</h3><ul>
+<li><strong>问题</strong>：检索到的文档与问题不相关</li>
+<li><strong>解决</strong>：优化Embedding模型、调整检索策略、使用rerank</li>
+</ul>
+<h3 id="7-2-生成质量差"><a href="#7-2-生成质量差" class="headerlink" title="7.2 生成质量差"></a>7.2 生成质量差</h3><ul>
+<li><strong>问题</strong>：LLM生成的内容不准确或偏离主题</li>
+<li><strong>解决</strong>：优化Prompt、增加上下文、使用更强的LLM</li>
+</ul>
+<h3 id="7-3-响应速度慢"><a href="#7-3-响应速度慢" class="headerlink" title="7.3 响应速度慢"></a>7.3 响应速度慢</h3><ul>
+<li><strong>问题</strong>：系统响应时间过长</li>
+<li><strong>解决</strong>：优化向量数据库、使用缓存、并行处理</li>
+</ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_59164520/article/details/147904493">RAG(检索增强生成)系统实践与调优_rag系统课程实验-CSDN博客</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/15117069800/answer/1899836663661828015">(99+ 封私信 &#x2F; 80 条消息) 通过 MCP 实现 AI Agent 目前有哪些最佳实践？ - 知乎 (zhihu.com)</a></li>
@@ -221,23 +292,23 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81RAG%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%A6%82%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">一、RAG系统架构概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Embedding%E6%A8%A1%E5%9E%8B%E9%80%89%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">二、Embedding模型选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%A8%A1%E5%9E%8B%E9%80%89%E6%8B%A9%E6%A0%87%E5%87%86"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 模型选择标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%B8%B8%E7%94%A8Embedding%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 常用Embedding模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%96%87%E6%A1%A3%E5%88%86%E5%9D%97%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">三、文档分块策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%88%86%E5%9D%97%E5%8E%9F%E5%88%99"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 分块原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%88%86%E5%9D%97%E6%96%B9%E6%B3%95"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 分块方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%A3%80%E7%B4%A2%E4%BC%98%E5%8C%96"><span class="toc-number">5.</span> <span class="toc-text">四、检索优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E6%A3%80%E7%B4%A2%E7%AD%96%E7%95%A5"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 检索策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%A3%80%E7%B4%A2%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 检索增强技术</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81Prompt%E6%A8%A1%E6%9D%BF%E4%BC%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">五、Prompt模板优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Prompt%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 Prompt设计原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%B8%B8%E7%94%A8Prompt%E6%A8%A1%E6%9D%BF"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 常用Prompt模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="toc-number">7.</span> <span class="toc-text">六、性能评估指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%A3%80%E7%B4%A2%E6%8C%87%E6%A0%87"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 检索指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E7%94%9F%E6%88%90%E6%8C%87%E6%A0%87"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 生成指标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">8.</span> <span class="toc-text">七、常见问题与解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%A3%80%E7%B4%A2%E4%B8%8D%E5%87%86%E7%A1%AE"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 检索不准确</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E7%94%9F%E6%88%90%E8%B4%A8%E9%87%8F%E5%B7%AE"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 生成质量差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E5%93%8D%E5%BA%94%E9%80%9F%E5%BA%A6%E6%85%A2"><span class="toc-number">8.3.</span> <span class="toc-text">7.3 响应速度慢</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&text=参考"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&is_video=false&description=参考"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=参考&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=参考"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&name=参考&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&t=参考"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&text=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&is_video=false&description=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM-Agent搭建系列RAG性能调优&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&title=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&name=LLM-Agent搭建系列RAG性能调优&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Agent/2025-12-13-LLM-Agent%E6%90%AD%E5%BB%BA%E7%B3%BB%E5%88%97RAG%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/&t=LLM-Agent搭建系列RAG性能调优"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

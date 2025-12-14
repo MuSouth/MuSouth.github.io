@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="一、每日温度力扣题目链接请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。 提示：气温 列表长度的范">
+    <meta name="description" content="一、每日温度力扣题目链接 请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。 提示：气温 列表长度的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="第六天：单调栈">
+<meta property="og:title" content="算法学习第六天：单调栈">
 <meta property="og:url" content="https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="一、每日温度力扣题目链接请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。 提示：气温 列表长度的范">
+<meta property="og:description" content="一、每日温度力扣题目链接 请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。 例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。 提示：气温 列表长度的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-30T02:46:18.000Z">
-<meta property="article:modified_time" content="2025-12-14T02:17:43.535Z">
+<meta property="article:modified_time" content="2025-12-14T02:22:05.821Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="算法">
 <meta property="article:tag" content="单调栈">
@@ -38,7 +38,7 @@
       
     
     <!-- title -->
-    <title>第六天：单调栈</title>
+    <title>算法学习第六天：单调栈</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -110,23 +110,23 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&text=第六天：单调栈"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&is_video=false&description=第六天：单调栈"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=第六天：单调栈&body=Check out this article: https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&name=第六天：单调栈&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&t=第六天：单调栈"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&text=算法学习第六天：单调栈"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&is_video=false&description=算法学习第六天：单调栈"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=算法学习第六天：单调栈&body=Check out this article: https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&name=算法学习第六天：单调栈&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&t=算法学习第六天：单调栈"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">一、每日温度</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">一、每日温度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">1.1.</span> <span class="toc-text">解题思路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8D%95%E8%B0%83%E6%A0%88%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">二、单调栈基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%95%E8%B0%83%E6%A0%88"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 什么是单调栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%8D%95%E8%B0%83%E6%A0%88%E6%A8%A1%E6%9D%BF"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 单调栈模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="toc-number">3.</span> <span class="toc-text">三、相关题目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E5%85%83%E7%B4%A0-I"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 下一个更大元素 I</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E5%85%83%E7%B4%A0-II"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 下一个更大元素 II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 柱状图中最大的矩形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
   </span>
@@ -139,7 +139,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        第六天：单调栈
+        算法学习第六天：单调栈
     </h1>
 
 
@@ -153,7 +153,7 @@
       
         <time datetime="2024-11-30T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-11-30</time>
         
-        (Updated: <time datetime="2025-12-14T02:17:43.535Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        (Updated: <time datetime="2025-12-14T02:22:05.821Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -178,9 +178,42 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="一、每日温度"><a href="#一、每日温度" class="headerlink" title="一、每日温度"></a>一、每日温度</h2><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/daily-temperatures/">力扣题目链接</a><br>请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。</p>
+    <h2 id="一、每日温度"><a href="#一、每日温度" class="headerlink" title="一、每日温度"></a>一、每日温度</h2><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/daily-temperatures/">力扣题目链接</a></p>
+<p>请根据每日 气温 列表，重新生成一个列表。对应位置的输出为：要想观测到更高的气温，至少需要等待的天数。如果气温在这之后都不会升高，请在该位置用 0 来代替。</p>
 <p>例如，给定一个列表 temperatures &#x3D; [73, 74, 75, 71, 69, 72, 76, 73]，你的输出应该是 [1, 1, 4, 2, 1, 1, 0, 0]。</p>
 <p>提示：气温 列表长度的范围是 [1, 30000]。每个气温的值的均为华氏度，都是在 [30, 100] 范围内的整数。</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>这是一道典型的单调栈问题。我们需要找到每个位置右边第一个比它大的元素。</p>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>使用栈存储数组下标</li>
+<li>遍历数组，对于每个元素：<ul>
+<li>如果栈不为空且当前元素大于栈顶元素对应的值，则弹出栈顶，计算距离</li>
+<li>将当前下标入栈</li>
+</ul>
+</li>
+<li>最后栈中剩余的元素对应位置的结果为0</li>
+</ol>
+<p><strong>代码实现</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dailyTemperatures</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; temperatures)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = temperatures.<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">result</span><span class="params">(n, <span class="number">0</span>)</span></span>;</span><br><span class="line">        stack&lt;<span class="type">int</span>&gt; st;  <span class="comment">// 存储下标</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp; temperatures[i] &gt; temperatures[st.<span class="built_in">top</span>()]) &#123;</span><br><span class="line">                <span class="type">int</span> prev = st.<span class="built_in">top</span>();</span><br><span class="line">                st.<span class="built_in">pop</span>();</span><br><span class="line">                result[prev] = i - prev;</span><br><span class="line">            &#125;</span><br><span class="line">            st.<span class="built_in">push</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：O(n)，每个元素最多入栈和出栈一次<br><strong>空间复杂度</strong>：O(n)，栈的空间</p>
+<h2 id="二、单调栈基础"><a href="#二、单调栈基础" class="headerlink" title="二、单调栈基础"></a>二、单调栈基础</h2><h3 id="2-1-什么是单调栈"><a href="#2-1-什么是单调栈" class="headerlink" title="2.1 什么是单调栈"></a>2.1 什么是单调栈</h3><p>单调栈是一种特殊的栈，栈中的元素从栈底到栈顶保持单调性（递增或递减）。</p>
+<h3 id="2-2-适用场景"><a href="#2-2-适用场景" class="headerlink" title="2.2 适用场景"></a>2.2 适用场景</h3><p>单调栈常用于解决以下问题：</p>
+<ul>
+<li>找到每个元素左边&#x2F;右边第一个比它大&#x2F;小的元素</li>
+<li>计算最大矩形面积</li>
+<li>接雨水问题</li>
+<li>柱状图中最大的矩形</li>
+</ul>
+<h3 id="2-3-单调栈模板"><a href="#2-3-单调栈模板" class="headerlink" title="2.3 单调栈模板"></a>2.3 单调栈模板</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单调递增栈（找右边第一个更小的元素）</span></span><br><span class="line">stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">    <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp; arr[i] &lt; arr[st.<span class="built_in">top</span>()]) &#123;</span><br><span class="line">        <span class="comment">// 处理栈顶元素</span></span><br><span class="line">        <span class="type">int</span> top = st.<span class="built_in">top</span>();</span><br><span class="line">        st.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="comment">// result[top] = i - top;</span></span><br><span class="line">    &#125;</span><br><span class="line">    st.<span class="built_in">push</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 单调递减栈（找右边第一个更大的元素）</span></span><br><span class="line">stack&lt;<span class="type">int</span>&gt; st;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">    <span class="keyword">while</span> (!st.<span class="built_in">empty</span>() &amp;&amp; arr[i] &gt; arr[st.<span class="built_in">top</span>()]) &#123;</span><br><span class="line">        <span class="comment">// 处理栈顶元素</span></span><br><span class="line">        <span class="type">int</span> top = st.<span class="built_in">top</span>();</span><br><span class="line">        st.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="comment">// result[top] = i - top;</span></span><br><span class="line">    &#125;</span><br><span class="line">    st.<span class="built_in">push</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、相关题目"><a href="#三、相关题目" class="headerlink" title="三、相关题目"></a>三、相关题目</h2><h3 id="3-1-下一个更大元素-I"><a href="#3-1-下一个更大元素-I" class="headerlink" title="3.1 下一个更大元素 I"></a>3.1 下一个更大元素 I</h3><p>找到nums1中每个元素在nums2中对应位置的下一个更大元素。</p>
+<h3 id="3-2-下一个更大元素-II"><a href="#3-2-下一个更大元素-II" class="headerlink" title="3.2 下一个更大元素 II"></a>3.2 下一个更大元素 II</h3><p>循环数组，找到每个元素的下一个更大元素。</p>
+<h3 id="3-3-柱状图中最大的矩形"><a href="#3-3-柱状图中最大的矩形" class="headerlink" title="3.3 柱状图中最大的矩形"></a>3.3 柱状图中最大的矩形</h3><p>使用单调栈找到以每个柱子为高度的最大矩形面积。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://programmercarl.com/%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80.html#%E5%8D%95%E8%B0%83%E6%A0%88">代码随想录 - 单调栈</a></li>
+<li><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/daily-temperatures/">LeetCode 739. 每日温度</a></li>
+</ol>
 
   </div>
 </article>
@@ -216,23 +249,23 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">一、每日温度</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">一、每日温度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-number">1.1.</span> <span class="toc-text">解题思路</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8D%95%E8%B0%83%E6%A0%88%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">二、单调栈基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%95%E8%B0%83%E6%A0%88"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 什么是单调栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 适用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%8D%95%E8%B0%83%E6%A0%88%E6%A8%A1%E6%9D%BF"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 单调栈模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="toc-number">3.</span> <span class="toc-text">三、相关题目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E5%85%83%E7%B4%A0-I"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 下一个更大元素 I</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E5%85%83%E7%B4%A0-II"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 下一个更大元素 II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%9F%B1%E7%8A%B6%E5%9B%BE%E4%B8%AD%E6%9C%80%E5%A4%A7%E7%9A%84%E7%9F%A9%E5%BD%A2"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 柱状图中最大的矩形</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&text=第六天：单调栈"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&is_video=false&description=第六天：单调栈"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=第六天：单调栈&body=Check out this article: https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=第六天：单调栈"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&name=第六天：单调栈&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&t=第六天：单调栈"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&text=算法学习第六天：单调栈"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&is_video=false&description=算法学习第六天：单调栈"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=算法学习第六天：单调栈&body=Check out this article: https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&title=算法学习第六天：单调栈"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&name=算法学习第六天：单调栈&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2024/11/30/Algorithm-Learning/2024-11-30-Algorithm-Learning-Day6-Monotonic-Stack/&t=算法学习第六天：单调栈"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

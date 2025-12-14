@@ -6,20 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="cdn.jsdelivr.net 国内无法访问的替代加速域名网址-CSDN博客">
+    <meta name="description" content="前言由于网络环境的原因，cdn.jsdelivr.net在国内访问可能不稳定或无法访问，这会影响博客中引用的外部资源（如CSS、JavaScript、图片等）的加载。本文介绍几种替代方案，确保博客资源能够正常加载。 一、问题背景1.1 jsdelivr访问问题 国内访问限制：jsdelivr在某些地区可能无法访问 速度问题：即使能访问，速度也可能较慢 稳定性：访问不稳定可能影响用户体验  1.2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cdn.jsdelivr.net替代方案">
 <meta property="og:url" content="https://musouth.github.io/2024/11/27/Blog-Tutorial/2024-11-27-cdn-jsdelivr-alternative/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="cdn.jsdelivr.net 国内无法访问的替代加速域名网址-CSDN博客">
+<meta property="og:description" content="前言由于网络环境的原因，cdn.jsdelivr.net在国内访问可能不稳定或无法访问，这会影响博客中引用的外部资源（如CSS、JavaScript、图片等）的加载。本文介绍几种替代方案，确保博客资源能够正常加载。 一、问题背景1.1 jsdelivr访问问题 国内访问限制：jsdelivr在某些地区可能无法访问 速度问题：即使能访问，速度也可能较慢 稳定性：访问不稳定可能影响用户体验  1.2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-27T02:46:18.000Z">
-<meta property="article:modified_time" content="2025-12-14T02:17:10.945Z">
+<meta property="article:modified_time" content="2025-12-14T02:21:51.589Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="Hexo">
 <meta property="article:tag" content="图床">
 <meta property="article:tag" content="Picturebed">
 <meta property="article:tag" content="网站上线">
+<meta property="article:tag" content="CDN">
 <meta name="twitter:card" content="summary">
     
     
@@ -127,6 +128,10 @@
     </div>
     
     
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">一、问题背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-jsdelivr%E8%AE%BF%E9%97%AE%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 jsdelivr访问问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 影响范围</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">二、替代方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BD%BF%E7%94%A8%E5%9B%BD%E5%86%85CDN"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 使用国内CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9Aunpkg%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F"><span class="toc-number">3.1.1.</span> <span class="toc-text">方案一：unpkg国内镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9Abootcdn"><span class="toc-number">3.1.2.</span> <span class="toc-text">方案二：bootcdn</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%89%EF%BC%9Astaticfile"><span class="toc-number">3.1.3.</span> <span class="toc-text">方案三：staticfile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BD%BF%E7%94%A8GitHub%E9%95%9C%E5%83%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 使用GitHub镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9AGitHub%E4%BB%A3%E7%90%86"><span class="toc-number">3.2.1.</span> <span class="toc-text">方案一：GitHub代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9AjsDelivr%E9%95%9C%E5%83%8F%E7%AB%99"><span class="toc-number">3.2.2.</span> <span class="toc-text">方案二：jsDelivr镜像站</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%87%AA%E5%BB%BACDN"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 自建CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Cloudflare"><span class="toc-number">3.3.1.</span> <span class="toc-text">使用Cloudflare</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91-%E8%85%BE%E8%AE%AF%E4%BA%91CDN"><span class="toc-number">3.3.2.</span> <span class="toc-text">使用阿里云&#x2F;腾讯云CDN</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9"><span class="toc-number">4.</span> <span class="toc-text">三、Hexo配置修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 修改主题配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%89%B9%E9%87%8F%E6%9B%BF%E6%8D%A2"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 批量替换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9B%BE%E5%BA%8A%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">四、图床替代方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%BD%BF%E7%94%A8GitHub-jsDelivr%E9%95%9C%E5%83%8F"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 使用GitHub + jsDelivr镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E5%9B%BE%E5%BA%8A"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 迁移到其他图床</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">五、推荐方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%89%8D%E7%AB%AF%E5%BA%93"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 前端库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 图片资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 自定义资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81"><span class="toc-number">7.</span> <span class="toc-text">六、测试验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%AE%BF%E9%97%AE%E6%B5%8B%E8%AF%95"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 访问测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 性能监控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
   </span>
 </div>
 
@@ -151,7 +156,7 @@
       
         <time datetime="2024-11-27T02:46:18.000Z" class="dt-published" itemprop="datePublished">2024-11-27</time>
         
-        (Updated: <time datetime="2025-12-14T02:17:10.945Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
+        (Updated: <time datetime="2025-12-14T02:21:51.589Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -167,7 +172,7 @@
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="p-category" href="/tags/Picturebed/" rel="tag">Picturebed</a>, <a class="p-category" href="/tags/%E5%9B%BE%E5%BA%8A/" rel="tag">图床</a>, <a class="p-category" href="/tags/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF/" rel="tag">网站上线</a>
+        <a class="p-category" href="/tags/CDN/" rel="tag">CDN</a>, <a class="p-category" href="/tags/Hexo/" rel="tag">Hexo</a>, <a class="p-category" href="/tags/Picturebed/" rel="tag">Picturebed</a>, <a class="p-category" href="/tags/%E5%9B%BE%E5%BA%8A/" rel="tag">图床</a>, <a class="p-category" href="/tags/%E7%BD%91%E7%AB%99%E4%B8%8A%E7%BA%BF/" rel="tag">网站上线</a>
     </div>
 
 
@@ -176,7 +181,81 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/muzihuaner/article/details/144798205">cdn.jsdelivr.net 国内无法访问的替代加速域名网址-CSDN博客</a></p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>由于网络环境的原因，cdn.jsdelivr.net在国内访问可能不稳定或无法访问，这会影响博客中引用的外部资源（如CSS、JavaScript、图片等）的加载。本文介绍几种替代方案，确保博客资源能够正常加载。</p>
+<h2 id="一、问题背景"><a href="#一、问题背景" class="headerlink" title="一、问题背景"></a>一、问题背景</h2><h3 id="1-1-jsdelivr访问问题"><a href="#1-1-jsdelivr访问问题" class="headerlink" title="1.1 jsdelivr访问问题"></a>1.1 jsdelivr访问问题</h3><ul>
+<li><strong>国内访问限制</strong>：jsdelivr在某些地区可能无法访问</li>
+<li><strong>速度问题</strong>：即使能访问，速度也可能较慢</li>
+<li><strong>稳定性</strong>：访问不稳定可能影响用户体验</li>
+</ul>
+<h3 id="1-2-影响范围"><a href="#1-2-影响范围" class="headerlink" title="1.2 影响范围"></a>1.2 影响范围</h3><ul>
+<li><strong>外部资源</strong>：通过jsdelivr加载的CSS、JS库</li>
+<li><strong>图片资源</strong>：使用jsdelivr作为图床的图片</li>
+<li><strong>字体文件</strong>：通过jsdelivr加载的字体</li>
+</ul>
+<h2 id="二、替代方案"><a href="#二、替代方案" class="headerlink" title="二、替代方案"></a>二、替代方案</h2><h3 id="2-1-使用国内CDN"><a href="#2-1-使用国内CDN" class="headerlink" title="2.1 使用国内CDN"></a>2.1 使用国内CDN</h3><h4 id="方案一：unpkg国内镜像"><a href="#方案一：unpkg国内镜像" class="headerlink" title="方案一：unpkg国内镜像"></a>方案一：unpkg国内镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原地址：https://cdn.jsdelivr.net/npm/package@version/file</span><br><span class="line">替代：https://unpkg.com/package@version/file</span><br></pre></td></tr></table></figure>
+
+<h4 id="方案二：bootcdn"><a href="#方案二：bootcdn" class="headerlink" title="方案二：bootcdn"></a>方案二：bootcdn</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.bootcdn.cn/</span><br></pre></td></tr></table></figure>
+
+<p>提供常用前端库的CDN加速服务。</p>
+<h4 id="方案三：staticfile"><a href="#方案三：staticfile" class="headerlink" title="方案三：staticfile"></a>方案三：staticfile</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.staticfile.org/</span><br></pre></td></tr></table></figure>
+
+<p>提供稳定的CDN服务。</p>
+<h3 id="2-2-使用GitHub镜像"><a href="#2-2-使用GitHub镜像" class="headerlink" title="2.2 使用GitHub镜像"></a>2.2 使用GitHub镜像</h3><h4 id="方案一：GitHub代理"><a href="#方案一：GitHub代理" class="headerlink" title="方案一：GitHub代理"></a>方案一：GitHub代理</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原地址：https://cdn.jsdelivr.net/gh/user/repo@branch/file</span><br><span class="line">替代：https://ghproxy.com/https://raw.githubusercontent.com/user/repo/branch/file</span><br></pre></td></tr></table></figure>
+
+<h4 id="方案二：jsDelivr镜像站"><a href="#方案二：jsDelivr镜像站" class="headerlink" title="方案二：jsDelivr镜像站"></a>方案二：jsDelivr镜像站</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://cdn.jsdelivr.net/ → https://fastly.jsdelivr.net/</span><br><span class="line">或</span><br><span class="line">https://cdn.jsdelivr.net/ → https://gcore.jsdelivr.net/</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-自建CDN"><a href="#2-3-自建CDN" class="headerlink" title="2.3 自建CDN"></a>2.3 自建CDN</h3><h4 id="使用Cloudflare"><a href="#使用Cloudflare" class="headerlink" title="使用Cloudflare"></a>使用Cloudflare</h4><ul>
+<li><strong>免费CDN</strong>：Cloudflare提供免费CDN服务</li>
+<li><strong>全球加速</strong>：全球节点加速</li>
+<li><strong>配置简单</strong>：易于配置和使用</li>
+</ul>
+<h4 id="使用阿里云-腾讯云CDN"><a href="#使用阿里云-腾讯云CDN" class="headerlink" title="使用阿里云&#x2F;腾讯云CDN"></a>使用阿里云&#x2F;腾讯云CDN</h4><ul>
+<li><strong>国内加速</strong>：针对国内用户优化</li>
+<li><strong>稳定可靠</strong>：企业级CDN服务</li>
+<li><strong>需要费用</strong>：可能需要付费</li>
+</ul>
+<h2 id="三、Hexo配置修改"><a href="#三、Hexo配置修改" class="headerlink" title="三、Hexo配置修改"></a>三、Hexo配置修改</h2><h3 id="3-1-修改主题配置"><a href="#3-1-修改主题配置" class="headerlink" title="3.1 修改主题配置"></a>3.1 修改主题配置</h3><p>在Hexo主题的配置文件中，将jsdelivr链接替换为替代方案：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># _config.yml 或主题配置文件</span></span><br><span class="line"><span class="attr">cdn:</span></span><br><span class="line">  <span class="attr">jquery:</span> <span class="string">https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js</span></span><br><span class="line">  <span class="attr">fontawesome:</span> <span class="string">https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-批量替换"><a href="#3-2-批量替换" class="headerlink" title="3.2 批量替换"></a>3.2 批量替换</h3><p>使用脚本批量替换配置文件中的jsdelivr链接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用sed命令（Linux/Mac）</span></span><br><span class="line">sed -i <span class="string">&#x27;s/cdn.jsdelivr.net/cdn.bootcdn.net/g&#x27;</span> _config.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或使用PowerShell（Windows）</span></span><br><span class="line">(Get-Content _config.yml) -replace <span class="string">&#x27;cdn.jsdelivr.net&#x27;</span>, <span class="string">&#x27;cdn.bootcdn.net&#x27;</span> | Set-Content _config.yml</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、图床替代方案"><a href="#四、图床替代方案" class="headerlink" title="四、图床替代方案"></a>四、图床替代方案</h2><h3 id="4-1-使用GitHub-jsDelivr镜像"><a href="#4-1-使用GitHub-jsDelivr镜像" class="headerlink" title="4.1 使用GitHub + jsDelivr镜像"></a>4.1 使用GitHub + jsDelivr镜像</h3><p>如果使用GitHub作为图床，可以改用镜像地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">原：https://cdn.jsdelivr.net/gh/user/repo@main/img/image.png</span><br><span class="line">新：https://fastly.jsdelivr.net/gh/user/repo@main/img/image.png</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-迁移到其他图床"><a href="#4-2-迁移到其他图床" class="headerlink" title="4.2 迁移到其他图床"></a>4.2 迁移到其他图床</h3><ul>
+<li><strong>七牛云</strong>：提供免费图床服务</li>
+<li><strong>又拍云</strong>：稳定的图床服务</li>
+<li><strong>阿里云OSS</strong>：对象存储服务</li>
+<li><strong>腾讯云COS</strong>：对象存储服务</li>
+</ul>
+<h2 id="五、推荐方案"><a href="#五、推荐方案" class="headerlink" title="五、推荐方案"></a>五、推荐方案</h2><h3 id="5-1-前端库"><a href="#5-1-前端库" class="headerlink" title="5.1 前端库"></a>5.1 前端库</h3><p>推荐使用<strong>bootcdn</strong>或<strong>staticfile</strong>，这两个CDN服务在国内访问稳定，速度较快。</p>
+<h3 id="5-2-图片资源"><a href="#5-2-图片资源" class="headerlink" title="5.2 图片资源"></a>5.2 图片资源</h3><ul>
+<li><strong>短期方案</strong>：使用jsDelivr的镜像站（fastly.jsdelivr.net）</li>
+<li><strong>长期方案</strong>：迁移到国内图床服务（七牛云、又拍云等）</li>
+</ul>
+<h3 id="5-3-自定义资源"><a href="#5-3-自定义资源" class="headerlink" title="5.3 自定义资源"></a>5.3 自定义资源</h3><p>对于自己托管的资源，建议：</p>
+<ul>
+<li>使用GitHub + 代理</li>
+<li>或直接使用自己的服务器&#x2F;CDN</li>
+</ul>
+<h2 id="六、测试验证"><a href="#六、测试验证" class="headerlink" title="六、测试验证"></a>六、测试验证</h2><h3 id="6-1-访问测试"><a href="#6-1-访问测试" class="headerlink" title="6.1 访问测试"></a>6.1 访问测试</h3><p>替换后需要测试：</p>
+<ul>
+<li>资源是否能正常加载</li>
+<li>加载速度是否改善</li>
+<li>在不同网络环境下是否稳定</li>
+</ul>
+<h3 id="6-2-性能监控"><a href="#6-2-性能监控" class="headerlink" title="6.2 性能监控"></a>6.2 性能监控</h3><p>使用浏览器开发者工具监控：</p>
+<ul>
+<li>资源加载时间</li>
+<li>加载失败情况</li>
+<li>网络请求状态</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/muzihuaner/article/details/144798205">cdn.jsdelivr.net 国内无法访问的替代加速域名网址-CSDN博客</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bootcdn.cn/">BootCDN - 稳定、快速、免费的前端开源项目 CDN 加速服务</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.staticfile.org/">Staticfile CDN - 又拍云</a></li>
+</ol>
 
   </div>
 </article>
@@ -211,6 +290,10 @@
 
     
     
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">一、问题背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-jsdelivr%E8%AE%BF%E9%97%AE%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 jsdelivr访问问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%BD%B1%E5%93%8D%E8%8C%83%E5%9B%B4"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 影响范围</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">3.</span> <span class="toc-text">二、替代方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%BD%BF%E7%94%A8%E5%9B%BD%E5%86%85CDN"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 使用国内CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9Aunpkg%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F"><span class="toc-number">3.1.1.</span> <span class="toc-text">方案一：unpkg国内镜像</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9Abootcdn"><span class="toc-number">3.1.2.</span> <span class="toc-text">方案二：bootcdn</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%89%EF%BC%9Astaticfile"><span class="toc-number">3.1.3.</span> <span class="toc-text">方案三：staticfile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%BD%BF%E7%94%A8GitHub%E9%95%9C%E5%83%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 使用GitHub镜像</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9AGitHub%E4%BB%A3%E7%90%86"><span class="toc-number">3.2.1.</span> <span class="toc-text">方案一：GitHub代理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9AjsDelivr%E9%95%9C%E5%83%8F%E7%AB%99"><span class="toc-number">3.2.2.</span> <span class="toc-text">方案二：jsDelivr镜像站</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%87%AA%E5%BB%BACDN"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 自建CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Cloudflare"><span class="toc-number">3.3.1.</span> <span class="toc-text">使用Cloudflare</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%98%BF%E9%87%8C%E4%BA%91-%E8%85%BE%E8%AE%AF%E4%BA%91CDN"><span class="toc-number">3.3.2.</span> <span class="toc-text">使用阿里云&#x2F;腾讯云CDN</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81Hexo%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9"><span class="toc-number">4.</span> <span class="toc-text">三、Hexo配置修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 修改主题配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%89%B9%E9%87%8F%E6%9B%BF%E6%8D%A2"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 批量替换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9B%BE%E5%BA%8A%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88"><span class="toc-number">5.</span> <span class="toc-text">四、图床替代方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%BD%BF%E7%94%A8GitHub-jsDelivr%E9%95%9C%E5%83%8F"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 使用GitHub + jsDelivr镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%BF%81%E7%A7%BB%E5%88%B0%E5%85%B6%E4%BB%96%E5%9B%BE%E5%BA%8A"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 迁移到其他图床</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">五、推荐方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%89%8D%E7%AB%AF%E5%BA%93"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 前端库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 图片资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 自定义资源</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%B5%8B%E8%AF%95%E9%AA%8C%E8%AF%81"><span class="toc-number">7.</span> <span class="toc-text">六、测试验证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%AE%BF%E9%97%AE%E6%B5%8B%E8%AF%95"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 访问测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 性能监控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      </div>
+    
 
     <div id="share-footer" style="display: none">
       <ul>
@@ -231,6 +314,8 @@
 
     <div id="actions-footer">
         <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
         
         <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
         <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>

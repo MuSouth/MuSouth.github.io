@@ -6,16 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="参考[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili大语言模型高效推理技术 - 知乎 (zhihu.com) 1. vLLM入门2. vLLM源码解读主要是vllm代码库：vllm&#x2F;：  Entrypoints (LLM, API server)  Engine (同步：llm_engine.py ， 异步：async_llm_engine.py)  Core">
+    <meta name="description" content="前言vLLM是一个高性能的大语言模型推理和服务框架，由UC Berkeley开发。它通过PagedAttention技术实现了高效的KV Cache管理，显著提升了推理吞吐量。本文将对vLLM的核心技术和架构进行详细介绍。 参考[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili大语言模型高效推理技术 - 知乎 (zhihu.com) 1. vLLM入门2. vLLM源码解读主">
 <meta property="og:type" content="article">
-<meta property="og:title" content="参考">
+<meta property="og:title" content="LLM推理系列推理框架之vLLM">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
-<meta property="og:description" content="参考[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili大语言模型高效推理技术 - 知乎 (zhihu.com) 1. vLLM入门2. vLLM源码解读主要是vllm代码库：vllm&#x2F;：  Entrypoints (LLM, API server)  Engine (同步：llm_engine.py ， 异步：async_llm_engine.py)  Core">
+<meta property="og:description" content="前言vLLM是一个高性能的大语言模型推理和服务框架，由UC Berkeley开发。它通过PagedAttention技术实现了高效的KV Cache管理，显著提升了推理吞吐量。本文将对vLLM的核心技术和架构进行详细介绍。 参考[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili大语言模型高效推理技术 - 知乎 (zhihu.com) 1. vLLM入门2. vLLM源码解读主">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://testingcf.jsdelivr.net/gh/MuSouth/PicsBed@main/img/20250513160012.png">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.152Z">
+<meta property="article:modified_time" content="2025-12-14T02:19:06.814Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="推理">
 <meta property="article:tag" content="vLLM">
@@ -40,7 +40,7 @@
       
     
     <!-- title -->
-    <title>参考</title>
+    <title>LLM推理系列推理框架之vLLM</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -112,23 +112,23 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&text=参考"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&is_video=false&description=参考"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=参考&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&name=参考&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&t=参考"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&text=LLM推理系列推理框架之vLLM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&is_video=false&description=LLM推理系列推理框架之vLLM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM推理系列推理框架之vLLM&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&name=LLM推理系列推理框架之vLLM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&t=LLM推理系列推理框架之vLLM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-vLLM%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">1. vLLM入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-vLLM%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="toc-number">3.</span> <span class="toc-text">2. vLLM源码解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-vLLM%E5%85%A5%E9%97%A8"><span class="toc-number">3.</span> <span class="toc-text">1. vLLM入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-vLLM%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="toc-number">4.</span> <span class="toc-text">2. vLLM源码解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
   </span>
@@ -141,7 +141,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        参考
+        LLM推理系列推理框架之vLLM
     </h1>
 
 
@@ -155,7 +155,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.152Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:19:06.814Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -180,7 +180,8 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1DpoWYeEeH?spm_id_from=333.788.videopod.sections&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/703628651">大语言模型高效推理技术 - 知乎 (zhihu.com)</a></p>
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>vLLM是一个高性能的大语言模型推理和服务框架，由UC Berkeley开发。它通过PagedAttention技术实现了高效的KV Cache管理，显著提升了推理吞吐量。本文将对vLLM的核心技术和架构进行详细介绍。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1DpoWYeEeH?spm_id_from=333.788.videopod.sections&vd_source=0ce1a15132ad6e4d38931b46a2a719e1">[EP01] vllm源码讲解，基本代码结构_哔哩哔哩_bilibili</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/703628651">大语言模型高效推理技术 - 知乎 (zhihu.com)</a></p>
 <h2 id="1-vLLM入门"><a href="#1-vLLM入门" class="headerlink" title="1. vLLM入门"></a>1. vLLM入门</h2><h2 id="2-vLLM源码解读"><a href="#2-vLLM源码解读" class="headerlink" title="2. vLLM源码解读"></a>2. vLLM源码解读</h2><p>主要是vllm代码库：<br><strong>vllm&#x2F;：</strong></p>
 <ul>
 <li><p>Entrypoints (LLM, API server)</p>
@@ -306,23 +307,23 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">1.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-vLLM%E5%85%A5%E9%97%A8"><span class="toc-number">2.</span> <span class="toc-text">1. vLLM入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-vLLM%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="toc-number">3.</span> <span class="toc-text">2. vLLM源码解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-vLLM%E5%85%A5%E9%97%A8"><span class="toc-number">3.</span> <span class="toc-text">1. vLLM入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-vLLM%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB"><span class="toc-number">4.</span> <span class="toc-text">2. vLLM源码解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83-1"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&text=参考"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&is_video=false&description=参考"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=参考&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=参考"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&name=参考&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&t=参考"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&text=LLM推理系列推理框架之vLLM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&is_video=false&description=LLM推理系列推理框架之vLLM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM推理系列推理框架之vLLM&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&title=LLM推理系列推理框架之vLLM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&name=LLM推理系列推理框架之vLLM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Inference/2025-12-13-LLM%E6%8E%A8%E7%90%86%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A1%86%E6%9E%B6%E4%B9%8BvLLM/&t=LLM推理系列推理框架之vLLM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

@@ -8,15 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="前言对于大模型的位置编码的演变过程而言，我们在之前文章中分析过了，网上也有很多博客分析。那现代LLM中如何实现超长上下文的呢？比如经常听到的128K，甚至于现在有模型把上下文长度扩展到了4M大小，因为上下文长度，也就是token序列长度与注意力计算复杂度息息相关，虽然已经有了很多工作例如FlashAttention等降低计算复杂度，但4M的上下文长度还是让人震惊，所以本文就目前主流的大模型技术进行">
 <meta property="og:type" content="article">
-<meta property="og:title" content="位置编码">
+<meta property="og:title" content="LLM技术解读LLM中的位置编码与上下文长度扩展">
 <meta property="og:url" content="https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/index.html">
 <meta property="og:site_name" content="MuSouth&#39;s Blog">
 <meta property="og:description" content="前言对于大模型的位置编码的演变过程而言，我们在之前文章中分析过了，网上也有很多博客分析。那现代LLM中如何实现超长上下文的呢？比如经常听到的128K，甚至于现在有模型把上下文长度扩展到了4M大小，因为上下文长度，也就是token序列长度与注意力计算复杂度息息相关，虽然已经有了很多工作例如FlashAttention等降低计算复杂度，但4M的上下文长度还是让人震惊，所以本文就目前主流的大模型技术进行">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-13T09:06:06.000Z">
-<meta property="article:modified_time" content="2025-12-13T09:06:06.145Z">
+<meta property="article:modified_time" content="2025-12-14T02:20:38.708Z">
 <meta property="article:author" content="MuSouth">
 <meta property="article:tag" content="位置编码">
+<meta property="article:tag" content="上下文长度">
+<meta property="article:tag" content="Context-Length">
 <meta name="twitter:card" content="summary">
     
     
@@ -37,7 +39,7 @@
       
     
     <!-- title -->
-    <title>位置编码</title>
+    <title>LLM技术解读LLM中的位置编码与上下文长度扩展</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -109,23 +111,23 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&text=位置编码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&is_video=false&description=位置编码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=位置编码&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&name=位置编码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&t=位置编码"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&text=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&is_video=false&description=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM技术解读LLM中的位置编码与上下文长度扩展&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&name=LLM技术解读LLM中的位置编码与上下文长度扩展&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&t=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">位置编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">2.</span> <span class="toc-text">一、上下文长度扩展的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%AE%A1%E7%AE%97%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 计算复杂度问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%A4%96%E6%8E%A8"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 位置编码外推</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E6%89%A9%E5%B1%95%E6%8A%80%E6%9C%AF"><span class="toc-number">3.</span> <span class="toc-text">二、位置编码扩展技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-RoPE%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 RoPE扩展方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%EF%BC%88Linear-Interpolation%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">线性插值（Linear Interpolation）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NTK-Aware-Scaling"><span class="toc-number">3.1.2.</span> <span class="toc-text">NTK-Aware Scaling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#YaRN%EF%BC%88Yet-another-RoPE-extensioN%EF%BC%89"><span class="toc-number">3.1.3.</span> <span class="toc-text">YaRN（Yet another RoPE extensioN）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E6%89%A9%E5%B1%95"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 其他位置编码扩展</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">三、注意力计算优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-FlashAttention"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 FlashAttention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%A8%80%E7%96%8F%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 稀疏注意力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BC%98%E5%8C%96"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 长上下文优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">四、实际应用案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-128K%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 128K上下文模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%B6%85%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A8%A1%E5%9E%8B%EF%BC%881M-%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 超长上下文模型（1M+）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%9E%81%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%884M-%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 极长上下文（4M+）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text">五、技术路线图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%9F%AD%E6%9C%9F%E4%BC%98%E5%8C%96%EF%BC%88128K%E4%BB%A5%E5%86%85%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 短期优化（128K以内）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%AD%E6%9C%9F%E7%9B%AE%E6%A0%87%EF%BC%881M%E4%BB%A5%E5%86%85%EF%BC%89"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 中期目标（1M以内）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E9%95%BF%E6%9C%9F%E7%9B%AE%E6%A0%87%EF%BC%884M-%EF%BC%89"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 长期目标（4M+）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E6%9D%83%E8%A1%A1"><span class="toc-number">7.</span> <span class="toc-text">六、性能权衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%B4%A8%E9%87%8F-vs-%E9%95%BF%E5%BA%A6"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 质量 vs 长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E8%AE%A1%E7%AE%97%E6%88%90%E6%9C%AC"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 计算成本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-number">8.</span> <span class="toc-text">七、未来展望</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 技术趋势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
   </span>
@@ -138,7 +140,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        位置编码
+        LLM技术解读LLM中的位置编码与上下文长度扩展
     </h1>
 
 
@@ -152,7 +154,7 @@
       
         <time datetime="2025-12-13T09:06:06.000Z" class="dt-published" itemprop="datePublished">2025-12-13</time>
         
-        (Updated: <time datetime="2025-12-13T09:06:06.145Z" class="dt-updated" itemprop="dateModified">2025-12-13</time>)
+        (Updated: <time datetime="2025-12-14T02:20:38.708Z" class="dt-updated" itemprop="dateModified">2025-12-14</time>)
         
       
     </div>
@@ -168,7 +170,7 @@
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/" rel="tag">位置编码</a>
+        <a class="p-category" href="/tags/Context-Length/" rel="tag">Context-Length</a>, <a class="p-category" href="/tags/%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6/" rel="tag">上下文长度</a>, <a class="p-category" href="/tags/%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81/" rel="tag">位置编码</a>
     </div>
 
 
@@ -178,7 +180,111 @@
 
   <div class="content e-content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于大模型的位置编码的演变过程而言，我们在之前文章中分析过了，网上也有很多博客分析。那现代LLM中如何实现超长上下文的呢？比如经常听到的128K，甚至于现在有模型把上下文长度扩展到了4M大小，因为上下文长度，也就是token序列长度与注意力计算复杂度息息相关，虽然已经有了很多工作例如FlashAttention等降低计算复杂度，但4M的上下文长度还是让人震惊，所以本文就目前主流的大模型技术进行技术调研，探究超长上下文到底使用了什么技术设计。</p>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h2><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<h2 id="一、上下文长度扩展的挑战"><a href="#一、上下文长度扩展的挑战" class="headerlink" title="一、上下文长度扩展的挑战"></a>一、上下文长度扩展的挑战</h2><h3 id="1-1-计算复杂度问题"><a href="#1-1-计算复杂度问题" class="headerlink" title="1.1 计算复杂度问题"></a>1.1 计算复杂度问题</h3><p>注意力机制的计算复杂度是O(n²)，其中n是序列长度：</p>
+<ul>
+<li><strong>内存消耗</strong>：注意力矩阵需要O(n²)的内存</li>
+<li><strong>计算时间</strong>：计算时间随序列长度平方增长</li>
+<li><strong>硬件限制</strong>：GPU内存限制了可处理的序列长度</li>
+</ul>
+<h3 id="1-2-位置编码外推"><a href="#1-2-位置编码外推" class="headerlink" title="1.2 位置编码外推"></a>1.2 位置编码外推</h3><p>大多数位置编码方法在训练时只见过固定长度的序列，如何外推到更长序列是一个挑战。</p>
+<h2 id="二、位置编码扩展技术"><a href="#二、位置编码扩展技术" class="headerlink" title="二、位置编码扩展技术"></a>二、位置编码扩展技术</h2><h3 id="2-1-RoPE扩展方法"><a href="#2-1-RoPE扩展方法" class="headerlink" title="2.1 RoPE扩展方法"></a>2.1 RoPE扩展方法</h3><h4 id="线性插值（Linear-Interpolation）"><a href="#线性插值（Linear-Interpolation）" class="headerlink" title="线性插值（Linear Interpolation）"></a>线性插值（Linear Interpolation）</h4><p>最简单的方法是对RoPE的频率进行线性缩放：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">θ&#x27; = θ / scale_factor</span><br></pre></td></tr></table></figure>
+
+<p>其中scale_factor &#x3D; 目标长度 &#x2F; 训练长度</p>
+<h4 id="NTK-Aware-Scaling"><a href="#NTK-Aware-Scaling" class="headerlink" title="NTK-Aware Scaling"></a>NTK-Aware Scaling</h4><p>基于Neural Tangent Kernel理论的频率缩放方法，比线性插值更优。</p>
+<h4 id="YaRN（Yet-another-RoPE-extensioN）"><a href="#YaRN（Yet-another-RoPE-extensioN）" class="headerlink" title="YaRN（Yet another RoPE extensioN）"></a>YaRN（Yet another RoPE extensioN）</h4><p>YaRN结合了多种技术：</p>
+<ul>
+<li>频率缩放</li>
+<li>注意力缩放</li>
+<li>温度调整</li>
+</ul>
+<h3 id="2-2-其他位置编码扩展"><a href="#2-2-其他位置编码扩展" class="headerlink" title="2.2 其他位置编码扩展"></a>2.2 其他位置编码扩展</h3><ul>
+<li><strong>ALiBi</strong>：通过线性偏置实现位置编码，天然支持外推</li>
+<li><strong>xPos</strong>：改进的RoPE，具有更好的外推能力</li>
+</ul>
+<h2 id="三、注意力计算优化"><a href="#三、注意力计算优化" class="headerlink" title="三、注意力计算优化"></a>三、注意力计算优化</h2><h3 id="3-1-FlashAttention"><a href="#3-1-FlashAttention" class="headerlink" title="3.1 FlashAttention"></a>3.1 FlashAttention</h3><p>FlashAttention通过以下技术优化注意力计算：</p>
+<ul>
+<li><strong>分块计算</strong>：将注意力矩阵分块计算</li>
+<li><strong>在线softmax</strong>：避免存储完整的注意力矩阵</li>
+<li><strong>内存优化</strong>：减少内存访问次数</li>
+</ul>
+<p><strong>效果</strong>：</p>
+<ul>
+<li>内存复杂度从O(n²)降到O(n)</li>
+<li>计算速度提升2-4倍</li>
+</ul>
+<h3 id="3-2-稀疏注意力"><a href="#3-2-稀疏注意力" class="headerlink" title="3.2 稀疏注意力"></a>3.2 稀疏注意力</h3><ul>
+<li><strong>局部注意力</strong>：只计算局部窗口内的注意力</li>
+<li><strong>全局注意力</strong>：选择性地计算全局注意力</li>
+<li><strong>稀疏模式</strong>：使用预定义的稀疏模式</li>
+</ul>
+<h3 id="3-3-长上下文优化"><a href="#3-3-长上下文优化" class="headerlink" title="3.3 长上下文优化"></a>3.3 长上下文优化</h3><ul>
+<li><strong>滑动窗口</strong>：使用滑动窗口注意力</li>
+<li><strong>分层注意力</strong>：多层次的注意力机制</li>
+<li><strong>检索增强</strong>：结合检索机制减少计算</li>
+</ul>
+<h2 id="四、实际应用案例"><a href="#四、实际应用案例" class="headerlink" title="四、实际应用案例"></a>四、实际应用案例</h2><h3 id="4-1-128K上下文模型"><a href="#4-1-128K上下文模型" class="headerlink" title="4.1 128K上下文模型"></a>4.1 128K上下文模型</h3><ul>
+<li><strong>Claude 2</strong>：使用改进的位置编码和注意力优化</li>
+<li><strong>GPT-4 Turbo</strong>：支持128K上下文</li>
+<li><strong>技术要点</strong>：RoPE扩展 + FlashAttention + 优化架构</li>
+</ul>
+<h3 id="4-2-超长上下文模型（1M-）"><a href="#4-2-超长上下文模型（1M-）" class="headerlink" title="4.2 超长上下文模型（1M+）"></a>4.2 超长上下文模型（1M+）</h3><ul>
+<li><strong>Gemini 1.5 Pro</strong>：支持1M tokens</li>
+<li><strong>技术要点</strong>：<ul>
+<li>改进的RoPE扩展</li>
+<li>高效的注意力机制</li>
+<li>模型架构优化</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-3-极长上下文（4M-）"><a href="#4-3-极长上下文（4M-）" class="headerlink" title="4.3 极长上下文（4M+）"></a>4.3 极长上下文（4M+）</h3><ul>
+<li><strong>某些研究模型</strong>：支持4M tokens</li>
+<li><strong>技术要点</strong>：<ul>
+<li>创新的位置编码方法</li>
+<li>高效的稀疏注意力</li>
+<li>分布式计算</li>
+</ul>
+</li>
+</ul>
+<h2 id="五、技术路线图"><a href="#五、技术路线图" class="headerlink" title="五、技术路线图"></a>五、技术路线图</h2><h3 id="5-1-短期优化（128K以内）"><a href="#5-1-短期优化（128K以内）" class="headerlink" title="5.1 短期优化（128K以内）"></a>5.1 短期优化（128K以内）</h3><ul>
+<li>RoPE线性插值或NTK-Aware</li>
+<li>FlashAttention优化</li>
+<li>模型架构微调</li>
+</ul>
+<h3 id="5-2-中期目标（1M以内）"><a href="#5-2-中期目标（1M以内）" class="headerlink" title="5.2 中期目标（1M以内）"></a>5.2 中期目标（1M以内）</h3><ul>
+<li>改进的位置编码（YaRN等）</li>
+<li>稀疏注意力机制</li>
+<li>更高效的注意力实现</li>
+</ul>
+<h3 id="5-3-长期目标（4M-）"><a href="#5-3-长期目标（4M-）" class="headerlink" title="5.3 长期目标（4M+）"></a>5.3 长期目标（4M+）</h3><ul>
+<li>全新的位置编码方法</li>
+<li>创新的注意力机制</li>
+<li>硬件协同优化</li>
+</ul>
+<h2 id="六、性能权衡"><a href="#六、性能权衡" class="headerlink" title="六、性能权衡"></a>六、性能权衡</h2><h3 id="6-1-质量-vs-长度"><a href="#6-1-质量-vs-长度" class="headerlink" title="6.1 质量 vs 长度"></a>6.1 质量 vs 长度</h3><ul>
+<li><strong>更长上下文</strong>：可能带来质量下降</li>
+<li><strong>需要平衡</strong>：在长度和质量之间找到平衡点</li>
+</ul>
+<h3 id="6-2-计算成本"><a href="#6-2-计算成本" class="headerlink" title="6.2 计算成本"></a>6.2 计算成本</h3><ul>
+<li><strong>内存需求</strong>：随上下文长度线性或平方增长</li>
+<li><strong>计算时间</strong>：需要优化以保持合理速度</li>
+<li><strong>硬件要求</strong>：需要足够的GPU内存</li>
+</ul>
+<h2 id="七、未来展望"><a href="#七、未来展望" class="headerlink" title="七、未来展望"></a>七、未来展望</h2><h3 id="7-1-技术趋势"><a href="#7-1-技术趋势" class="headerlink" title="7.1 技术趋势"></a>7.1 技术趋势</h3><ul>
+<li><strong>更高效的位置编码</strong>：更好的外推能力</li>
+<li><strong>注意力机制创新</strong>：降低计算复杂度</li>
+<li><strong>硬件协同</strong>：专用硬件加速</li>
+</ul>
+<h3 id="7-2-应用场景"><a href="#7-2-应用场景" class="headerlink" title="7.2 应用场景"></a>7.2 应用场景</h3><ul>
+<li><strong>长文档处理</strong>：法律、医疗文档</li>
+<li><strong>代码理解</strong>：大型代码库分析</li>
+<li><strong>多轮对话</strong>：保持长期上下文</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/711623293">备忘：关于LLM中的位置编码与context扩展 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/693368080">大语言模型中上下文长度扩展技术的内容、原因和方式-综述 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2309.00071">YaRN: Efficient Context Window Extension of Large Language Models</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2205.14135">FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/711623293">备忘：关于LLM中的位置编码与context扩展 - 知乎 (zhihu.com)</a></li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/693368080">大语言模型中上下文长度扩展技术的内容、原因和方式-综述 - 知乎 (zhihu.com)</a></li>
 </ol>
@@ -217,23 +323,23 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">位置编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">2.</span> <span class="toc-text">一、上下文长度扩展的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%AE%A1%E7%AE%97%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 计算复杂度问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E5%A4%96%E6%8E%A8"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 位置编码外推</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E6%89%A9%E5%B1%95%E6%8A%80%E6%9C%AF"><span class="toc-number">3.</span> <span class="toc-text">二、位置编码扩展技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-RoPE%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 RoPE扩展方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%EF%BC%88Linear-Interpolation%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">线性插值（Linear Interpolation）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NTK-Aware-Scaling"><span class="toc-number">3.1.2.</span> <span class="toc-text">NTK-Aware Scaling</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#YaRN%EF%BC%88Yet-another-RoPE-extensioN%EF%BC%89"><span class="toc-number">3.1.3.</span> <span class="toc-text">YaRN（Yet another RoPE extensioN）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E6%89%A9%E5%B1%95"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 其他位置编码扩展</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%AE%A1%E7%AE%97%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">三、注意力计算优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-FlashAttention"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 FlashAttention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%A8%80%E7%96%8F%E6%B3%A8%E6%84%8F%E5%8A%9B"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 稀疏注意力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E4%BC%98%E5%8C%96"><span class="toc-number">4.3.</span> <span class="toc-text">3.3 长上下文优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">5.</span> <span class="toc-text">四、实际应用案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-128K%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 128K上下文模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E8%B6%85%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A8%A1%E5%9E%8B%EF%BC%881M-%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 超长上下文模型（1M+）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E6%9E%81%E9%95%BF%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%884M-%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 极长上下文（4M+）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E5%9B%BE"><span class="toc-number">6.</span> <span class="toc-text">五、技术路线图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E7%9F%AD%E6%9C%9F%E4%BC%98%E5%8C%96%EF%BC%88128K%E4%BB%A5%E5%86%85%EF%BC%89"><span class="toc-number">6.1.</span> <span class="toc-text">5.1 短期优化（128K以内）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E4%B8%AD%E6%9C%9F%E7%9B%AE%E6%A0%87%EF%BC%881M%E4%BB%A5%E5%86%85%EF%BC%89"><span class="toc-number">6.2.</span> <span class="toc-text">5.2 中期目标（1M以内）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E9%95%BF%E6%9C%9F%E7%9B%AE%E6%A0%87%EF%BC%884M-%EF%BC%89"><span class="toc-number">6.3.</span> <span class="toc-text">5.3 长期目标（4M+）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%80%A7%E8%83%BD%E6%9D%83%E8%A1%A1"><span class="toc-number">7.</span> <span class="toc-text">六、性能权衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E8%B4%A8%E9%87%8F-vs-%E9%95%BF%E5%BA%A6"><span class="toc-number">7.1.</span> <span class="toc-text">6.1 质量 vs 长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E8%AE%A1%E7%AE%97%E6%88%90%E6%9C%AC"><span class="toc-number">7.2.</span> <span class="toc-text">6.2 计算成本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-number">8.</span> <span class="toc-text">七、未来展望</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF"><span class="toc-number">8.1.</span> <span class="toc-text">7.1 技术趋势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">8.2.</span> <span class="toc-text">7.2 应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
       </div>
     
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&text=位置编码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&is_video=false&description=位置编码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=位置编码&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=位置编码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&name=位置编码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&t=位置编码"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&text=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&is_video=false&description=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=LLM技术解读LLM中的位置编码与上下文长度扩展&body=Check out this article: https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&title=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&name=LLM技术解读LLM中的位置编码与上下文长度扩展&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://musouth.github.io/2025/12/13/LLM-Foundation/2025-12-13-LLM%E6%8A%80%E6%9C%AF%E8%A7%A3%E8%AF%BBLLM%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E4%B8%8E%E4%B8%8A%E4%B8%8B%E6%96%87%E9%95%BF%E5%BA%A6%E6%89%A9%E5%B1%95/&t=LLM技术解读LLM中的位置编码与上下文长度扩展"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
